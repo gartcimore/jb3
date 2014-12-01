@@ -1,9 +1,9 @@
-package im.bci.jb3;
+package im.bci.jb3.controllers;
 
 import im.bci.jb3.backend.legacy.LegacyBoard;
 import im.bci.jb3.backend.legacy.LegacyPost;
 import im.bci.jb3.data.Post;
-import im.bci.jb3.data.PostRepository;
+import im.bci.jb3.logic.Tribune;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,33 +24,24 @@ import org.springframework.web.bind.annotation.RestController;
  * @author devnewton
  */
 @RestController
+@RequestMapping("/legacy")
 public class LegacyRestController {
 
     @Autowired
-    private PostRepository repository;
+    private Tribune tribune;
 
-    private final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s");
-
-    @RequestMapping("/legacy/post")
+    @RequestMapping("/post")
     public void post(@RequestParam(value = "nickname") String nickname, @RequestParam(value = "message") String message) {
-        nickname = Jsoup.clean(nickname, Whitelist.none());
-        message = Jsoup.clean(message, messageWhitelist);
-        if (StringUtils.hasText(message)) {
-            Post plop = new Post();
-            plop.setNickname(StringUtils.hasText(nickname) ? nickname : "AnonymousCoward");
-            plop.setMessage(message);
-            plop.setTime(new Date());
-            repository.save(plop);
-        }
+        tribune.post(nickname, message);
     }
     
     private final SimpleDateFormat legacyNorlogeSdf = new SimpleDateFormat("yyyyMMddHHmmss");
 
-    @RequestMapping(value = "/legacy/xml", produces = "application/xml")
+    @RequestMapping(value = "/xml", produces = "application/xml")
     public LegacyBoard xml() {
         LegacyBoard board = new LegacyBoard();
         List<LegacyPost> legacyPosts = new ArrayList<LegacyPost>();
-        Page<Post> posts = repository.findAll(new PageRequest(0, 1000, Sort.Direction.DESC, "time"));
+        Page<Post> posts = tribune.get();
         for(Post post : posts) {
             LegacyPost legacyPost = new LegacyPost();
             legacyPost.setId(post.getTime().getTime());

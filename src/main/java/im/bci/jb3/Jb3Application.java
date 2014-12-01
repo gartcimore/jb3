@@ -11,12 +11,12 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan
 public class Jb3Application implements CommandLineRunner {
 
-	@Override
-	public void run(String... args) throws Exception {
-		System.out.println("jb3 or not to be!");
-	}
+    @Override
+    public void run(String... args) throws Exception {
+        System.out.println("jb3 or not to be!");
+    }
 
-	public static void main(String[] args) throws Exception {
-		SpringApplication.run(Jb3Application.class, args);
-	}
+    public static void main(String[] args) throws Exception {
+        SpringApplication.run(Jb3Application.class, args);
+    }
 }

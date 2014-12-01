@@ -1,0 +1,21 @@
+.jb3-messages {
+    display : table;
+}
+
+.jb3-post {
+    display : table-row;
+}
+
+.jb3-post-time {
+    display : table-cell;
+    padding-right: 10px;
+}
+
+.jb3-post-nickname {
+    display : table-cell;
+    padding-right: 10px;
+}
+
+.jb3-post-message {
+    display : table-cell;
+}
