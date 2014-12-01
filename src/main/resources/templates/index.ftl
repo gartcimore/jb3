@@ -7,7 +7,7 @@
         <link rel="stylesheet" type="text/css" href="jb3.css" />
     </head>
     <body>
-        <div id="jb3-messages">
+        <div id="jb3-posts">
         </div>
         <div id="jb3-controls">
             <input id="jb3-controls-message" type="text"/>

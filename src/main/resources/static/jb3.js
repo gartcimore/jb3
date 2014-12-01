@@ -41,7 +41,7 @@ jb3 = {
         self.sortMessages();
     },
     onMessage: function (message) {
-        var messagesContainer = $('#jb3-messages');
+        var messagesContainer = $('#jb3-posts');
         var existingMessageDiv = messagesContainer.find('#' + message.id);
         if (existingMessageDiv.length === 0) {
             var isoTime = new Date(message.time).toISOString();
@@ -53,9 +53,9 @@ jb3 = {
         }
     },
     sortMessages: function () {
-        $('#jb3-messages').find('.jb3-post').sort(function (a, b) {
+        $('#jb3-posts').find('.jb3-post').sort(function (a, b) {
             return $(a).attr('time') - $(b).attr('time');
-        }).appendTo('#jb3-messages');
+        }).appendTo('#jb3-posts');
     }
 };
 jb3.init();
