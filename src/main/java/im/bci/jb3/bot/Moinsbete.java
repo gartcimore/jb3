@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,7 @@ public class Moinsbete implements Bot {
     private Tribune tribune;
 
     private static final String NAME = "moinsbete";
-    private static final String CALL = NAME + "<";
+    private static final String CALL = Jsoup.clean(NAME + "<", Whitelist.none());
 
     @Override
     public void handle(Post post) {

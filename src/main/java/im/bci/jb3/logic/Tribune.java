@@ -47,7 +47,6 @@ public class Tribune {
             nickname = StringUtils.abbreviate(Jsoup.clean(nickname, Whitelist.none()), MAX_NICKNAME_LENGTH);
         }
         message = StringUtils.abbreviate(Jsoup.clean(message, messageWhitelist), MAX_POST_LENGTH);
-        message = Parser.unescapeEntities(message, false);
         if (StringUtils.isNotBlank(message)) {
             Post post = new Post();
             post.setNickname(StringUtils.isNotBlank(nickname) ? nickname : "AnonymousCoward");

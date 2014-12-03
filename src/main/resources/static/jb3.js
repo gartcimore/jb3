@@ -46,8 +46,8 @@ jb3 = {
         if (existingMessageDiv.length === 0) {
             var isoTime = new Date(message.time).toISOString();
             var timeSpan = $('<span/>').addClass('jb3-post-time').text(isoTime.substr(11,8)).attr("title",isoTime);
-            var nickSpan = $('<span/>').addClass('jb3-post-nickname').text(message.nickname);
-            var messageSpan = $('<span/>').addClass('jb3-post-message').text(message.message);
+            var nickSpan = $('<span/>').addClass('jb3-post-nickname').html(message.nickname);
+            var messageSpan = $('<span/>').addClass('jb3-post-message').html(message.message);
             var messageDiv = $('<div/>').attr('id', message.id).addClass('jb3-post').attr('time', message.time).append(timeSpan).append(nickSpan).append(messageSpan);
             messagesContainer.append(messageDiv);
         }
