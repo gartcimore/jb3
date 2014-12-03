@@ -1,14 +1,12 @@
 package im.bci.jb3.logic;
 
-import im.bci.jb3.bot.Bot;
+import im.bci.jb3.bot.Bots;
 import im.bci.jb3.data.Post;
 import im.bci.jb3.data.PostRepository;
 import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.parser.Parser;
 import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,7 +21,7 @@ public class Tribune {
     private PostRepository repository;
 
     @Autowired
-    private Bot[] bots;
+    private Bots bots;
 
     private final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s", "u", "tt");
     private static final int MAX_POST_LENGTH = 512;
@@ -32,9 +30,7 @@ public class Tribune {
     public void post(String nickname, String message) {
         Post post = doPost(nickname, message);
         if (null != post) {
-            for (Bot bot : bots) {
-                bot.handle(post);
-            }
+            bots.handle(post);
         }
     }
     
@@ -55,7 +51,6 @@ public class Tribune {
             repository.save(post);
             return post;
         }
-
         return null;
     }
 
