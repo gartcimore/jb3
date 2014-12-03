@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +29,7 @@ public class Moinsbete implements Bot {
                 String message = anecdote.text();
                 tribune.botPost(NAME, message);
             }
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(Moinsbete.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
