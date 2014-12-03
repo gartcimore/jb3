@@ -19,13 +19,11 @@ public class Moinsbete implements Bot {
     private Tribune tribune;
 
     private static final String NAME = "moinsbete";
-    private static final String CALL = Jsoup.clean(NAME + "<", Whitelist.none());
 
     @Override
     public void handle(Post post) {
         try {
-            if (!NAME.equals(post.getNickname()) && post.getMessage().contains(CALL)) {
-
+            if (BotUtils.isBotCall(post, NAME)) {
                 Document doc = Jsoup.connect("http://secouchermoinsbete.fr/random").get();
                 Element anecdote = doc.select(".anecdote-content-wrapper .summary a").first();
                 anecdote.select(".read-more").remove();
