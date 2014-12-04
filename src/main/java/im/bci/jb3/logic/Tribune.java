@@ -3,9 +3,13 @@ package im.bci.jb3.logic;
 import im.bci.jb3.bot.Bots;
 import im.bci.jb3.data.Post;
 import im.bci.jb3.data.PostRepository;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatterBuilder;
+import org.joda.time.format.DateTimeParser;
+import org.joda.time.format.DateTimeParserBucket;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +59,13 @@ public class Tribune {
     }
 
     public Page<Post> get() {
+        DateTime end = DateTime.now();
+        DateTime start = end.minusWeeks(1);
+        Page<Post> posts = repository.findPosts(start.toDate(), end.toDate(), new PageRequest(0, 1000, Sort.Direction.DESC, "time"));
+        return posts;
+    }
+
+    public Page<Post> getForNorloge(String norloge) {
         DateTime end = DateTime.now();
         DateTime start = end.minusWeeks(1);
         Page<Post> posts = repository.findPosts(start.toDate(), end.toDate(), new PageRequest(0, 1000, Sort.Direction.DESC, "time"));
