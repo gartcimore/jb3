@@ -4,9 +4,10 @@ import im.bci.jb3.backend.legacy.LegacyBoard;
 import im.bci.jb3.backend.legacy.LegacyPost;
 import im.bci.jb3.data.Post;
 import im.bci.jb3.logic.Tribune;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,21 +30,21 @@ public class LegacyRestController {
         tribune.post(nickname, message);
     }
 
-    private final SimpleDateFormat legacyNorlogeSdf = new SimpleDateFormat("yyyyMMddHHmmss");
+    private static final DateTimeFormatter legacyNorlogeSdf = DateTimeFormat.forPattern("yyyyMMddHHmmss").withZoneUTC();
 
     @RequestMapping(value = "/xml", produces = "application/xml")
     public LegacyBoard xml(WebRequest webRequest) {
-        List<Post> posts = tribune.get();        
+        List<Post> posts = tribune.get();
         if (posts.isEmpty() || webRequest.checkNotModified(posts.get(0).getTime().getTime())) {
             return null;
         } else {
             LegacyBoard board = new LegacyBoard();
             List<LegacyPost> legacyPosts = new ArrayList<LegacyPost>();
-
             for (Post post : posts) {
                 LegacyPost legacyPost = new LegacyPost();
-                legacyPost.setId(post.getTime().getTime());
-                legacyPost.setTime(legacyNorlogeSdf.format(post.getTime()));
+                final long time = post.getTime().getTime();
+                legacyPost.setId(time);
+                legacyPost.setTime(legacyNorlogeSdf.print(time));
                 legacyPost.setInfo(post.getNickname());
                 legacyPost.setMessage(post.getMessage());
                 legacyPost.setLogin("");
