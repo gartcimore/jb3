@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.WebRequest;
 
 /**
  *
@@ -27,24 +28,29 @@ public class LegacyRestController {
     public void post(@RequestParam(value = "nickname") String nickname, @RequestParam(value = "message") String message) {
         tribune.post(nickname, message);
     }
-    
+
     private final SimpleDateFormat legacyNorlogeSdf = new SimpleDateFormat("yyyyMMddHHmmss");
 
     @RequestMapping(value = "/xml", produces = "application/xml")
-    public LegacyBoard xml() {
-        LegacyBoard board = new LegacyBoard();
-        List<LegacyPost> legacyPosts = new ArrayList<LegacyPost>();
-        List<Post> posts = tribune.get();
-        for(Post post : posts) {
-            LegacyPost legacyPost = new LegacyPost();
-            legacyPost.setId(post.getTime().getTime());
-            legacyPost.setTime(legacyNorlogeSdf.format(post.getTime()));
-            legacyPost.setInfo(post.getNickname());
-            legacyPost.setMessage(post.getMessage());
-            legacyPost.setLogin("");
-            legacyPosts.add(legacyPost);
+    public LegacyBoard xml(WebRequest webRequest) {
+        List<Post> posts = tribune.get();        
+        if (posts.isEmpty() || webRequest.checkNotModified(posts.get(0).getTime().getTime())) {
+            return null;
+        } else {
+            LegacyBoard board = new LegacyBoard();
+            List<LegacyPost> legacyPosts = new ArrayList<LegacyPost>();
+
+            for (Post post : posts) {
+                LegacyPost legacyPost = new LegacyPost();
+                legacyPost.setId(post.getTime().getTime());
+                legacyPost.setTime(legacyNorlogeSdf.format(post.getTime()));
+                legacyPost.setInfo(post.getNickname());
+                legacyPost.setMessage(post.getMessage());
+                legacyPost.setLogin("");
+                legacyPosts.add(legacyPost);
+            }
+            board.setPost(legacyPosts);
+            return board;
         }
-        board.setPost(legacyPosts);
-        return board;
     }
 }
