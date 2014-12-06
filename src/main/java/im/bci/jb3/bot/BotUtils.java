@@ -12,18 +12,13 @@ public class BotUtils {
             return false;
         }
         String message = post.getMessage();
-        return message.contains(bigornoCall(botName)) || message.contains(hashTagCall(botName)) || message.contains(ircCall(botName));
+        return message.contains(bigornoCall(botName)) || message.contains(ircCall(botName));
     }
 
     static String messageWithoutBotCall(Post post, String botName) {
         String message = post.getMessage();
         message = StringUtils.removeStart(message, bigornoCall(botName));
-        message = StringUtils.removeStart(message, hashTagCall(botName));
         return message;
-    }
-
-    private static String hashTagCall(String botName) {
-        return Jsoup.clean("#" + botName, Whitelist.none());
     }
 
     private static String bigornoCall(String botName) {

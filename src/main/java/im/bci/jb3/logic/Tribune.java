@@ -1,8 +1,14 @@
 package im.bci.jb3.logic;
 
 import im.bci.jb3.bot.Bots;
+import im.bci.jb3.data.Fortune;
+import im.bci.jb3.data.FortuneRepository;
 import im.bci.jb3.data.Post;
 import im.bci.jb3.data.PostRepository;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +25,10 @@ import org.springframework.stereotype.Component;
 public class Tribune {
 
     @Autowired
-    private PostRepository repository;
+    private PostRepository postPepository;
+
+    @Autowired
+    private FortuneRepository fortunePepository;
 
     @Autowired
     private Bots bots;
@@ -34,7 +43,7 @@ public class Tribune {
             bots.handle(post);
         }
     }
-    
+
     public void botPost(String nickname, String message) {
         doPost(nickname, message);
     }
@@ -49,28 +58,53 @@ public class Tribune {
             post.setNickname(StringUtils.isNotBlank(nickname) ? nickname : "AnonymousCoward");
             post.setMessage(message);
             post.setTime(new Date());
-            repository.save(post);
+            postPepository.save(post);
             return post;
         }
         return null;
     }
 
-    public Page<Post> get() {
+    public List<Post> get() {
         DateTime end = DateTime.now();
         DateTime start = end.minusWeeks(1);
-        Page<Post> posts = repository.findPosts(start.toDate(), end.toDate(), new PageRequest(0, 1000, Sort.Direction.DESC, "time"));
-        return posts;
+        return postPepository.findPosts(start, end);
     }
 
-    public Page<Post> getForNorloge(String norloge) {
-        DateTime end = DateTime.now();
-        DateTime start = end.minusWeeks(1);
-        Page<Post> posts = repository.findPosts(start.toDate(), end.toDate(), new PageRequest(0, 1000, Sort.Direction.DESC, "time"));
-        return posts;
+    public Fortune fortune(List<Norloge> norloges) {
+        Fortune f = new Fortune();
+        f.setPosts(getForNorloges(norloges));
+        return fortunePepository.save(f);
     }
 
-    public List<Post> getForNorloges(List<Norloge> parseNorloges) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private List<Post> getForNorloges(List<Norloge> norloges) {
+        List<Post> result = new ArrayList<Post>();
+        for (Norloge norloge : norloges) {
+            result.addAll(getForNorloge(norloge));
+        }
+        Collections.sort(result, new Comparator<Post>() {
+
+            @Override
+            public int compare(Post o1, Post o2) {
+                return o1.getTime().compareTo(o2.getTime());
+            }
+        });
+        return result;
+    }
+
+    private List<Post> getForNorloge(Norloge norloge) {
+        if (null == norloge.getBouchot()) {
+            if (null != norloge.getId()) {
+                final Post post = postPepository.findOne(norloge.getId());
+                if (null != post) {
+                    return Arrays.asList(post);
+                }
+            } else if (null != norloge.getTime()) {
+                DateTime start = norloge.getTime();
+                DateTime end = norloge.getTime().plusSeconds(1);
+                return postPepository.findPosts(start, end);
+            }
+        }
+        return Collections.emptyList();
     }
 
 }

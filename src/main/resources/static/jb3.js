@@ -34,7 +34,7 @@ jb3 = {
     },
     onNewMessages: function (data) {
         var self = this;
-        $.each(data.content, function (index, value) {
+        $.each(data, function (index, value) {
             self.onMessage(value);
         }
         );

@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +34,7 @@ public class LegacyRestController {
     public LegacyBoard xml() {
         LegacyBoard board = new LegacyBoard();
         List<LegacyPost> legacyPosts = new ArrayList<LegacyPost>();
-        Page<Post> posts = tribune.get();
+        List<Post> posts = tribune.get();
         for(Post post : posts) {
             LegacyPost legacyPost = new LegacyPost();
             legacyPost.setId(post.getTime().getTime());

@@ -1,14 +1,14 @@
 package im.bci.jb3.data;
 
-import java.util.Date;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
+import java.util.List;
+import org.joda.time.DateTime;
 
-public interface PostRepository extends MongoRepository<Post, String> {
+public interface PostRepository {
     
-    @Query("{ 'time' : {$gte: ?0, $lt: ?1} }")
-    Page<Post> findPosts(Date start, Date end, Pageable pageable);
+    List<Post> findPosts(DateTime start, DateTime end);
+
+    public void save(Post post);
+
+    public Post findOne(String id);
 
 }

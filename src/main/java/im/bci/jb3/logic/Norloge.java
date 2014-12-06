@@ -1,5 +1,6 @@
 package im.bci.jb3.logic;
 
+import im.bci.jb3.data.Post;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +18,13 @@ public class Norloge {
     private String id;
     private DateTime time;
     private String bouchot;
+
+    public Norloge(Post post) {
+        this.id = post.getId();
+    }
+
+    public Norloge() {
+    }
 
     public String getId() {
         return id;
@@ -85,7 +93,7 @@ public class Norloge {
     }
 
     private static final DateTimeFormatter norlogePrintFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss");
-    private static final List<DateTimeFormatter> norlogeParseFormatters = Arrays.asList(DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss"), DateTimeFormat.forPattern("MM/dd#HH:mm:ss"), DateTimeFormat.forPattern("HH:mm:ss"), DateTimeFormat.forPattern("HH:mm:ss"));
+    private static final List<DateTimeFormatter> norlogeParseFormatters = Arrays.asList(DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZoneUTC(), DateTimeFormat.forPattern("MM/dd#HH:mm:ss").withZoneUTC(), DateTimeFormat.forPattern("HH:mm:ss").withZoneUTC(), DateTimeFormat.forPattern("HH:mm").withZoneUTC());
     private static final Pattern postIdBasedPattern = Pattern.compile("#(?<id>\\w*)(@(?<bouchot>[\\w.]*))?");
     private static final Pattern timeBasedPattern = Pattern.compile("(?<time>.*)(@(?<bouchot>[\\w.]*))?");
 
@@ -146,6 +154,7 @@ public class Norloge {
         try {
             MutableDateTime norlogeTime = new MutableDateTime();
             norlogeTime.setRounding(norlogeTime.getChronology().secondOfMinute());
+            norlogeTime.setSecondOfMinute(0);
             if (format.parseInto(norlogeTime, item, 0) >= 0) {
                 return norlogeTime.toDateTime();
             } else {
@@ -171,12 +180,4 @@ public class Norloge {
         }
         return sb.toString();
     }
-
-    public static void main(String[] args) throws Exception {
-        final String post = "moules< 16:25:11 les norloges du style 12/02#18:28:15 ou 2012/01/02#18:12:12 c'est conforme à la rfc #22:30  #tamaman #1234 #n3 #lol@dlfp  #troll@euro?";
-        for (Norloge norloge : parseNorloges(post)) {
-            System.out.println(norloge);
-        }
-    }
-
 }
