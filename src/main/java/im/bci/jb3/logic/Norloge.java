@@ -3,6 +3,7 @@ package im.bci.jb3.logic;
 import im.bci.jb3.data.Post;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -52,6 +53,11 @@ public class Norloge {
         return this;
     }
 
+    public Norloge withTime(Date t) {
+        setTime(new DateTime(t));
+        return this;
+    }
+
     public String getBouchot() {
         return bouchot;
     }
@@ -92,7 +98,7 @@ public class Norloge {
         return !((this.bouchot == null) ? (other.bouchot != null) : !this.bouchot.equals(other.bouchot));
     }
 
-    private static final DateTimeFormatter norlogePrintFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss");
+    private static final DateTimeFormatter norlogePrintFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZoneUTC();
     private static final List<DateTimeFormatter> norlogeParseFormatters = Arrays.asList(DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZoneUTC(), DateTimeFormat.forPattern("MM/dd#HH:mm:ss").withZoneUTC(), DateTimeFormat.forPattern("HH:mm:ss").withZoneUTC(), DateTimeFormat.forPattern("HH:mm").withZoneUTC());
     private static final Pattern postIdBasedPattern = Pattern.compile("#(?<id>\\w*)(@(?<bouchot>[\\w.]*))?");
     private static final Pattern timeBasedPattern = Pattern.compile("(?<time>.*)(@(?<bouchot>[\\w.]*))?");
@@ -102,17 +108,22 @@ public class Norloge {
         Scanner scanner = new Scanner(message);
         while (scanner.hasNext()) {
             String item = scanner.next();
-            Norloge norloge;
-            if (item.startsWith("#")) {
-                norloge = parsePostIdBasedNorloge(item);
-            } else {
-                norloge = parseTimeBasedNorloge(item);
-            }
+            Norloge norloge = parseNorloge(item);
             if (null != norloge) {
                 result.add(norloge);
             }
         }
         return result;
+    }
+
+    public static Norloge parseNorloge(String item) {
+        Norloge norloge;
+        if (item.startsWith("#")) {
+            norloge = parsePostIdBasedNorloge(item);
+        } else {
+            norloge = parseTimeBasedNorloge(item);
+        }
+        return norloge;
     }
 
     private static Norloge parsePostIdBasedNorloge(String item) {
