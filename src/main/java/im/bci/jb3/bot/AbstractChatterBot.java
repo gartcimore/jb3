@@ -5,10 +5,10 @@ import com.google.code.chatterbotapi.ChatterBotFactory;
 import com.google.code.chatterbotapi.ChatterBotSession;
 import com.google.code.chatterbotapi.ChatterBotType;
 import im.bci.jb3.data.Post;
+import im.bci.jb3.logic.Norloge;
 import im.bci.jb3.logic.Tribune;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractChatterBot implements Bot {
@@ -36,7 +36,7 @@ public abstract class AbstractChatterBot implements Bot {
                     session = bot.createSession();
                 }
                 final String message = BotUtils.messageWithoutBotCall(post, name);
-                tribune.botPost(name, session.think(message));
+                tribune.botPost(name, new Norloge(post) + " " + session.think(message));
             }
         } catch (Exception ex) {
             session = null;

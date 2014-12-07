@@ -1,6 +1,7 @@
 package im.bci.jb3.bot;
 
 import im.bci.jb3.data.Post;
+import im.bci.jb3.logic.Norloge;
 import im.bci.jb3.logic.Tribune;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -38,11 +39,17 @@ public class Deeplop implements Bot {
                             new InputStreamReader(con.getInputStream()));
                     String inputLine;
                     StringBuilder response = new StringBuilder();
+                    response.append(new Norloge(post));
+                    response.append(' ');
+                    boolean hasContent = false;
                     while ((inputLine = in.readLine()) != null) {
                         response.append(inputLine);
+                        hasContent = false;
                     }
                     in.close();
-                    tribune.botPost(NAME, response.toString());
+                    if (hasContent) {
+                        tribune.botPost(NAME, response.toString());
+                    }
                 }
             }
         } catch (Exception ex) {
