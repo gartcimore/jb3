@@ -1,7 +1,7 @@
 package im.bci.jb3.controllers;
 
 import im.bci.jb3.data.Post;
-import im.bci.jb3.logic.Tribune;
+import im.bci.jb3.logic.TribuneService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApiController {
 
     @Autowired
-    private Tribune tribune;
+    private TribuneService tribune;
 
     @RequestMapping("/post")
     public void post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message) {

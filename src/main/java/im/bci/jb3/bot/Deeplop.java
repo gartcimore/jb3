@@ -48,7 +48,7 @@ public class Deeplop implements Bot {
                     }
                     in.close();
                     if (hasContent) {
-                        tribune.botPost(NAME, response.toString());
+                        tribune.post(NAME, response.toString());
                     }
                 }
             }

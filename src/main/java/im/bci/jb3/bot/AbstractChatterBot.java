@@ -36,7 +36,7 @@ public abstract class AbstractChatterBot implements Bot {
                     session = bot.createSession();
                 }
                 final String message = BotUtils.messageWithoutBotCall(post, name);
-                tribune.botPost(name, new Norloge(post) + " " + session.think(message));
+                tribune.post(name, new Norloge(post) + " " + session.think(message));
             }
         } catch (Exception ex) {
             session = null;

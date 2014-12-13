@@ -6,7 +6,7 @@ import im.bci.jb3.data.Post;
 import im.bci.jb3.data.PostRepository;
 import im.bci.jb3.logic.Norloge;
 import static im.bci.jb3.logic.Norloge.parseNorloge;
-import im.bci.jb3.logic.Tribune;
+import im.bci.jb3.logic.TribuneService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -27,7 +27,7 @@ import org.springframework.web.context.request.WebRequest;
 public class LegacyRestController {
 
     @Autowired
-    private Tribune tribune;
+    private TribuneService tribune;
 
     @Autowired
     private PostRepository postPepository;

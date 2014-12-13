@@ -27,25 +27,11 @@ public class Tribune {
     @Autowired
     private FortuneRepository fortunePepository;
 
-    @Autowired
-    private Bots bots;
-
     private final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s", "u", "tt");
     private static final int MAX_POST_LENGTH = 512;
     private static final int MAX_NICKNAME_LENGTH = 32;
 
-    public void post(String nickname, String message) {
-        Post post = doPost(nickname, message);
-        if (null != post) {
-            bots.handle(post);
-        }
-    }
-
-    public void botPost(String nickname, String message) {
-        doPost(nickname, message);
-    }
-
-    private Post doPost(String nickname, String message) {
+    public Post post(String nickname, String message) {
         if (null != nickname) {
             nickname = StringUtils.abbreviate(Jsoup.clean(nickname, Whitelist.none()), MAX_NICKNAME_LENGTH);
         }

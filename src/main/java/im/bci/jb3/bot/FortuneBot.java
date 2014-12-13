@@ -26,7 +26,7 @@ public class FortuneBot implements Bot {
         try {
             if (BotUtils.isBotCall(post, NAME)) {
                 Fortune fortune = tribune.fortune(Norloge.parseNorloges(post.getMessage()));
-                tribune.botPost(NAME, new Norloge(post) + " La voilà " + host + "/fortune/" + fortune.getId());
+                tribune.post(NAME, new Norloge(post) + " La voilà " + host + "/fortune/" + fortune.getId());
             }
         } catch (Exception ex) {
             Logger.getLogger(FortuneBot.class.getName()).log(Level.SEVERE, null, ex);
