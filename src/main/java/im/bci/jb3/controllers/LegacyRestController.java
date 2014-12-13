@@ -10,9 +10,11 @@ import im.bci.jb3.logic.TribuneService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +35,10 @@ public class LegacyRestController {
     private PostRepository postPepository;
 
     @RequestMapping("/post")
-    public void post(@RequestParam(value = "nickname") String nickname, @RequestParam(value = "message") String message) {
+    public void post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestHeader(value="User-Agent", required = false) String userAgent) {
+        if(StringUtils.isBlank(nickname)) {
+            nickname = userAgent;
+        }
         tribune.post(nickname, message);
     }
     
