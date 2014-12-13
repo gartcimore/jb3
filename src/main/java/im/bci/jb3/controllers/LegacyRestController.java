@@ -39,7 +39,7 @@ public class LegacyRestController {
     
     private static final DateTimeFormatter legacyPostTimeFormatter = DateTimeFormat.forPattern("yyyyMMddHHmmss").withZoneUTC();
 
-    @RequestMapping(value = "/xml", produces = "application/xml")
+    @RequestMapping(value = "/xml", produces = { "application/xml", "text/xml" } )
     public LegacyBoard xml(WebRequest webRequest) {
         List<Post> posts = tribune.get();
         if (posts.isEmpty() || webRequest.checkNotModified(posts.get(0).getTime().getTime())) {
