@@ -4,8 +4,6 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2014.08.29 at 09:18:23 AM CEST 
 //
-
-
 package im.bci.jb3.backend.legacy;
 
 import java.util.ArrayList;
@@ -17,12 +15,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p>
+ * Java class for anonymous complex type.
+ *
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -35,8 +35,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -45,6 +45,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "board")
 public class LegacyBoard {
 
+    @XmlAttribute(name = "timezone")
+    protected String timezone;
+
     protected List<LegacyPost> post;
     @XmlAttribute(name = "site", required = true)
     @XmlSchemaType(name = "anyURI")
@@ -52,25 +55,25 @@ public class LegacyBoard {
 
     /**
      * Gets the value of the post property.
-     * 
+     *
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the post property.
-     * 
+     * This accessor method returns a reference to the live list, not a
+     * snapshot. Therefore any modification you make to the returned list will
+     * be present inside the JAXB object. This is why there is not a
+     * <CODE>set</CODE> method for the post property.
+     *
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getPost().add(newItem);
      * </pre>
-     * 
-     * 
+     *
+     *
      * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link LegacyPost }
-     * 
-     * 
+     *
+     *
      */
     public List<LegacyPost> getPost() {
         if (post == null) {
@@ -85,11 +88,9 @@ public class LegacyBoard {
 
     /**
      * Gets the value of the site property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
+     *
      */
     public String getSite() {
         return site;
@@ -97,14 +98,19 @@ public class LegacyBoard {
 
     /**
      * Sets the value of the site property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
+     *
      */
     public void setSite(String value) {
         this.site = value;
     }
 
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
 }

@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +29,9 @@ import org.springframework.web.context.request.WebRequest;
 @RequestMapping("/legacy")
 public class LegacyRestController {
 
+    @Value("${jb3.host}")
+    private String site;
+
     @Autowired
     private TribuneService tribune;
 
@@ -35,22 +39,24 @@ public class LegacyRestController {
     private PostRepository postPepository;
 
     @RequestMapping("/post")
-    public void post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestHeader(value="User-Agent", required = false) String userAgent) {
-        if(StringUtils.isBlank(nickname)) {
+    public void post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestHeader(value = "User-Agent", required = false) String userAgent) {
+        if (StringUtils.isBlank(nickname)) {
             nickname = userAgent;
         }
         tribune.post(nickname, message);
     }
-    
+
     private static final DateTimeFormatter legacyPostTimeFormatter = DateTimeFormat.forPattern("yyyyMMddHHmmss").withZoneUTC();
 
-    @RequestMapping(value = "/xml", produces = { "application/xml", "text/xml" } )
+    @RequestMapping(value = "/xml", produces = {"application/xml", "text/xml"})
     public LegacyBoard xml(WebRequest webRequest) {
         List<Post> posts = tribune.get();
         if (posts.isEmpty() || webRequest.checkNotModified(posts.get(0).getTime().getTime())) {
             return null;
         } else {
             LegacyBoard board = new LegacyBoard();
+            board.setSite(site);
+            board.setTimezone("UTC");
             List<LegacyPost> legacyPosts = new ArrayList<LegacyPost>();
             for (Post post : posts) {
                 LegacyPost legacyPost = new LegacyPost();
