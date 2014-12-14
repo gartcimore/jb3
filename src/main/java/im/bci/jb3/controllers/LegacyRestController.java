@@ -10,6 +10,8 @@ import im.bci.jb3.logic.TribuneService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -99,17 +101,23 @@ public class LegacyRestController {
                         case 14:
                             formatter = toLegacyLongNorlogeFormatter;
                             break;
-                        default:
+                        case 19:
                             formatter = toLegacyFullNorlogeFormatter;
                             break;
+                        default:
+                            formatter = null;
+                            Logger.getLogger(LegacyRestController.class.getName()).log(Level.INFO, "Strange norloge: {0}", message.substring(scanner.match().start(), scanner.match().end()));
                     }
-                    message = message.substring(0, scanner.match().start()) + formatter.print(norloge.getTime()) + message.substring(scanner.match().end());
-                } else if (null != norloge.getId()) {
-                    Post post = postPepository.findOne(norloge.getId());
-                    if (null != post) {
-                        message = message.substring(0, scanner.match().start()) + new Norloge().withTime(post.getTime()) + message.substring(scanner.match().end());
+                    if (null != formatter) {
+                        message = message.substring(0, scanner.match().start()) + formatter.print(norloge.getTime()) + message.substring(scanner.match().end());
                     }
-                }
+                } /*else if (null != norloge.getId()) {
+                 Post post = postPepository.findOne(norloge.getId());
+                 if (null != post) {
+                 message = message.substring(0, scanner.match().start()) + new Norloge().withTime(post.getTime()) + message.substring(scanner.match().end());
+                 }
+                 }*/
+
             }
         }
         return message;
@@ -139,11 +147,17 @@ public class LegacyRestController {
                         case 14:
                             formatter = fromLegacyLongNorlogeFormatter;
                             break;
-                        default:
+                        case 19:
                             formatter = fromLegacyFullNorlogeFormatter;
                             break;
+                        default:
+                            formatter = null;
+                            Logger.getLogger(LegacyRestController.class.getName()).log(Level.INFO, "Strange norloge: {0}", message.substring(scanner.match().start(), scanner.match().end()));
+                            break;
                     }
-                    message = message.substring(0, scanner.match().start()) + formatter.print(norloge.getTime().minusHours(1)) + message.substring(scanner.match().end());
+                    if (null != formatter) {
+                        message = message.substring(0, scanner.match().start()) + formatter.print(norloge.getTime().minusHours(1)) + message.substring(scanner.match().end());
+                    }
                 }
             }
         }
