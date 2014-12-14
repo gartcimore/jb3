@@ -5,14 +5,12 @@ import im.bci.jb3.backend.legacy.LegacyPost;
 import im.bci.jb3.data.Post;
 import im.bci.jb3.data.PostRepository;
 import im.bci.jb3.logic.Norloge;
-import static im.bci.jb3.logic.Norloge.parseNorloge;
 import im.bci.jb3.logic.TribuneService;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -83,85 +81,76 @@ public class LegacyRestController {
     private static final DateTimeFormatter toLegacyShortNorlogeFormatter = DateTimeFormat.forPattern("HH:mm").withZone(DateTimeZone.forID(legacyTimezone));
 
     private String convertToLegacyNorloges(String message) {
-        Scanner scanner = new Scanner(message);
-        while (scanner.hasNext()) {
-            String item = scanner.next();
-            Norloge norloge = parseNorloge(item);
-            if (null != norloge && null == norloge.getBouchot()) {
+        final StringBuffer sb = new StringBuffer();
+        Norloge.forEachNorloge(message, new Norloge.NorlogeProcessor() {
+
+            @Override
+            public void process(Norloge norloge, Matcher matcher) {
                 if (null != norloge.getTime()) {
-                    int size = scanner.match().end() - scanner.match().start();
-                    DateTimeFormatter formatter;
-                    switch (size) {
-                        case 5:
-                            formatter = toLegacyShortNorlogeFormatter;
-                            break;
-                        case 8:
-                            formatter = toLegacyNormalNorlogeFormatter;
-                            break;
-                        case 14:
-                            formatter = toLegacyLongNorlogeFormatter;
-                            break;
-                        case 19:
-                            formatter = toLegacyFullNorlogeFormatter;
-                            break;
-                        default:
-                            formatter = null;
-                            Logger.getLogger(LegacyRestController.class.getName()).log(Level.INFO, "Strange norloge: {0}", message.substring(scanner.match().start(), scanner.match().end()));
+                    if (null != matcher.group("year")) {
+                        matcher.appendReplacement(sb, toLegacyFullNorlogeFormatter.print(norloge.getTime()));
+                    } else if (null != matcher.group("date")) {
+                        matcher.appendReplacement(sb, toLegacyLongNorlogeFormatter.print(norloge.getTime()));
+                    } else if (null == matcher.group("seconds")) {
+                        matcher.appendReplacement(sb, toLegacyShortNorlogeFormatter.print(norloge.getTime()));
+                    } else {
+                        matcher.appendReplacement(sb, toLegacyNormalNorlogeFormatter.print(norloge.getTime()));
                     }
-                    if (null != formatter) {
-                        message = message.substring(0, scanner.match().start()) + formatter.print(norloge.getTime()) + message.substring(scanner.match().end());
+                }
+                else if(null != norloge.getId()) {
+                    Post post = postPepository.findOne(norloge.getId());
+                    if(null != post) {
+                        matcher.appendReplacement(sb, toLegacyFullNorlogeFormatter.print(new DateTime(post.getTime())));
+                    } else {
+                        matcher.appendReplacement(sb, norloge.toString());
                     }
-                } /*else if (null != norloge.getId()) {
-                 Post post = postPepository.findOne(norloge.getId());
-                 if (null != post) {
-                 message = message.substring(0, scanner.match().start()) + new Norloge().withTime(post.getTime()) + message.substring(scanner.match().end());
-                 }
-                 }*/
-
+                }
+                else {
+                    matcher.appendReplacement(sb, norloge.toString());
+                }
             }
-        }
-        return message;
-    }
 
+            @Override
+            public void end(Matcher matcher) {
+                matcher.appendTail(sb);
+            }
+        });
+        return sb.toString();
+    }
+    
     private static final DateTimeFormatter fromLegacyFullNorlogeFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZoneUTC();
     private static final DateTimeFormatter fromLegacyLongNorlogeFormatter = DateTimeFormat.forPattern("MM/dd#HH:mm:ss").withZoneUTC();
     private static final DateTimeFormatter fromLegacyNormalNorlogeFormatter = DateTimeFormat.forPattern("HH:mm:ss").withZoneUTC();
     private static final DateTimeFormatter fromLegacyShortNorlogeFormatter = DateTimeFormat.forPattern("HH:mm").withZoneUTC();
 
     private String convertFromLegacyNorloges(String message) {
-        Scanner scanner = new Scanner(message);
-        while (scanner.hasNext()) {
-            String item = scanner.next();
-            Norloge norloge = parseNorloge(item);
-            if (null != norloge && null == norloge.getBouchot()) {
+        final StringBuffer sb = new StringBuffer();
+        Norloge.forEachNorloge(message, new Norloge.NorlogeProcessor() {
+
+            @Override
+            public void process(Norloge norloge, Matcher matcher) {
                 if (null != norloge.getTime()) {
-                    int size = scanner.match().end() - scanner.match().start();
-                    DateTimeFormatter formatter;
-                    switch (size) {
-                        case 5:
-                            formatter = fromLegacyShortNorlogeFormatter;
-                            break;
-                        case 8:
-                            formatter = fromLegacyNormalNorlogeFormatter;
-                            break;
-                        case 14:
-                            formatter = fromLegacyLongNorlogeFormatter;
-                            break;
-                        case 19:
-                            formatter = fromLegacyFullNorlogeFormatter;
-                            break;
-                        default:
-                            formatter = null;
-                            Logger.getLogger(LegacyRestController.class.getName()).log(Level.INFO, "Strange norloge: {0}", message.substring(scanner.match().start(), scanner.match().end()));
-                            break;
-                    }
-                    if (null != formatter) {
-                        message = message.substring(0, scanner.match().start()) + formatter.print(norloge.getTime().minusHours(1)) + message.substring(scanner.match().end());
+                    if (null != matcher.group("year")) {
+                        matcher.appendReplacement(sb, fromLegacyFullNorlogeFormatter.print(norloge.getTime()));
+                    } else if (null != matcher.group("date")) {
+                        matcher.appendReplacement(sb, fromLegacyLongNorlogeFormatter.print(norloge.getTime()));
+                    } else if (null == matcher.group("seconds")) {
+                        matcher.appendReplacement(sb, fromLegacyShortNorlogeFormatter.print(norloge.getTime()));
+                    } else {
+                        matcher.appendReplacement(sb, fromLegacyNormalNorlogeFormatter.print(norloge.getTime()));
                     }
                 }
+                else {
+                    matcher.appendReplacement(sb, norloge.toString());
+                }
             }
-        }
-        return message;
+
+            @Override
+            public void end(Matcher matcher) {
+                matcher.appendTail(sb);
+            }
+        });
+        return sb.toString();
     }
 
 }

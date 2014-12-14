@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
@@ -100,55 +99,52 @@ public class Norloge {
 
     private static final DateTimeFormatter norlogePrintFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZoneUTC();
     private static final List<DateTimeFormatter> norlogeParseFormatters = Arrays.asList(DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZoneUTC(), DateTimeFormat.forPattern("MM/dd#HH:mm:ss").withZoneUTC(), DateTimeFormat.forPattern("HH:mm:ss").withZoneUTC(), DateTimeFormat.forPattern("HH:mm").withZoneUTC());
-    private static final Pattern postIdBasedPattern = Pattern.compile("#(?<id>\\w*)(@(?<bouchot>[\\w.]*))?");
-    private static final Pattern timeBasedPattern = Pattern.compile("(?<time>.*)(@(?<bouchot>[\\w.]*))?");
+    private static final Pattern norlogesPattern = Pattern.compile("((#(?<id>\\w+))|(?<time>(?<date>((?<year>\\d\\d\\d\\d)/)?(?:1[0-2]|0[1-9])/(?:3[0-1]|[1-2][0-9]|0[1-9])#)?((?:2[0-3]|[0-1][0-9])):([0-5][0-9])(:(?<seconds>[0-5][0-9]))?)(?<exp>[¹²³]|[:\\^][1-9]|[:\\^][1-9][0-9])?)(@(?<bouchot>[\\w.]+))?");
 
     public static List<Norloge> parseNorloges(String message) {
-        List<Norloge> result = new ArrayList<Norloge>();
-        Scanner scanner = new Scanner(message);
-        while (scanner.hasNext()) {
-            String item = scanner.next();
-            Norloge norloge = parseNorloge(item);
-            if (null != norloge) {
+        final List<Norloge> result = new ArrayList<Norloge>();
+        forEachNorloge(message, new NorlogeProcessor() {
+
+            @Override
+            public void process(Norloge norloge, Matcher matcher) {
                 result.add(norloge);
             }
-        }
+
+            @Override
+            public void end(Matcher matcher) {
+            }
+        });
         return result;
     }
 
-    public static Norloge parseNorloge(String item) {
-        Norloge norloge;
-        if (item.startsWith("#")) {
-            norloge = parsePostIdBasedNorloge(item);
-        } else {
-            norloge = parseTimeBasedNorloge(item);
-        }
-        return norloge;
+    public interface NorlogeProcessor {
+
+        void process(Norloge norloge, Matcher matcher);
+        void end(Matcher matcher);
     }
 
-    private static Norloge parsePostIdBasedNorloge(String item) {
-        Matcher matcher = postIdBasedPattern.matcher(item);
-        if (matcher.find()) {
-            Norloge norloge = new Norloge();
-            norloge.setId(matcher.group("id"));
-            norloge.setBouchot(matcher.group("bouchot"));
-            return norloge;
-        }
-        return null;
-    }
-
-    private static Norloge parseTimeBasedNorloge(String item) {
-        Matcher matcher = timeBasedPattern.matcher(item);
-        if (matcher.find()) {
-            DateTime norlogeTime = parseNorlogeTime(matcher.group("time"));
-            if (null != norlogeTime) {
-                Norloge norloge = new Norloge();
-                norloge.setTime(norlogeTime);
-                norloge.setBouchot(matcher.group("bouchot"));
-                return norloge;
+    public static void forEachNorloge(String message, NorlogeProcessor processor) {
+        Matcher matcher = norlogesPattern.matcher(message);
+        while (matcher.find()) {
+            String id = matcher.group("id");
+            String bouchot = matcher.group("bouchot");
+            Norloge norloge = null;
+            if (null != id) {
+                norloge = new Norloge().withId(id).withBouchot(bouchot);
+            } else {
+                final String time = matcher.group("time");
+                if (null != time) {
+                    DateTime norlogeTime = parseNorlogeTime(time);
+                    if (null != norlogeTime) {
+                        norloge = new Norloge().withTime(norlogeTime).withBouchot(bouchot);
+                    }
+                }
+            }
+            if (null != norloge) {
+                processor.process(norloge, matcher);
             }
         }
-        return null;
+        processor.end(matcher);
     }
 
     private static DateTime parseNorlogeTime(String item) {
