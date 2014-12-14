@@ -15,6 +15,8 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -155,14 +157,16 @@ public class LegacyRestController {
 
     private static final Pattern urlPattern = Pattern.compile("(https?|ftp|gopher)://[^\\s]+");
 
+    private final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s", "u", "tt", "a").addAttributes("a", "href", "rel", "target");
+
     private String convertUrls(String message) {
         Matcher matcher = urlPattern.matcher(message);
         final StringBuffer sb = new StringBuffer();
-        while(matcher.find()) {
-            matcher.appendReplacement(sb,"<a href=\"$0\" rel=\"nofollow\" target=\"_blank\">[url]</a>");
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, "<a href=\"$0\" rel=\"nofollow\" target=\"_blank\">[url]</a>");
         }
         matcher.appendTail(sb);
-        return sb.toString();
+        return Jsoup.clean(sb.toString(), messageWhitelist);
     }
 
 }
