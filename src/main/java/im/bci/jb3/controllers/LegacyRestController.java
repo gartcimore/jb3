@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +44,11 @@ public class LegacyRestController {
         if (StringUtils.isBlank(nickname)) {
             nickname = userAgent;
         }
-        tribune.post(nickname, message);
+        tribune.post(nickname, convertFromLegacyNorloges(message));
     }
 
-    private static final DateTimeFormatter legacyPostTimeFormatter = DateTimeFormat.forPattern("yyyyMMddHHmmss").withZoneUTC();
+    private static final String legacyTimezone = "Europe/Paris";
+    private static final DateTimeFormatter legacyPostTimeFormatter = DateTimeFormat.forPattern("yyyyMMddHHmmss").withZone(DateTimeZone.forID(legacyTimezone));
 
     @RequestMapping(value = "/xml", produces = {"application/xml", "text/xml"})
     public LegacyBoard xml(WebRequest webRequest) {
@@ -56,7 +58,7 @@ public class LegacyRestController {
         } else {
             LegacyBoard board = new LegacyBoard();
             board.setSite(site);
-            board.setTimezone("UTC");
+            board.setTimezone(legacyTimezone);
             List<LegacyPost> legacyPosts = new ArrayList<LegacyPost>();
             for (Post post : posts) {
                 LegacyPost legacyPost = new LegacyPost();
@@ -64,7 +66,7 @@ public class LegacyRestController {
                 legacyPost.setId(time);
                 legacyPost.setTime(legacyPostTimeFormatter.print(time));
                 legacyPost.setInfo(post.getNickname());
-                legacyPost.setMessage(convertNonLegacyNorloges(post.getMessage()));
+                legacyPost.setMessage(convertToLegacyNorloges(post.getMessage()));
                 legacyPost.setLogin("");
                 legacyPosts.add(legacyPost);
             }
@@ -73,13 +75,36 @@ public class LegacyRestController {
         }
     }
 
-    private String convertNonLegacyNorloges(String message) {
+    private static final DateTimeFormatter toLegacyFullNorlogeFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZone(DateTimeZone.forID(legacyTimezone));
+    private static final DateTimeFormatter toLegacyLongNorlogeFormatter = DateTimeFormat.forPattern("MM/dd#HH:mm:ss").withZone(DateTimeZone.forID(legacyTimezone));
+    private static final DateTimeFormatter toLegacyNormalNorlogeFormatter = DateTimeFormat.forPattern("HH:mm:ss").withZone(DateTimeZone.forID(legacyTimezone));
+    private static final DateTimeFormatter toLegacyShortNorlogeFormatter = DateTimeFormat.forPattern("HH:mm").withZone(DateTimeZone.forID(legacyTimezone));
+
+    private String convertToLegacyNorloges(String message) {
         Scanner scanner = new Scanner(message);
         while (scanner.hasNext()) {
             String item = scanner.next();
             Norloge norloge = parseNorloge(item);
-            if (null != norloge) {
-                if (null == norloge.getTime() && null != norloge.getId() && null == norloge.getBouchot()) {
+            if (null != norloge && null == norloge.getBouchot()) {
+                if (null != norloge.getTime()) {
+                    int size = scanner.match().end() - scanner.match().start();
+                    DateTimeFormatter formatter;
+                    switch (size) {
+                        case 5:
+                            formatter = toLegacyShortNorlogeFormatter;
+                            break;
+                        case 8:
+                            formatter = toLegacyNormalNorlogeFormatter;
+                            break;
+                        case 14:
+                            formatter = toLegacyLongNorlogeFormatter;
+                            break;
+                        default:
+                            formatter = toLegacyFullNorlogeFormatter;
+                            break;
+                    }
+                    message = message.substring(0, scanner.match().start()) + formatter.print(norloge.getTime()) + message.substring(scanner.match().end());
+                } else if (null != norloge.getId()) {
                     Post post = postPepository.findOne(norloge.getId());
                     if (null != post) {
                         message = message.substring(0, scanner.match().start()) + new Norloge().withTime(post.getTime()) + message.substring(scanner.match().end());
@@ -89,4 +114,40 @@ public class LegacyRestController {
         }
         return message;
     }
+
+    private static final DateTimeFormatter fromLegacyFullNorlogeFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZoneUTC();
+    private static final DateTimeFormatter fromLegacyLongNorlogeFormatter = DateTimeFormat.forPattern("MM/dd#HH:mm:ss").withZoneUTC();
+    private static final DateTimeFormatter fromLegacyNormalNorlogeFormatter = DateTimeFormat.forPattern("HH:mm:ss").withZoneUTC();
+    private static final DateTimeFormatter fromLegacyShortNorlogeFormatter = DateTimeFormat.forPattern("HH:mm").withZoneUTC();
+
+    private String convertFromLegacyNorloges(String message) {
+        Scanner scanner = new Scanner(message);
+        while (scanner.hasNext()) {
+            String item = scanner.next();
+            Norloge norloge = parseNorloge(item);
+            if (null != norloge && null == norloge.getBouchot()) {
+                if (null != norloge.getTime()) {
+                    int size = scanner.match().end() - scanner.match().start();
+                    DateTimeFormatter formatter;
+                    switch (size) {
+                        case 5:
+                            formatter = fromLegacyShortNorlogeFormatter;
+                            break;
+                        case 8:
+                            formatter = fromLegacyNormalNorlogeFormatter;
+                            break;
+                        case 14:
+                            formatter = fromLegacyLongNorlogeFormatter;
+                            break;
+                        default:
+                            formatter = fromLegacyFullNorlogeFormatter;
+                            break;
+                    }
+                    message = message.substring(0, scanner.match().start()) + formatter.print(norloge.getTime().minusHours(1)) + message.substring(scanner.match().end());
+                }
+            }
+        }
+        return message;
+    }
+
 }
