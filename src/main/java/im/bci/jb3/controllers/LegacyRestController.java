@@ -129,15 +129,17 @@ public class LegacyRestController {
 
             @Override
             public void process(Norloge norloge, Matcher matcher) {
-                if (null != norloge.getTime()) {
+                DateTime time = norloge.getTime();
+                if (null != time) {
+                    time = time.minusHours(1);
                     if (null != matcher.group("year")) {
-                        matcher.appendReplacement(sb, fromLegacyFullNorlogeFormatter.print(norloge.getTime()));
+                        matcher.appendReplacement(sb, fromLegacyFullNorlogeFormatter.print(time));
                     } else if (null != matcher.group("date")) {
-                        matcher.appendReplacement(sb, fromLegacyLongNorlogeFormatter.print(norloge.getTime()));
+                        matcher.appendReplacement(sb, fromLegacyLongNorlogeFormatter.print(time));
                     } else if (null == matcher.group("seconds")) {
-                        matcher.appendReplacement(sb, fromLegacyShortNorlogeFormatter.print(norloge.getTime()));
+                        matcher.appendReplacement(sb, fromLegacyShortNorlogeFormatter.print(time));
                     } else {
-                        matcher.appendReplacement(sb, fromLegacyNormalNorlogeFormatter.print(norloge.getTime()));
+                        matcher.appendReplacement(sb, fromLegacyNormalNorlogeFormatter.print(time));
                     }
                 }
                 else {
