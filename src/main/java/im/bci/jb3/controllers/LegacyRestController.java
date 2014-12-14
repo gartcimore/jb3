@@ -9,6 +9,7 @@ import im.bci.jb3.logic.TribuneService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -66,7 +67,7 @@ public class LegacyRestController {
                 legacyPost.setId(time);
                 legacyPost.setTime(legacyPostTimeFormatter.print(time));
                 legacyPost.setInfo(post.getNickname());
-                legacyPost.setMessage(convertToLegacyNorloges(post.getMessage()));
+                legacyPost.setMessage(convertToLegacyNorloges(convertUrls(post.getMessage())));
                 legacyPost.setLogin("");
                 legacyPosts.add(legacyPost);
             }
@@ -96,16 +97,14 @@ public class LegacyRestController {
                     } else {
                         matcher.appendReplacement(sb, toLegacyNormalNorlogeFormatter.print(norloge.getTime()));
                     }
-                }
-                else if(null != norloge.getId()) {
+                } else if (null != norloge.getId()) {
                     Post post = postPepository.findOne(norloge.getId());
-                    if(null != post) {
+                    if (null != post) {
                         matcher.appendReplacement(sb, toLegacyFullNorlogeFormatter.print(new DateTime(post.getTime())));
                     } else {
                         matcher.appendReplacement(sb, norloge.toString());
                     }
-                }
-                else {
+                } else {
                     matcher.appendReplacement(sb, norloge.toString());
                 }
             }
@@ -117,7 +116,7 @@ public class LegacyRestController {
         });
         return sb.toString();
     }
-    
+
     private static final DateTimeFormatter fromLegacyFullNorlogeFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZoneUTC();
     private static final DateTimeFormatter fromLegacyLongNorlogeFormatter = DateTimeFormat.forPattern("MM/dd#HH:mm:ss").withZoneUTC();
     private static final DateTimeFormatter fromLegacyNormalNorlogeFormatter = DateTimeFormat.forPattern("HH:mm:ss").withZoneUTC();
@@ -141,8 +140,7 @@ public class LegacyRestController {
                     } else {
                         matcher.appendReplacement(sb, fromLegacyNormalNorlogeFormatter.print(time));
                     }
-                }
-                else {
+                } else {
                     matcher.appendReplacement(sb, norloge.toString());
                 }
             }
@@ -152,6 +150,18 @@ public class LegacyRestController {
                 matcher.appendTail(sb);
             }
         });
+        return sb.toString();
+    }
+
+    private static final Pattern urlPattern = Pattern.compile("(https?|ftp|gopher)://[^\\s]+");
+
+    private String convertUrls(String message) {
+        Matcher matcher = urlPattern.matcher(message);
+        final StringBuffer sb = new StringBuffer();
+        while(matcher.find()) {
+            matcher.appendReplacement(sb,"<a href=\"$0\" rel=\"nofollow\" target=\"_blank\">[url]</a>");
+        }
+        matcher.appendTail(sb);
         return sb.toString();
     }
 
