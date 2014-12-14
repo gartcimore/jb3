@@ -54,9 +54,14 @@ public class Tribune {
     }
 
     public Fortune fortune(List<Norloge> norloges) {
-        Fortune f = new Fortune();
-        f.setPosts(getForNorloges(norloges));
-        return fortunePepository.save(f);
+        final List<Post> posts = getForNorloges(norloges);
+        if (!posts.isEmpty()) {
+            Fortune f = new Fortune();
+            f.setPosts(posts);
+            return fortunePepository.save(f);
+        } else {
+            return null;
+        }
     }
 
     private List<Post> getForNorloges(List<Norloge> norloges) {

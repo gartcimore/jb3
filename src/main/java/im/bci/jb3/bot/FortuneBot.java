@@ -15,7 +15,7 @@ public class FortuneBot implements Bot {
 
     @Autowired
     private Tribune tribune;
-    
+
     @Value("${jb3.host}")
     private String host;
 
@@ -26,7 +26,9 @@ public class FortuneBot implements Bot {
         try {
             if (BotUtils.isBotCall(post, NAME)) {
                 Fortune fortune = tribune.fortune(Norloge.parseNorloges(post.getMessage()));
-                tribune.post(NAME, new Norloge(post) + " La voilà " + host + "/fortune/" + fortune.getId());
+                if (null != fortune) {
+                    tribune.post(NAME, new Norloge(post) + " La voilà " + host + "/fortune/" + fortune.getId());
+                }
             }
         } catch (Exception ex) {
             Logger.getLogger(FortuneBot.class.getName()).log(Level.SEVERE, null, ex);
