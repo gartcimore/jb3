@@ -64,6 +64,38 @@ public class Tribune {
         }
     }
 
+    public boolean isBotCall(Post post, String botName) {
+        if (botName.equals(post.getNickname())) {
+            return false;
+        }
+        String message = post.getMessage();
+        if(message.contains(bigornoCall(botName)) || message.contains(ircCall(botName))) {
+            return true;
+        }
+        for(Norloge norloge : Norloge.parseNorloges(message)) {
+            for(Post referencedPost : getForNorloge(norloge)) {
+                if(botName.equals(referencedPost.getNickname())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public String messageWithoutBotCall(Post post, String botName) {
+        String message = post.getMessage();
+        message = StringUtils.removeStart(message, bigornoCall(botName));
+        return message;
+    }
+
+    private static String bigornoCall(String botName) {
+        return Jsoup.clean(botName + "<", Whitelist.none());
+    }
+
+    private static String ircCall(String botName) {
+        return Jsoup.clean("/" + botName, Whitelist.none());
+    }
+
     private List<Post> getForNorloges(List<Norloge> norloges) {
         List<Post> result = new ArrayList<Post>();
         for (Norloge norloge : norloges) {

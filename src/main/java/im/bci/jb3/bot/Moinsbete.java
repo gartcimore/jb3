@@ -22,7 +22,7 @@ public class Moinsbete implements Bot {
     @Override
     public void handle(Post post) {
         try {
-            if (BotUtils.isBotCall(post, NAME)) {
+            if (tribune.isBotCall(post, NAME)) {
                 Document doc = Jsoup.connect("http://secouchermoinsbete.fr/random").get();
                 Element anecdote = doc.select(".anecdote-content-wrapper .summary a").first();
                 anecdote.select(".read-more").remove();

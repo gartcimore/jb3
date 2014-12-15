@@ -24,7 +24,7 @@ public class FortuneBot implements Bot {
     @Override
     public void handle(Post post) {
         try {
-            if (BotUtils.isBotCall(post, NAME)) {
+            if (tribune.isBotCall(post, NAME)) {
                 Fortune fortune = tribune.fortune(Norloge.parseNorloges(post.getMessage()));
                 if (null != fortune) {
                     tribune.post(NAME, new Norloge(post) + " La voilà " + host + "/fortune/" + fortune.getId());

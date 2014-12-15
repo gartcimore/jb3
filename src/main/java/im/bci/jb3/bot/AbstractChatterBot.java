@@ -30,12 +30,12 @@ public abstract class AbstractChatterBot implements Bot {
     @Override
     public void handle(Post post) {
         try {
-            if (BotUtils.isBotCall(post, name)) {
+            if (tribune.isBotCall(post, name)) {
                 if (null == session) {
                     ChatterBot bot = factory.create(type);
                     session = bot.createSession();
                 }
-                final String message = BotUtils.messageWithoutBotCall(post, name);
+                final String message = tribune.messageWithoutBotCall(post, name);
                 tribune.post(name, new Norloge(post) + " " + session.think(message));
             }
         } catch (Exception ex) {

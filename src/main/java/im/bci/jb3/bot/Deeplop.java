@@ -24,13 +24,13 @@ public class Deeplop implements Bot {
     @Override
     public void handle(Post post) {
         try {
-            if (BotUtils.isBotCall(post, NAME)) {
+            if (tribune.isBotCall(post, NAME)) {
                 URL obj = new URL("http://deeplop.ssz.fr");
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                 con.setRequestMethod("POST");
                 con.setDoOutput(true);
                 DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-                wr.writeUTF(BotUtils.messageWithoutBotCall(post, NAME));
+                wr.writeUTF(tribune.messageWithoutBotCall(post, NAME));
                 wr.flush();
                 wr.close();
                 int responseCode = con.getResponseCode();
