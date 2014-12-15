@@ -9,13 +9,20 @@
 .jb3-post-time {
     display : table-cell;
     padding-right: 10px;
+    color: #5F7FBF;
+    font-weight: bold;
 }
 
 .jb3-post-nickname {
     display : table-cell;
     padding-right: 10px;
+    color: #833;
 }
 
 .jb3-post-message {
     display : table-cell;
+}
+
+#jb3-controls-message {
+    width: 50%;
 }

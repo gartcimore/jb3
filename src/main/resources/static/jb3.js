@@ -10,8 +10,16 @@ jb3 = {
             }
         });
 
-        $('#jb3-controls-refresh').click(function (e) {
+        $('#jb3-controls-refresh').click(function () {
             self.refreshMessages();
+        });
+        
+        $('#jb3-posts').on('click', '.jb3-post-time', function (e) {
+            var postId = $(e.target).parent().attr('id');
+            if(postId) {
+                controlsMessage.val(controlsMessage.val() + '#' + postId + ' ');
+                controlsMessage.focus();
+            }
         });
     },
     postMessage: function (message) {
