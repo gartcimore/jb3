@@ -72,9 +72,13 @@ public class Tribune {
         if(message.contains(bigornoCall(botName)) || message.contains(ircCall(botName))) {
             return true;
         }
-        for(Norloge norloge : Norloge.parseNorloges(message)) {
-            for(Post referencedPost : getForNorloge(norloge)) {
-                if(botName.equals(referencedPost.getNickname())) {
+        return false;
+    }
+
+    public boolean isReplyToBot(Post post, String botName) {
+        for (Norloge norloge : Norloge.parseNorloges(post.getMessage())) {
+            for (Post referencedPost : getForNorloge(norloge)) {
+                if (botName.equals(referencedPost.getNickname())) {
                     return true;
                 }
             }

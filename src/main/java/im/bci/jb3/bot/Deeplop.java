@@ -24,7 +24,7 @@ public class Deeplop implements Bot {
     @Override
     public void handle(Post post) {
         try {
-            if (tribune.isBotCall(post, NAME)) {
+            if (tribune.isBotCall(post, NAME) || tribune.isReplyToBot(post, NAME)) {
                 URL obj = new URL("http://deeplop.ssz.fr");
                 HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                 con.setRequestMethod("POST");
