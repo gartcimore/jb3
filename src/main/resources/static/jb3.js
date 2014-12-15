@@ -3,15 +3,12 @@ jb3 = {
         var self = this;
 
         var controlsMessage = $('#jb3-controls-message');
+        var controlsNickname = $('#jb3-controls-nickname');
         controlsMessage.bind('keypress', function (e) {
             if (e.keyCode === 13) {
-                self.postMessage(controlsMessage.val());
+                self.postMessage(controlsNickname.val(), controlsMessage.val());
                 controlsMessage.val('');
             }
-        });
-
-        $('#jb3-controls-refresh').click(function () {
-            self.refreshMessages();
         });
         
         $('#jb3-posts').on('click', '.jb3-post-time', function (e) {
@@ -21,15 +18,21 @@ jb3 = {
                 controlsMessage.focus();
             }
         });
+        
+        self.refreshMessages(30000);
     },
-    postMessage: function (message) {
+    postMessage: function (nickname, message) {
+        var self = this;
         $.ajax({
             type: "POST",
             url: "/api/post",
-            data: {message: message}
+            data: {message: message, nickname: nickname},
+            success: function() {
+                self.refreshMessages();
+            }
         });
     },
-    refreshMessages: function () {
+    refreshMessages: function (pollInterval) {
         var self = this;
         $.ajax({
             dataType: "json",
@@ -37,7 +40,15 @@ jb3 = {
             url: "/api/get",
             success: function (data) {
                 self.onNewMessages(data);
-            }
+            },
+            complete: function() {
+                if(pollInterval) {
+                    setTimeout(function() {
+                        self.refreshMessages(pollInterval);
+                    }, pollInterval );
+                }
+            },
+            timeout: 15000
         });
     },
     onNewMessages: function (data) {
@@ -47,6 +58,8 @@ jb3 = {
         }
         );
         self.sortMessages();
+        var postContainer = $('#jb3-posts-container');
+        postContainer.scrollTop(postContainer.prop("scrollHeight"));
     },
     onMessage: function (message) {
         var messagesContainer = $('#jb3-posts');
