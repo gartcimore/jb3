@@ -26,7 +26,7 @@ public class Moinsbete implements Bot {
                 Document doc = Jsoup.connect("http://secouchermoinsbete.fr/random").get();
                 Element anecdote = doc.select(".anecdote-content-wrapper .summary a").first();
                 anecdote.select(".read-more").remove();
-                String message = new Norloge(post) + " " + anecdote.text();
+                String message = Norloge.format(post) + " " + anecdote.text();
                 tribune.post(NAME, message);
             }
         } catch (Exception ex) {

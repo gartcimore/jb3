@@ -39,7 +39,7 @@ public class Deeplop implements Bot {
                             new InputStreamReader(con.getInputStream()));
                     String inputLine;
                     StringBuilder response = new StringBuilder();
-                    response.append(new Norloge(post));
+                    response.append(Norloge.format(post));
                     response.append(' ');
                     boolean hasContent = false;
                     while ((inputLine = in.readLine()) != null) {

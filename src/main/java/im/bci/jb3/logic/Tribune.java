@@ -69,10 +69,7 @@ public class Tribune {
             return false;
         }
         String message = post.getMessage();
-        if(message.contains(bigornoCall(botName)) || message.contains(ircCall(botName))) {
-            return true;
-        }
-        return false;
+        return message.contains(bigornoCall(botName)) || message.contains(ircCall(botName));
     }
 
     public boolean isReplyToBot(Post post, String botName) {

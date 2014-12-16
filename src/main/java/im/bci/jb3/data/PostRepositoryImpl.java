@@ -4,7 +4,6 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -33,6 +32,13 @@ public class PostRepositoryImpl implements PostRepository {
     public Post findOne(String id) {
         return mongoTemplate.findById(id, Post.class, COLLECTION_NAME);
     }
+
     private static final String COLLECTION_NAME = "post";
+
+    @Override
+    public Post findOne(DateTime start, DateTime end) {
+        Query query = new Query().addCriteria(Criteria.where("time").gte(start.toDate()).lt(end.toDate())).with(new PageRequest(0, 1000, Sort.Direction.DESC, "time"));
+        return mongoTemplate.findOne(query, Post.class, COLLECTION_NAME);
+    }
 
 }

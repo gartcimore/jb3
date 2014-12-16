@@ -120,6 +120,7 @@ public class Norloge {
     public interface NorlogeProcessor {
 
         void process(Norloge norloge, Matcher matcher);
+
         void end(Matcher matcher);
     }
 
@@ -170,6 +171,10 @@ public class Norloge {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static String format(Post post) {
+        return '#' + post.getId();
     }
 
     @Override

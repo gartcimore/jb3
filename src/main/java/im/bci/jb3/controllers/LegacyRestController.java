@@ -7,12 +7,15 @@ import im.bci.jb3.data.PostRepository;
 import im.bci.jb3.logic.Norloge;
 import im.bci.jb3.logic.TribuneService;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
+import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.jsoup.Jsoup;
@@ -50,8 +53,9 @@ public class LegacyRestController {
         tribune.post(nickname, convertFromLegacyNorloges(message));
     }
 
-    private static final String legacyTimezone = "Europe/Paris";
-    private static final DateTimeFormatter legacyPostTimeFormatter = DateTimeFormat.forPattern("yyyyMMddHHmmss").withZone(DateTimeZone.forID(legacyTimezone));
+    private static final String legacyTimezoneId = "Europe/Paris";
+    private static final DateTimeZone legacyTimeZone = DateTimeZone.forID(legacyTimezoneId);
+    private static final DateTimeFormatter legacyPostTimeFormatter = DateTimeFormat.forPattern("yyyyMMddHHmmss").withZone(legacyTimeZone);
 
     @RequestMapping(value = "/xml", produces = {"application/xml", "text/xml"})
     public LegacyBoard xml(WebRequest webRequest) {
@@ -61,7 +65,7 @@ public class LegacyRestController {
         } else {
             LegacyBoard board = new LegacyBoard();
             board.setSite(site);
-            board.setTimezone(legacyTimezone);
+            board.setTimezone(legacyTimezoneId);
             List<LegacyPost> legacyPosts = new ArrayList<LegacyPost>();
             for (Post post : posts) {
                 LegacyPost legacyPost = new LegacyPost();
@@ -69,7 +73,7 @@ public class LegacyRestController {
                 legacyPost.setId(time);
                 legacyPost.setTime(legacyPostTimeFormatter.print(time));
                 legacyPost.setInfo(post.getNickname());
-                legacyPost.setMessage(convertToLegacyNorloges(convertUrls(post.getMessage())));
+                legacyPost.setMessage(convertToLegacyNorloges(convertUrls(post.getMessage()), post.getTime()));
                 legacyPost.setLogin("");
                 legacyPosts.add(legacyPost);
             }
@@ -78,51 +82,52 @@ public class LegacyRestController {
         }
     }
 
-    private static final DateTimeFormatter toLegacyFullNorlogeFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZone(DateTimeZone.forID(legacyTimezone));
-    private static final DateTimeFormatter toLegacyLongNorlogeFormatter = DateTimeFormat.forPattern("MM/dd#HH:mm:ss").withZone(DateTimeZone.forID(legacyTimezone));
-    private static final DateTimeFormatter toLegacyNormalNorlogeFormatter = DateTimeFormat.forPattern("HH:mm:ss").withZone(DateTimeZone.forID(legacyTimezone));
-    private static final DateTimeFormatter toLegacyShortNorlogeFormatter = DateTimeFormat.forPattern("HH:mm").withZone(DateTimeZone.forID(legacyTimezone));
+    private static final DateTimeFormatter toLegacyFullNorlogeFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZone(legacyTimeZone);
+    private static final DateTimeFormatter toLegacyLongNorlogeFormatter = DateTimeFormat.forPattern("MM/dd#HH:mm:ss").withZone(legacyTimeZone);
+    private static final DateTimeFormatter toLegacyNormalNorlogeFormatter = DateTimeFormat.forPattern("HH:mm:ss").withZone(legacyTimeZone);
+    private static final DateTimeFormatter toLegacyShortNorlogeFormatter = DateTimeFormat.forPattern("HH:mm").withZone(legacyTimeZone);
 
-    private String convertToLegacyNorloges(String message) {
+    private String convertToLegacyNorloges(String message, Date messageDate) {
+        final DateTime postTime = new DateTime(messageDate);
         final StringBuffer sb = new StringBuffer();
         Norloge.forEachNorloge(message, new Norloge.NorlogeProcessor() {
 
             @Override
             public void process(Norloge norloge, Matcher matcher) {
-                if (null != norloge.getTime()) {
-                    if (null != matcher.group("year")) {
-                        matcher.appendReplacement(sb, toLegacyFullNorlogeFormatter.print(norloge.getTime()));
-                    } else if (null != matcher.group("date")) {
-                        matcher.appendReplacement(sb, toLegacyLongNorlogeFormatter.print(norloge.getTime()));
-                    } else if (null == matcher.group("seconds")) {
-                        matcher.appendReplacement(sb, toLegacyShortNorlogeFormatter.print(norloge.getTime()));
-                    } else {
-                        matcher.appendReplacement(sb, toLegacyNormalNorlogeFormatter.print(norloge.getTime()));
-                    }
-                } else if (null != norloge.getId()) {
+                if (null != norloge.getId()) {
                     Post post = postPepository.findOne(norloge.getId());
                     if (null != post) {
-                        matcher.appendReplacement(sb, toLegacyFullNorlogeFormatter.print(new DateTime(post.getTime())));
-                    } else {
-                        matcher.appendReplacement(sb, norloge.toString());
+                        final DateTime referencedPostTime = new DateTime(post.getTime());
+                        DateTimeFormatter formatter = findLegacyNorlogeFormatter(postTime, referencedPostTime);
+                        matcher.appendReplacement(sb, formatter.print(referencedPostTime));
+                        return;
                     }
-                } else {
-                    matcher.appendReplacement(sb, norloge.toString());
                 }
+                matcher.appendReplacement(sb, norloge.toString());
             }
 
             @Override
             public void end(Matcher matcher) {
                 matcher.appendTail(sb);
             }
+
         });
         return sb.toString();
     }
 
-    private static final DateTimeFormatter fromLegacyFullNorlogeFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZoneUTC();
-    private static final DateTimeFormatter fromLegacyLongNorlogeFormatter = DateTimeFormat.forPattern("MM/dd#HH:mm:ss").withZoneUTC();
-    private static final DateTimeFormatter fromLegacyNormalNorlogeFormatter = DateTimeFormat.forPattern("HH:mm:ss").withZoneUTC();
-    private static final DateTimeFormatter fromLegacyShortNorlogeFormatter = DateTimeFormat.forPattern("HH:mm").withZoneUTC();
+    private DateTimeFormatter findLegacyNorlogeFormatter(DateTime postTime, DateTime referencedPostTime) {
+        if (Days.daysBetween(postTime, referencedPostTime).isLessThan(Days.ONE)) {
+            if (referencedPostTime.getSecondOfMinute() == 0) {
+                return toLegacyShortNorlogeFormatter;
+            } else {
+                return toLegacyNormalNorlogeFormatter;
+            }
+        } else if (Years.yearsBetween(postTime, referencedPostTime).isLessThan(Years.ONE)) {
+            return toLegacyLongNorlogeFormatter;
+        } else {
+            return toLegacyFullNorlogeFormatter;
+        }
+    }
 
     private String convertFromLegacyNorloges(String message) {
         final StringBuffer sb = new StringBuffer();
@@ -132,19 +137,14 @@ public class LegacyRestController {
             public void process(Norloge norloge, Matcher matcher) {
                 DateTime time = norloge.getTime();
                 if (null != time) {
-                    time = time.minusHours(1);
-                    if (null != matcher.group("year")) {
-                        matcher.appendReplacement(sb, fromLegacyFullNorlogeFormatter.print(time));
-                    } else if (null != matcher.group("date")) {
-                        matcher.appendReplacement(sb, fromLegacyLongNorlogeFormatter.print(time));
-                    } else if (null == matcher.group("seconds")) {
-                        matcher.appendReplacement(sb, fromLegacyShortNorlogeFormatter.print(time));
-                    } else {
-                        matcher.appendReplacement(sb, fromLegacyNormalNorlogeFormatter.print(time));
+                    time = time.withZoneRetainFields(legacyTimeZone);
+                    Post post = postPepository.findOne(time, time.plusSeconds(1));
+                    if (null != post) {
+                        matcher.appendReplacement(sb, Norloge.format(post));
+                        return;
                     }
-                } else {
-                    matcher.appendReplacement(sb, norloge.toString());
                 }
+                matcher.appendReplacement(sb, norloge.toString());
             }
 
             @Override
