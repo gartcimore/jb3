@@ -69,6 +69,7 @@
                     <include>**/*.xml</include>
                     <include>**/*.js</include>
                     <include>**/*.css</include>
+                    <include>**/*.png</include>
                 </includes>
             </resource>
         </resources>
