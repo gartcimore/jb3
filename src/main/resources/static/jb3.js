@@ -1,7 +1,6 @@
 jb3 = {
     init: function () {
         var self = this;
-
         var controlsMessage = $('#jb3-controls-message');
         var controlsNickname = $('#jb3-controls-nickname');
         controlsMessage.bind('keypress', function (e) {
@@ -10,16 +9,40 @@ jb3 = {
                 controlsMessage.val('');
             }
         });
-        
         $('#jb3-posts').on('click', '.jb3-post-time', function (e) {
             var postId = $(e.target).parent().attr('id');
-            if(postId) {
+            if (postId) {
                 controlsMessage.val(controlsMessage.val() + '#' + postId + ' ');
                 controlsMessage.focus();
             }
         });
-        
+        $('#jb3-posts').on({
+            mouseenter: function (event) {
+                self.highlightPostAndReplies($(event.target).data('ref'));
+            },
+            mouseleave: function (event) {
+                self.unhighlightPostAndReplies($(event.target).data('ref'));
+            }
+        }, ".jb3-cite");
+        $('#jb3-posts').on({
+            mouseenter: function (event) {
+                self.highlightPostAndReplies($(event.target).parent().attr('id'));
+            },
+            mouseleave: function (event) {
+                self.unhighlightPostAndReplies($(event.target).parent().attr('id'));
+            }
+        }, ".jb3-post-time");
         self.refreshMessages(30000);
+    },
+    highlightPostAndReplies: function (postId) {
+        var post = $('#' + postId);
+        post.addClass("jb3-highlight");
+        $(".jb3-cite[data-ref='" + post.attr('id') + "']").addClass("jb3-highlight");
+    },
+    unhighlightPostAndReplies: function (postId) {
+        var post = $('#' + postId);
+        post.removeClass("jb3-highlight");
+        $(".jb3-cite[data-ref='" + post.attr('id') + "']").removeClass("jb3-highlight");
     },
     postMessage: function (nickname, message) {
         var self = this;
@@ -27,7 +50,7 @@ jb3 = {
             type: "POST",
             url: "/api/post",
             data: {message: message, nickname: nickname},
-            success: function() {
+            success: function () {
                 self.refreshMessages();
             }
         });
@@ -41,11 +64,11 @@ jb3 = {
             success: function (data) {
                 self.onNewMessages(data);
             },
-            complete: function() {
-                if(pollInterval) {
-                    setTimeout(function() {
+            complete: function () {
+                if (pollInterval) {
+                    setTimeout(function () {
                         self.refreshMessages(pollInterval);
-                    }, pollInterval );
+                    }, pollInterval);
                 }
             },
             timeout: 15000
@@ -66,9 +89,11 @@ jb3 = {
         var existingMessageDiv = messagesContainer.find('#' + message.id);
         if (existingMessageDiv.length === 0) {
             var isoTime = new Date(message.time).toISOString();
-            var timeSpan = $('<span/>').addClass('jb3-post-time').text(isoTime.substr(11,8)).attr("title",isoTime);
+            var timeSpan = $('<span/>').addClass('jb3-post-time').text(isoTime.substr(11, 8)).attr("title", isoTime);
             var nickSpan = $('<span/>').addClass('jb3-post-nickname').html(message.nickname);
-            var messageSpan = $('<span/>').addClass('jb3-post-message').html(message.message);
+            var formattedMessage = message.message.replace(/(\s|^)#(\w+)/g, '$1<span class="jb3-cite" data-ref="$2">#$2</span>');
+            formattedMessage = formattedMessage.replace(/(\s|^)\[\:([a-zA-Z0-9-_ ]*)\]/g, '$1<a class="jb3-totoz">[:$2]<img src="http://sfw.totoz.eu/gif/$2.gif"/></a>');
+            var messageSpan = $('<span/>').addClass('jb3-post-message').html(formattedMessage);
             var messageDiv = $('<div/>').attr('id', message.id).addClass('jb3-post').attr('time', message.time).append(timeSpan).append(nickSpan).append(messageSpan);
             messagesContainer.append(messageDiv);
         }

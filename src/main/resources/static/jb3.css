@@ -1,3 +1,7 @@
+body {
+    background-color: #FEFEFE;
+}
+
 #jb3-posts-container {
     position: fixed;
     top: 5px;
@@ -19,7 +23,7 @@
 .jb3-post-time {
     display : table-cell;
     padding-right: 10px;
-    color: #5F7FBF;
+    color: black;
     font-weight: bold;
 }
 
@@ -43,4 +47,29 @@
     left: 0px;
     right: 0px;
     height: 42px;
+}
+
+.jb3-cite {
+    color: #5F7FBF;
+}
+
+.jb3-highlight {
+    border: 1px solid #FA0 !important;
+    background-color: #FFD202 !important;
+}
+
+.jb3-totoz {
+    position: relative;
+    font-weight: bold;
+    color: #0A1;
+}
+
+.jb3-totoz img {
+    display: none;
+}
+
+.jb3-totoz:hover img {
+    display: inline;
+    position: absolute;
+    bottom: 100%;
 }
