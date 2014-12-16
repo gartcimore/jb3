@@ -37,6 +37,10 @@ body {
     display : table-cell;
 }
 
+.jb3-post-message a {
+    font-weight: bold;
+}
+
 #jb3-controls-message {
     width: 50%;
 }

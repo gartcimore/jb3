@@ -92,6 +92,8 @@ jb3 = {
             var timeSpan = $('<span/>').addClass('jb3-post-time').text(isoTime.substr(11, 8)).attr("title", isoTime);
             var nickSpan = $('<span/>').addClass('jb3-post-nickname').html(message.nickname);
             var formattedMessage = message.message.replace(/(\s|^)#(\w+)/g, '$1<span class="jb3-cite" data-ref="$2">#$2</span>');
+            formattedMessage = formattedMessage.replace(/(\s|^)(https?:\/\/\S+)/gi,'$1<a href="$2" target="_blank" rel="nofollow">[url]</a>');
+            formattedMessage = formattedMessage.replace(/(\s|^)(ftp:\/\/\S+)/gi,'$1<a href="$2" target="_blank" rel="nofollow">[url]</a>');
             formattedMessage = formattedMessage.replace(/(\s|^)\[\:([a-zA-Z0-9-_ ]*)\]/g, '$1<a class="jb3-totoz">[:$2]<img src="http://sfw.totoz.eu/gif/$2.gif"/></a>');
             var messageSpan = $('<span/>').addClass('jb3-post-message').html(formattedMessage);
             var messageDiv = $('<div/>').attr('id', message.id).addClass('jb3-post').attr('time', message.time).append(timeSpan).append(nickSpan).append(messageSpan);
