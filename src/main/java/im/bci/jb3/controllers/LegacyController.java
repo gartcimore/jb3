@@ -6,12 +6,13 @@ import im.bci.jb3.data.Post;
 import im.bci.jb3.data.PostRepository;
 import im.bci.jb3.logic.Norloge;
 import im.bci.jb3.logic.TribuneService;
-import im.bci.jb3.utils.Cleaner;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -23,19 +24,20 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
 /**
  *
  * @author devnewton
  */
-@RestController
+@Controller
 @RequestMapping("/legacy")
-public class LegacyRestController {
+public class LegacyController {
 
     @Value("${jb3.host}")
     private String site;
@@ -58,8 +60,8 @@ public class LegacyRestController {
     private static final DateTimeZone legacyTimeZone = DateTimeZone.forID(legacyTimezoneId);
     private static final DateTimeFormatter legacyPostTimeFormatter = DateTimeFormat.forPattern("yyyyMMddHHmmss").withZone(legacyTimeZone);
 
-    @RequestMapping(value = "/xml", produces = {"application/xml", "text/xml"})
-    public LegacyBoard xml(WebRequest webRequest) {
+    @RequestMapping(value = "/xml")
+    public String xml(WebRequest webRequest, Model model, HttpServletResponse response) {
         List<Post> posts = tribune.get();
         if (posts.isEmpty() || webRequest.checkNotModified(posts.get(0).getTime().getTime())) {
             return null;
@@ -67,22 +69,20 @@ public class LegacyRestController {
             LegacyBoard board = new LegacyBoard();
             board.setSite(site);
             board.setTimezone(legacyTimezoneId);
-            List<LegacyPost> legacyPosts = new ArrayList<LegacyPost>();
+            List<LegacyPost> legacyPosts = new ArrayList<LegacyPost>(posts.size());
             for (Post post : posts) {
                 LegacyPost legacyPost = new LegacyPost();
-                final String message = Cleaner.cleanInvalidChars(convertToLegacyNorloges(convertUrls(post.getMessage()), post.getTime()));
-                if (null != message) {
                     final long time = post.getTime().getTime();
                     legacyPost.setId(time);
                     legacyPost.setTime(legacyPostTimeFormatter.print(time));
-                    legacyPost.setInfo(post.getNickname());
-                    legacyPost.setMessage(Jsoup.clean(message, messageWhitelist));
-                    legacyPost.setLogin("");
+                    legacyPost.setInfo(StringEscapeUtils.escapeXml10(Jsoup.clean(post.getNickname(), Whitelist.none())));
+                    legacyPost.setMessage(StringEscapeUtils.escapeXml10(Jsoup.clean(convertToLegacyNorloges(convertUrls(post.getMessage()), post.getTime()), messageWhitelist)));
                     legacyPosts.add(legacyPost);
-                }
             }
-            board.setPost(legacyPosts);
-            return board;
+            board.setPosts(legacyPosts);
+            model.addAttribute("board", board);
+            response.setContentType("text/xml");
+            return "legacy/xml";
         }
     }
 
