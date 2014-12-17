@@ -6,6 +6,7 @@ import im.bci.jb3.data.Post;
 import im.bci.jb3.data.PostRepository;
 import im.bci.jb3.logic.Norloge;
 import im.bci.jb3.logic.TribuneService;
+import im.bci.jb3.utils.Cleaner;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -69,13 +70,16 @@ public class LegacyRestController {
             List<LegacyPost> legacyPosts = new ArrayList<LegacyPost>();
             for (Post post : posts) {
                 LegacyPost legacyPost = new LegacyPost();
-                final long time = post.getTime().getTime();
-                legacyPost.setId(time);
-                legacyPost.setTime(legacyPostTimeFormatter.print(time));
-                legacyPost.setInfo(post.getNickname());
-                legacyPost.setMessage(convertToLegacyNorloges(convertUrls(post.getMessage()), post.getTime()));
-                legacyPost.setLogin("");
-                legacyPosts.add(legacyPost);
+                final String message = Cleaner.cleanInvalidChars(convertToLegacyNorloges(convertUrls(post.getMessage()), post.getTime()));
+                if (null != message) {
+                    final long time = post.getTime().getTime();
+                    legacyPost.setId(time);
+                    legacyPost.setTime(legacyPostTimeFormatter.print(time));
+                    legacyPost.setInfo(post.getNickname());
+                    legacyPost.setMessage(Jsoup.clean(message, messageWhitelist));
+                    legacyPost.setLogin("");
+                    legacyPosts.add(legacyPost);
+                }
             }
             board.setPost(legacyPosts);
             return board;
@@ -166,7 +170,8 @@ public class LegacyRestController {
             matcher.appendReplacement(sb, "<a href=\"$0\" rel=\"nofollow\" target=\"_blank\">[url]</a>");
         }
         matcher.appendTail(sb);
-        return Jsoup.clean(sb.toString(), messageWhitelist);
+        return sb.toString();
     }
+
 
 }
