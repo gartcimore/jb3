@@ -37,8 +37,28 @@ jb3 = {
                 self.unhighlightPostAndReplies($(event.target).parent().attr('id'));
             }
         }, ".jb3-post-time");
+        self.initNickname();
         self.refreshMessages(30000);
     },
+    initNickname: function () {
+        var controlsNickname = $('#jb3-controls-nickname');
+        if (localStorage.nickname) {
+            controlsNickname.val(localStorage.nickname);
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "/api/random-nickname",
+                success: function (data) {
+                    localStorage.nickname = data.nickname;
+                    controlsNickname.val(localStorage.nickname);
+                }
+            });
+        }
+        controlsNickname.change(function() {
+            localStorage.nickname = controlsNickname.val();
+        });
+    }
+    ,
     highlightPostAndReplies: function (postId) {
         var post = $('#' + postId);
         post.addClass("jb3-highlight");
@@ -165,5 +185,3 @@ jb3 = {
     }
 };
 jb3.init();
-
-

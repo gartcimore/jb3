@@ -1,8 +1,10 @@
 package im.bci.jb3.controllers;
 
 import im.bci.jb3.data.Post;
+import im.bci.jb3.frontend.RandomNicknameMV;
 import im.bci.jb3.logic.TribuneService;
 import java.util.List;
+import org.fluttercode.datafactory.impl.DataFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,8 +26,17 @@ public class ApiController {
         tribune.post(nickname, message);
     }
 
-    @RequestMapping(value = "/get")
+    @RequestMapping("/get")
     public List<Post> get() {
         return tribune.get();
+    }
+
+    private final DataFactory dataFactory = new DataFactory();
+
+    @RequestMapping("/random-nickname")
+    public RandomNicknameMV randomNickname() {
+        RandomNicknameMV mv = new RandomNicknameMV();
+        mv.setNickname(dataFactory.getName());
+        return mv;
     }
 }
