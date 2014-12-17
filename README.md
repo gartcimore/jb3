@@ -15,6 +15,10 @@ You can also configure your prefered coincoin using these parameters:
 
 # How to use
 
+## Skill check
+
+Please note that a thorough knowledge of Java web application development and hosting is required.
+
 ## Requirements
 
 - JDK 1.6+
