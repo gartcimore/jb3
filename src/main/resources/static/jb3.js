@@ -3,8 +3,13 @@ jb3 = {
         var self = this;
         var controlsMessage = $('#jb3-controls-message');
         var controlsNickname = $('#jb3-controls-nickname');
-        controlsMessage.bind('keypress', function (e) {
-            if (e.keyCode === 13) {
+        controlsMessage.bind('keypress', function (event) {
+            if (event.altKey) {
+                if (self.handleAltShortcut(event.key)) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                }
+            } else if (event.keyCode === 13) {
                 self.postMessage(controlsNickname.val(), controlsMessage.val());
                 controlsMessage.val('');
             }
@@ -92,8 +97,8 @@ jb3 = {
             var timeSpan = $('<span/>').addClass('jb3-post-time').text(isoTime.substr(11, 8)).attr("title", isoTime);
             var nickSpan = $('<span/>').addClass('jb3-post-nickname').html(message.nickname);
             var formattedMessage = message.message.replace(/(\s|^)#(\w+)/g, '$1<span class="jb3-cite" data-ref="$2">#$2</span>');
-            formattedMessage = formattedMessage.replace(/(\s|^)(https?:\/\/\S+)/gi,'$1<a href="$2" target="_blank" rel="nofollow">[url]</a>');
-            formattedMessage = formattedMessage.replace(/(\s|^)(ftp:\/\/\S+)/gi,'$1<a href="$2" target="_blank" rel="nofollow">[url]</a>');
+            formattedMessage = formattedMessage.replace(/(\s|^)(https?:\/\/\S+)/gi, '$1<a href="$2" target="_blank" rel="nofollow">[url]</a>');
+            formattedMessage = formattedMessage.replace(/(\s|^)(ftp:\/\/\S+)/gi, '$1<a href="$2" target="_blank" rel="nofollow">[url]</a>');
             formattedMessage = formattedMessage.replace(/(\s|^)\[\:([a-zA-Z0-9-_ ]*)\]/g, '$1<a class="jb3-totoz">[:$2]<img src="http://sfw.totoz.eu/gif/$2.gif"/></a>');
             var messageSpan = $('<span/>').addClass('jb3-post-message').html(formattedMessage);
             var messageDiv = $('<div/>').attr('id', message.id).addClass('jb3-post').attr('time', message.time).append(timeSpan).append(nickSpan).append(messageSpan);
@@ -104,6 +109,59 @@ jb3 = {
         $('#jb3-posts').find('.jb3-post').sort(function (a, b) {
             return $(a).attr('time') - $(b).attr('time');
         }).appendTo('#jb3-posts');
+    },
+    handleAltShortcut: function (keychar) {
+        switch (keychar) {
+            case 'o':
+                this.insertTextInMessageControl('_o/* <b>BLAM</b>! ');
+                return true;
+            case 'm':
+                this.insertTextInMessageControl('====> <b>Moment ' + this.getSelectedText() + '</b> <====', 16);
+                return true;
+            case 'f':
+                this.insertTextInMessageControl('/fortune ');
+                return true;
+            case 'b':
+                this.insertTextInMessageControl('<b>' + this.getSelectedText() + '</b>', 3);
+                return true;
+            case 'i':
+                this.insertTextInMessageControl('<i>' + this.getSelectedText() + '</i>', 3);
+                return true;
+            case 'u':
+                this.insertTextInMessageControl('<u>' + this.getSelectedText() + '</u>', 3);
+                return true;
+            case 's':
+                this.insertTextInMessageControl('<s>' + this.getSelectedText() + '</s>', 3);
+                return true;
+            case 't':
+                this.insertTextInMessageControl('<tt>' + this.getSelectedText() + '</tt>', 4);
+                return true;
+            case 'p':
+                this.insertTextInMessageControl('_o/* <b>paf!</b> ');
+                return true;
+            case 'a':
+                this.insertTextInMessageControl('♪ <i>' + this.getSelectedText() + '</i> ♪', 5);
+                return true;
+        }
+        return false;
+    },
+    getSelectedText: function () {
+        var controlsMessage = document.getElementById("jb3-controls-message");
+        if (controlsMessage) {
+            return controlsMessage.value.substring(controlsMessage.selectionStart, controlsMessage.selectionEnd);
+        } else {
+            return"";
+        }
+    },
+    insertTextInMessageControl: function (text, pos) {
+        var control = document.getElementById("jb3-controls-message");
+        if (!pos) {
+            pos = text.length;
+        }
+        var selectionEnd = control.selectionStart + pos;
+        control.value = control.value.substring(0, control.selectionStart) + text + control.value.substr(control.selectionEnd);
+        control.focus();
+        control.setSelectionRange(selectionEnd, selectionEnd);
     }
 };
 jb3.init();
