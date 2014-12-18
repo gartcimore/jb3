@@ -54,7 +54,7 @@ jb3 = {
                 }
             });
         }
-        controlsNickname.change(function() {
+        controlsNickname.change(function () {
             localStorage.nickname = controlsNickname.val();
         });
     }
@@ -101,13 +101,16 @@ jb3 = {
     },
     onNewMessages: function (data) {
         var self = this;
+        var postContainer = $('#jb3-posts-container');
+        var wasAtbottom = postContainer.scrollTop() + postContainer.innerHeight() >= postContainer[0].scrollHeight;
         $.each(data, function (index, value) {
             self.onMessage(value);
         }
         );
         self.sortMessages();
-        var postContainer = $('#jb3-posts-container');
-        postContainer.scrollTop(postContainer.prop("scrollHeight"));
+        if (wasAtbottom) {
+            postContainer.scrollTop(postContainer.prop("scrollHeight"));
+        }
     },
     onMessage: function (message) {
         var messagesContainer = $('#jb3-posts');
