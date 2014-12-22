@@ -107,6 +107,7 @@ jb3 = {
             self.onMessage(value);
         }
         );
+        self.updateNorloges();
         self.sortMessages();
         if (wasAtbottom) {
             postContainer.scrollTop(postContainer.prop("scrollHeight"));
@@ -133,38 +134,47 @@ jb3 = {
             return $(a).attr('time') - $(b).attr('time');
         }).appendTo('#jb3-posts');
     },
-    handleAltShortcut: function (keychar) {
+    updateNorloges: function () {
+        $('.jb3-cite').each(function() {
+            var cite = $(this);
+            var referencedNorloge = $('#' + cite.data('ref')).find('.jb3-post-time');
+            if(referencedNorloge) {
+                cite.text(referencedNorloge.text());
+            }
+        });
+        },
+        handleAltShortcut: function (keychar) {
         switch (keychar) {
             case 'o':
-                this.insertTextInMessageControl('_o/* <b>BLAM</b>! ');
-                return true;
-            case 'm':
-                this.insertTextInMessageControl('====> <b>Moment ' + this.getSelectedText() + '</b> <====', 16);
-                return true;
-            case 'f':
-                this.insertTextInMessageControl('/fortune ');
-                return true;
-            case 'b':
-                this.insertTextInMessageControl('<b>' + this.getSelectedText() + '</b>', 3);
-                return true;
-            case 'i':
-                this.insertTextInMessageControl('<i>' + this.getSelectedText() + '</i>', 3);
-                return true;
-            case 'u':
-                this.insertTextInMessageControl('<u>' + this.getSelectedText() + '</u>', 3);
-                return true;
-            case 's':
-                this.insertTextInMessageControl('<s>' + this.getSelectedText() + '</s>', 3);
-                return true;
-            case 't':
-                this.insertTextInMessageControl('<tt>' + this.getSelectedText() + '</tt>', 4);
-                return true;
-            case 'p':
-                this.insertTextInMessageControl('_o/* <b>paf!</b> ');
-                return true;
-            case 'a':
-                this.insertTextInMessageControl('♪ <i>' + this.getSelectedText() + '</i> ♪', 5);
-                return true;
+            this.insertTextInMessageControl('_o/* <b>BLAM</b>! ');
+                    return true;
+                    case 'm':
+            this.insertTextInMessageControl('====> <b>Moment ' + this.getSelectedText() + '</b> <====', 16);
+                    return true;
+                    case 'f':
+            this.insertTextInMessageControl('/fortune ');
+                    return true;
+                    case 'b':
+            this.insertTextInMessageControl('<b>' + this.getSelectedText() + '</b>', 3);
+                    return true;
+                    case 'i':
+            this.insertTextInMessageControl('<i>' + this.getSelectedText() + '</i>', 3);
+                    return true;
+                    case 'u':
+            this.insertTextInMessageControl('<u>' + this.getSelectedText() + '</u>', 3);
+                    return true;
+                    case 's':
+            this.insertTextInMessageControl('<s>' + this.getSelectedText() + '</s>', 3);
+                    return true;
+                    case 't':
+            this.insertTextInMessageControl('<tt>' + this.getSelectedText() + '</tt>', 4);
+                    return true;
+                    case 'p':
+            this.insertTextInMessageControl('_o/* <b>paf!</b> ');
+                    return true;
+                    case 'a':
+            this.insertTextInMessageControl('♪ <i>' + this.getSelectedText() + '</i> ♪', 5);
+                    return true;
         }
         return false;
     },
