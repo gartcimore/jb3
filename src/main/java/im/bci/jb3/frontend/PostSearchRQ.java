@@ -19,8 +19,9 @@ public class PostSearchRQ {
     private static final int pageSize = 50;
 
     public PostSearchRQ() {
-        to = DateTime.now();
-        from = to.minusWeeks(1);
+        DateTime now = DateTime.now();
+        to = now.plusDays(1);
+        from = now.minusWeeks(1);
     }
 
     public DateTime getFrom() {
