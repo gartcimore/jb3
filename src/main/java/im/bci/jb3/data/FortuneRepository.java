@@ -1,7 +1,14 @@
 package im.bci.jb3.data;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import im.bci.jb3.frontend.FortuneSearchFO;
+import java.util.List;
 
-public interface FortuneRepository extends MongoRepository<Fortune, String> {
+public interface FortuneRepository {
+
+    Fortune save(Fortune f);
+
+    Fortune findOne(String fortuneId);
+    
+    List<Fortune> search(FortuneSearchFO fo);
     
 }

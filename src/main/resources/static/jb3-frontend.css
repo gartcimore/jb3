@@ -1,0 +1,25 @@
+#jb3-posts-container {
+    position: fixed;
+    top: 5px;
+    right: 5px;
+    bottom: 50px;
+    left: 0px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+#jb3-posts {
+    display : table;
+}
+
+#jb3-controls-message {
+    width: 50%;
+}
+
+#jb3-controls {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    height: 42px;
+}

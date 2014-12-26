@@ -25,7 +25,7 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public void save(Post post) {
-        mongoTemplate.save(post);
+        mongoTemplate.save(post, COLLECTION_NAME);
     }
 
     @Override

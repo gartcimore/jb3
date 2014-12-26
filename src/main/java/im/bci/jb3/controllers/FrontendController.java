@@ -11,4 +11,9 @@ public class FrontendController {
     public String index() {
         return "index";
     }
+    
+    @RequestMapping("error")
+    public String error() {
+        return "error";
+    }
 }
