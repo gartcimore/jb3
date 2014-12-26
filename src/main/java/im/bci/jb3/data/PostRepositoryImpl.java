@@ -1,5 +1,6 @@
 package im.bci.jb3.data;
 
+import im.bci.jb3.frontend.PostSearchRQ;
 import java.util.List;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,12 @@ public class PostRepositoryImpl implements PostRepository {
     public Post findOne(DateTime start, DateTime end) {
         Query query = new Query().addCriteria(Criteria.where("time").gte(start.toDate()).lt(end.toDate())).with(new PageRequest(0, 1000, Sort.Direction.DESC, "time"));
         return mongoTemplate.findOne(query, Post.class, COLLECTION_NAME);
+    }
+
+    @Override
+    public List<Post> search(PostSearchRQ fo) {
+        Query query = new Query().addCriteria(Criteria.where("message").regex(fo.getContent())).with(new PageRequest(fo.getPage(), fo.getPageSize(), Sort.Direction.DESC, "time"));
+        return mongoTemplate.find(query, Post.class, COLLECTION_NAME);
     }
 
 }

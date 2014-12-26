@@ -1,5 +1,6 @@
 package im.bci.jb3.data;
 
+import im.bci.jb3.frontend.PostSearchRQ;
 import java.util.List;
 import org.joda.time.DateTime;
 
@@ -9,8 +10,10 @@ public interface PostRepository {
     
     Post findOne(DateTime start, DateTime end);
 
-    public void save(Post post);
+    void save(Post post);
 
-    public Post findOne(String id);
+    Post findOne(String id);
+    
+    List<Post> search(PostSearchRQ fo);
 
 }
