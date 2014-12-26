@@ -7,7 +7,7 @@
         <meta name="robots" content="noindex,nofollow">
         <link rel="stylesheet" type="text/css" href="jb3-common.css" />
         <link rel="stylesheet" type="text/css" href="jb3-frontend.css" />
-        <link rel="icon" type="image/png" href="favicon.png" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
     </head>
     <body>
         <div id="jb3-posts-container">

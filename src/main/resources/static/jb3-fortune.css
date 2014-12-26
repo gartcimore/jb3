@@ -4,6 +4,11 @@
     margin-bottom: 8px;
 }
 
+.jb3-fortune-title {
+    font-size-adjust: 1.01;
+    margin-bottom: 8px;
+}
+
 .jb3-fortune-pager form {
     display: block;
 }

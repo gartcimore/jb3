@@ -2,6 +2,7 @@ package im.bci.jb3.data;
 
 import im.bci.jb3.frontend.PostSearchRQ;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -44,7 +45,11 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public List<Post> search(PostSearchRQ fo) {
-        Query query = new Query().addCriteria(Criteria.where("message").regex(fo.getContent())).with(new PageRequest(fo.getPage(), fo.getPageSize(), Sort.Direction.DESC, "time"));
+        Query query = new Query().addCriteria(Criteria.where("time").gte(fo.getFrom().toDate()).lt(fo.getTo().toDate()));
+        if (StringUtils.isNotBlank(fo.getContent())) {
+            query = query.addCriteria(Criteria.where("message").regex(fo.getContent()));
+        }
+        query = query.with(new PageRequest(fo.getPage(), fo.getPageSize(), Sort.Direction.DESC, "time"));
         return mongoTemplate.find(query, Post.class, COLLECTION_NAME);
     }
 

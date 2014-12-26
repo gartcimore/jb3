@@ -18,9 +18,7 @@ public class ArchiveController {
     @RequestMapping("")
     public String index(PostSearchRQ rq, Model model) {
         model.addAttribute("rq", rq);
-        if(StringUtils.isNotBlank(rq.getContent())) {
-            model.addAttribute("posts", postRepository.search(rq));
-        }
+        model.addAttribute("posts", postRepository.search(rq));
         return "archive/index";
     }
 }
