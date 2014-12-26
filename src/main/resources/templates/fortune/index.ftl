@@ -12,7 +12,7 @@
     </head>
     <body>
     <form id="fortune-search-form">
-        <input name="content" type="text" value="${(fo.content)!}"></input>
+        <input name="content" type="text" value="${(rq.content)!}"></input>
         <input type="submit"></input>
     </form>
     <#if fortunes?? >
@@ -23,17 +23,17 @@
     </div>
     </#if>
     <div class="jb3-fortune-pager">
-        <#if fo.page &gt; 0 >
+        <#if rq.page &gt; 0 >
         <form>
-            <input name="content" type="hidden" value="${(fo.content)!}"></input>
-            <input name="page" type="hidden" value="${(fo.page - 1)!}"></input>
+            <input name="content" type="hidden" value="${(rq.content)!}"></input>
+            <input name="page" type="hidden" value="${(rq.page - 1)!}"></input>
             <input type="submit" value="Précédents"></input>
         </form>
         </#if>
         <#if fortunes?? && fortunes?has_content >
         <form>
-            <input name="content" type="hidden" value="${(fo.content)!}"></input>
-            <input name="page" type="hidden" value="${(fo.page + 1)!}"></input>
+            <input name="content" type="hidden" value="${(rq.content)!}"></input>
+            <input name="page" type="hidden" value="${(rq.page + 1)!}"></input>
             <input type="submit" value="Suivants"></input>
         </form>
         </#if>

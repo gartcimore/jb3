@@ -1,6 +1,6 @@
 package im.bci.jb3.data;
 
-import im.bci.jb3.frontend.FortuneSearchFO;
+import im.bci.jb3.frontend.FortuneSearchRQ;
 import java.util.List;
 
 public interface FortuneRepository {
@@ -9,6 +9,6 @@ public interface FortuneRepository {
 
     Fortune findOne(String fortuneId);
     
-    List<Fortune> search(FortuneSearchFO fo);
+    List<Fortune> search(FortuneSearchRQ fo);
     
 }

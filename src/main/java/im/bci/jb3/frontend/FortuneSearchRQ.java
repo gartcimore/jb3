@@ -4,7 +4,7 @@ package im.bci.jb3.frontend;
  *
  * @author devnewton <devnewton@bci.im>
  */
-public class FortuneSearchFO {
+public class FortuneSearchRQ {
 
     private String content;
     private int page = 0;

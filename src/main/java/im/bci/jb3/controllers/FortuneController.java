@@ -2,7 +2,7 @@ package im.bci.jb3.controllers;
 
 import im.bci.jb3.data.Fortune;
 import im.bci.jb3.data.FortuneRepository;
-import im.bci.jb3.frontend.FortuneSearchFO;
+import im.bci.jb3.frontend.FortuneSearchRQ;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,10 +18,10 @@ public class FortuneController {
     private FortuneRepository fortuneRepository;
 
     @RequestMapping("")
-    public String index(FortuneSearchFO fo, Model model) {
-        model.addAttribute("fo", fo);
-        if(StringUtils.isNotBlank(fo.getContent())) {
-            model.addAttribute("fortunes", fortuneRepository.search(fo));
+    public String index(FortuneSearchRQ rq, Model model) {
+        model.addAttribute("rq", rq);
+        if(StringUtils.isNotBlank(rq.getContent())) {
+            model.addAttribute("fortunes", fortuneRepository.search(rq));
         }
         return "fortune/index";
     }
