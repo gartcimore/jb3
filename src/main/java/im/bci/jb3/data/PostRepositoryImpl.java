@@ -46,8 +46,11 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public List<Post> search(PostSearchRQ fo) {
         Query query = new Query().addCriteria(Criteria.where("time").gte(fo.getFrom().toDate()).lt(fo.getTo().toDate()));
-        if (StringUtils.isNotBlank(fo.getContent())) {
-            query = query.addCriteria(Criteria.where("message").regex(fo.getContent()));
+        if (StringUtils.isNotBlank(fo.getMessageFilter())) {
+            query = query.addCriteria(Criteria.where("message").regex(fo.getMessageFilter()));
+        }
+        if (StringUtils.isNotBlank(fo.getNicknameFilter())) {
+            query = query.addCriteria(Criteria.where("nickname").regex(fo.getNicknameFilter()));
         }
         query = query.with(new PageRequest(fo.getPage(), fo.getPageSize(), Sort.Direction.DESC, "time"));
         return mongoTemplate.find(query, Post.class, COLLECTION_NAME);

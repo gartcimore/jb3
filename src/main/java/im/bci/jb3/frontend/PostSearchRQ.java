@@ -13,7 +13,8 @@ public class PostSearchRQ {
     private DateTime from;
     @DateTimeFormat(pattern = "yyyy/MM/dd#HH:mm:ss")
     private DateTime to;
-    private String content;
+    private String nicknameFilter;
+    private String messageFilter;
     private int page = 0;
     private static final int pageSize = 50;
 
@@ -42,12 +43,20 @@ public class PostSearchRQ {
         return pageSize;
     }
 
-    public String getContent() {
-        return content;
+    public String getNicknameFilter() {
+        return nicknameFilter;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setNicknameFilter(String nicknameFilter) {
+        this.nicknameFilter = nicknameFilter;
+    }
+
+    public String getMessageFilter() {
+        return messageFilter;
+    }
+
+    public void setMessageFilter(String messageFilter) {
+        this.messageFilter = messageFilter;
     }
 
     public int getPage() {
