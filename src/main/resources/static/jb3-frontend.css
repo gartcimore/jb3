@@ -8,6 +8,18 @@
     overflow-x: auto;
 }
 
+#jb3-post-popup {
+    border: 2px solid #FFA500;
+    background-color: #CCCCCC;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 4px;
+    padding: 2px 8px 2px 4px;
+    z-index: 75;
+    display: none;
+}
+
 #jb3-posts {
     display : table;
 }
