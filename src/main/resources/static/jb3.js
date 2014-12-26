@@ -54,7 +54,7 @@ jb3 = {
                 }
             });
         }
-        controlsNickname.change(function() {
+        controlsNickname.change(function () {
             localStorage.nickname = controlsNickname.val();
         });
     }
@@ -62,12 +62,14 @@ jb3 = {
     highlightPostAndReplies: function (postId) {
         var post = $('#' + postId);
         post.addClass("jb3-highlight");
+        $('#jb3-post-popup').html(post.html()).css('display', 'block');
         $(".jb3-cite[data-ref='" + post.attr('id') + "']").addClass("jb3-highlight");
     },
     unhighlightPostAndReplies: function (postId) {
         var post = $('#' + postId);
         post.removeClass("jb3-highlight");
         $(".jb3-cite[data-ref='" + post.attr('id') + "']").removeClass("jb3-highlight");
+        $('#jb3-post-popup').hide();
     },
     postMessage: function (nickname, message) {
         var self = this;
@@ -101,13 +103,17 @@ jb3 = {
     },
     onNewMessages: function (data) {
         var self = this;
+        var postContainer = $('#jb3-posts-container');
+        var wasAtbottom = postContainer.scrollTop() + postContainer.innerHeight() >= postContainer[0].scrollHeight;
         $.each(data, function (index, value) {
             self.onMessage(value);
         }
         );
+        self.updateNorloges();
         self.sortMessages();
-        var postContainer = $('#jb3-posts-container');
-        postContainer.scrollTop(postContainer.prop("scrollHeight"));
+        if (wasAtbottom) {
+            postContainer.scrollTop(postContainer.prop("scrollHeight"));
+        }
     },
     onMessage: function (message) {
         var messagesContainer = $('#jb3-posts');
@@ -129,6 +135,15 @@ jb3 = {
         $('#jb3-posts').find('.jb3-post').sort(function (a, b) {
             return $(a).attr('time') - $(b).attr('time');
         }).appendTo('#jb3-posts');
+    },
+    updateNorloges: function () {
+        $('.jb3-cite').each(function () {
+            var cite = $(this);
+            var referencedNorloge = $('#' + cite.data('ref')).find('.jb3-post-time');
+            if (referencedNorloge) {
+                cite.text(referencedNorloge.text());
+            }
+        });
     },
     handleAltShortcut: function (keychar) {
         switch (keychar) {
