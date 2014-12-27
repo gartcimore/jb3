@@ -9,7 +9,7 @@ import org.joda.time.DateTimeZone;
 public class TimezoneUtils {
     
     public static String javascriptTimezoneOffsetToJavaTimeZoneId(int offset) {
-        return DateTimeZone.forOffsetMillis(offset * 60 * 1000).toTimeZone().getID();
+        return DateTimeZone.forOffsetMillis(-offset * 60 * 1000).toTimeZone().getID();
     }
 
 }

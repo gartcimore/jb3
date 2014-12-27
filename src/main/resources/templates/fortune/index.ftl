@@ -21,6 +21,7 @@
         <input id="fortune-search-nicknameFilter" name="nicknameFilter" type="text" value="${(rq.nicknameFilter)!}"></input>
         <label for="fortune-search-messageFilter">disant</label>
         <input id="fortune-search-messageFilter" name="messageFilter" type="text" value="${(rq.messageFilter)!}"></input>
+        <input name="timezoneOffset" type="hidden" value="${(rq.timezoneOffset)!}"></input>
         <input type="submit"></input>
     </form>
     <#if fortunes?? >
@@ -38,6 +39,7 @@
             <input name="nicknameFilter" type="hidden" value="${(rq.nicknameFilter)!}"></input>
             <input name="messageFilter" type="hidden" value="${(rq.messageFilter)!}"></input>
             <input name="page" type="hidden" value="${(rq.page - 1)!}"></input>
+            <input name="timezoneOffset" type="hidden" value="${(rq.timezoneOffset)!}"></input>
             <input type="submit" value="Précédents"></input>
         </form>
         </#if>
@@ -48,6 +50,7 @@
             <input name="nicknameFilter" type="hidden" value="${(rq.nicknameFilter)!}"></input>
             <input name="messageFilter" type="hidden" value="${(rq.messageFilter)!}"></input>
             <input name="page" type="hidden" value="${(rq.page + 1)!}"></input>
+            <input name="timezoneOffset" type="hidden" value="${(rq.timezoneOffset)!}"></input>
             <input type="submit" value="Suivants"></input>
         </form>
         </#if>

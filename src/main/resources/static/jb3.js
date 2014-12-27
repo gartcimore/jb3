@@ -37,10 +37,16 @@ jb3 = {
                 self.unhighlightPostAndReplies($(event.target).parent().attr('id'));
             }
         }, ".jb3-post-time");
+        self.initMenus();
         self.initNickname();
         self.refreshMessages(30000);
     },
     norlogeFormat: "HH:mm:ss",
+    initMenus: function () {
+        var offset = (new Date()).getTimezoneOffset();
+        $('#jb3-archives-menu-item').attr("href", "/archive?timezoneOffset=" + offset);
+        $('#jb3-fortunes-menu-item').attr("href", "/fortune?timezoneOffset=" + offset);
+    },
     initNickname: function () {
         var controlsNickname = $('#jb3-controls-nickname');
         if (localStorage.nickname) {

@@ -15,9 +15,13 @@
             <div id="jb3-posts"></div>
         </div>
         <div id="jb3-controls">
-            <input id="jb3-controls-message" type="text"/>
+            <input id="jb3-controls-message" type="text"></input>
             <label for="jb3-controls-nickname">Nickname:</label>
-            <input id="jb3-controls-nickname" type="text"/>
+            <input id="jb3-controls-nickname" type="text"></input>
+            <div id="jb3-menu">
+                <a id="jb3-archives-menu-item" target="_blank">Archives</a>
+                <a id="jb3-fortunes-menu-item" target="_blank">Fortunes</a>
+            </div>
         </div>
     </body>
     <script src="jquery-2.1.1.js" defer></script>
