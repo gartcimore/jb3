@@ -19,12 +19,12 @@
             <label for="jb3-controls-nickname">Nickname:</label>
             <input id="jb3-controls-nickname" type="text"></input>
             <div id="jb3-menu">
-                <a id="jb3-archives-menu-item" target="_blank">Archives</a>
-                <a id="jb3-fortunes-menu-item" target="_blank">Fortunes</a>
+                <a id="jb3-archives-menu-item" href="/archive" target="_blank">Archives</a>
+                <a id="jb3-fortunes-menu-item" href="/fortune" target="_blank">Fortunes</a>
             </div>
         </div>
     </body>
-    <script src="jquery-2.1.1.js" defer></script>
-    <script src="moment.js" defer/></script>
-    <script src="jb3.js" defer/></script>
+    <script src="/jquery-2.1.1.js" defer></script>
+    <script src="/moment.js" defer/></script>
+    <script src="/jb3.js" defer/></script>
 </html>

@@ -1,5 +1,4 @@
 <#import "fortune.ftl" as fortuneMacros />
-<#setting time_zone= timezone />
 <!DOCTYPE html>
 <html>
     <head>
@@ -20,4 +19,7 @@
     </#if>
     </div>
     </body>
+    <script src="/jquery-2.1.1.js" defer></script>
+    <script src="/moment.js" defer/></script>
+    <script src="/jb3-fortune.js" defer/></script>
 </html>

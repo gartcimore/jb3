@@ -1,5 +1,4 @@
 <#import "fortune.ftl" as fortuneMacros />
-<#setting time_zone= timezone />
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,14 +13,15 @@
     <body>
     <form id="fortune-search-form">
         <label for="fortune-search-from">De</label>
-        <input id="fortune-search-from" name="from" type="text" value="${rq.from.toDate()?datetime}"></input>
+        <input id="fortune-search-from" name="from" type="text"></input>
         <label for="fortune-search-to">à</label>
-        <input id="fortune-search-to" name="to" type="text" value="${rq.to.toDate()?datetime}"></input>
+        <input id="fortune-search-to" name="to" type="text"></input>
         <label for="fortune-search-nicknameFilter">par</label>
         <input id="fortune-search-nicknameFilter" name="nicknameFilter" type="text" value="${(rq.nicknameFilter)!}"></input>
         <label for="fortune-search-messageFilter">disant</label>
         <input id="fortune-search-messageFilter" name="messageFilter" type="text" value="${(rq.messageFilter)!}"></input>
-        <input name="timezoneOffset" type="hidden" value="${(rq.timezoneOffset)!}"></input>
+        <input id="fortune-search-from-hidden" name="from" type="hidden" value="${(rq.from.toDate()?datetime)!}"></input>
+        <input id="fortune-search-to-hidden" name="to" type="hidden" value="${(rq.to.toDate()?datetime)!}"></input>
         <input type="submit"></input>
     </form>
     <#if fortunes?? >
@@ -39,7 +39,6 @@
             <input name="nicknameFilter" type="hidden" value="${(rq.nicknameFilter)!}"></input>
             <input name="messageFilter" type="hidden" value="${(rq.messageFilter)!}"></input>
             <input name="page" type="hidden" value="${(rq.page - 1)!}"></input>
-            <input name="timezoneOffset" type="hidden" value="${(rq.timezoneOffset)!}"></input>
             <input type="submit" value="Précédents"></input>
         </form>
         </#if>
@@ -50,10 +49,12 @@
             <input name="nicknameFilter" type="hidden" value="${(rq.nicknameFilter)!}"></input>
             <input name="messageFilter" type="hidden" value="${(rq.messageFilter)!}"></input>
             <input name="page" type="hidden" value="${(rq.page + 1)!}"></input>
-            <input name="timezoneOffset" type="hidden" value="${(rq.timezoneOffset)!}"></input>
             <input type="submit" value="Suivants"></input>
         </form>
         </#if>
     </div>
     </body>
+    <script src="/jquery-2.1.1.js" defer></script>
+    <script src="/moment.js" defer/></script>
+    <script src="/jb3-fortune.js" defer/></script>
 </html>

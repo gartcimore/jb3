@@ -1,4 +1,3 @@
-<#setting time_zone= timezone />
 <!DOCTYPE html>
 <html>
     <head>
@@ -13,14 +12,15 @@
     <body>
     <form id="archive-search-form">
         <label for="archive-search-from">De</label>
-        <input id="archive-search-from" name="from" type="text" value="${rq.from.toDate()?datetime}"></input>
+        <input id="archive-search-from" type="text"></input>
         <label for="archive-search-to">à</label>
-        <input id="archive-search-to" name="to" type="text" value="${rq.to.toDate()?datetime}"></input>
+        <input id="archive-search-to" type="text"></input>
         <label for="archive-search-nicknameFilter">par</label>
         <input id="archive-search-nicknameFilter" name="nicknameFilter" type="text" value="${(rq.nicknameFilter)!}"></input>
         <label for="archive-search-messageFilter">disant</label>
         <input id="archive-search-messageFilter" name="messageFilter" type="text" value="${(rq.messageFilter)!}"></input>
-        <input name="timezoneOffset" type="hidden" value="${(rq.timezoneOffset)!}"></input>
+        <input id="archive-search-from-hidden" name="from" type="hidden" value="${(rq.from.toDate()?datetime)!}"></input>
+        <input id="archive-search-to-hidden" name="to" type="hidden" value="${(rq.to.toDate()?datetime)!}"></input>
         <input type="submit"></input>
     </form>
     <#if posts?? >
@@ -42,7 +42,6 @@
             <input name="nicknameFilter" type="hidden" value="${(rq.nicknameFilter)!}"></input>
             <input name="messageFilter" type="hidden" value="${(rq.messageFilter)!}"></input>
             <input name="page" type="hidden" value="${(rq.page - 1)!}"></input>
-            <input name="timezoneOffset" type="hidden" value="${(rq.timezoneOffset)!}"></input>
             <input type="submit" value="Précédents"></input>
         </form>
         </#if>
@@ -53,10 +52,12 @@
             <input name="nicknameFilter" type="hidden" value="${(rq.nicknameFilter)!}"></input>
             <input name="messageFilter" type="hidden" value="${(rq.messageFilter)!}"></input>
             <input name="page" type="hidden" value="${(rq.page + 1)!}"></input>
-            <input name="timezoneOffset" type="hidden" value="${(rq.timezoneOffset)!}"></input>
             <input type="submit" value="Suivants"></input>
         </form>
         </#if>
     </div>
     </body>
+    <script src="/jquery-2.1.1.js" defer></script>
+    <script src="/moment.js" defer/></script>
+    <script src="/jb3-archive.js" defer/></script>
 </html>
