@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class Tribune {
             Post post = new Post();
             post.setNickname(StringUtils.isNotBlank(nickname) ? nickname : "AnonymousCoward");
             post.setMessage(message);
-            post.setTime(new Date());
+            post.setTime(DateTime.now(DateTimeZone.UTC));
             postPepository.save(post);
             return post;
         }
@@ -48,7 +49,7 @@ public class Tribune {
     }
 
     public List<Post> get() {
-        DateTime end = DateTime.now();
+        DateTime end = DateTime.now(DateTimeZone.UTC);
         DateTime start = end.minusWeeks(1);
         return postPepository.findPosts(start, end);
     }

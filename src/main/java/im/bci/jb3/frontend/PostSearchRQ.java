@@ -1,7 +1,6 @@
 package im.bci.jb3.frontend;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**

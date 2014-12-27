@@ -26,7 +26,7 @@
     <div class="jb3-posts">
         <#list posts as post>
         <div id="${post.id}" class="jb3-post">
-            <span class="jb3-post-time">${post.time?datetime}</span>
+            <span class="jb3-post-time">${post.time.toDate()?datetime}</span>
             <span class="jb3-post-nickname">${post.nickname}</span>
             <span class="jb3-post-message">${post.message}</span>
         </div>

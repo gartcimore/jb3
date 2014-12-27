@@ -1,6 +1,6 @@
 package im.bci.jb3.data;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -11,7 +11,7 @@ public class Post {
     private String id;
 
     @DateTimeFormat(iso=ISO.DATE_TIME)
-    private Date time;
+    private DateTime time;
     private String nickname;
     private String message;
 
@@ -23,11 +23,11 @@ public class Post {
         this.id = id;
     }
 
-    public Date getTime() {
+    public DateTime getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(DateTime time) {
         this.time = time;
     }
 

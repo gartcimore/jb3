@@ -7,7 +7,6 @@ import im.bci.jb3.data.PostRepository;
 import im.bci.jb3.logic.Norloge;
 import im.bci.jb3.logic.TribuneService;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,7 +62,7 @@ public class LegacyController {
     @RequestMapping(value = "/xml")
     public String xml(WebRequest webRequest, Model model, HttpServletResponse response) {
         List<Post> posts = tribune.get();
-        if (posts.isEmpty() || webRequest.checkNotModified(posts.get(0).getTime().getTime())) {
+        if (posts.isEmpty() || webRequest.checkNotModified(posts.get(0).getTime().getMillis())) {
             return null;
         } else {
             LegacyBoard board = new LegacyBoard();
@@ -72,9 +71,8 @@ public class LegacyController {
             List<LegacyPost> legacyPosts = new ArrayList<LegacyPost>(posts.size());
             for (Post post : posts) {
                 LegacyPost legacyPost = new LegacyPost();
-                    final long time = post.getTime().getTime();
-                    legacyPost.setId(time);
-                    legacyPost.setTime(legacyPostTimeFormatter.print(time));
+                    legacyPost.setId(post.getTime().getMillis());
+                    legacyPost.setTime(legacyPostTimeFormatter.print(post.getTime()));
                     legacyPost.setInfo(StringEscapeUtils.escapeXml10(Jsoup.clean(post.getNickname(), Whitelist.none())));
                     legacyPost.setMessage(StringEscapeUtils.escapeXml10(Jsoup.clean(convertToLegacyNorloges(convertUrls(post.getMessage()), post.getTime()), messageWhitelist)));
                     legacyPosts.add(legacyPost);
@@ -91,8 +89,7 @@ public class LegacyController {
     private static final DateTimeFormatter toLegacyNormalNorlogeFormatter = DateTimeFormat.forPattern("HH:mm:ss").withZone(legacyTimeZone);
     private static final DateTimeFormatter toLegacyShortNorlogeFormatter = DateTimeFormat.forPattern("HH:mm").withZone(legacyTimeZone);
 
-    private String convertToLegacyNorloges(String message, Date messageDate) {
-        final DateTime postTime = new DateTime(messageDate);
+    private String convertToLegacyNorloges(String message, final DateTime postTime) {
         final StringBuffer sb = new StringBuffer();
         Norloge.forEachNorloge(message, new Norloge.NorlogeProcessor() {
 

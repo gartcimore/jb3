@@ -40,6 +40,7 @@ jb3 = {
         self.initNickname();
         self.refreshMessages(30000);
     },
+    norlogeFormat: "HH:mm:ss",
     initNickname: function () {
         var controlsNickname = $('#jb3-controls-nickname');
         if (localStorage.nickname) {
@@ -105,7 +106,7 @@ jb3 = {
         var self = this;
         var postContainer = $('#jb3-posts-container');
         var wasAtbottom = postContainer.scrollTop() + postContainer.innerHeight() >= postContainer[0].scrollHeight;
-        $.each(data, function (index, value) {
+        $.each(data, function (_, value) {
             self.onMessage(value);
         }
         );
@@ -119,8 +120,7 @@ jb3 = {
         var messagesContainer = $('#jb3-posts');
         var existingMessageDiv = messagesContainer.find('#' + message.id);
         if (existingMessageDiv.length === 0) {
-            var isoTime = new Date(message.time).toISOString();
-            var timeSpan = $('<span/>').addClass('jb3-post-time').text(isoTime.substr(11, 8)).attr("title", isoTime);
+            var timeSpan = $('<span/>').addClass('jb3-post-time').text(moment(message.time).format(this.norlogeFormat));
             var nickSpan = $('<span/>').addClass('jb3-post-nickname').html(message.nickname);
             var formattedMessage = message.message.replace(/(\s|^)#(\w+)/g, '$1<span class="jb3-cite" data-ref="$2">#$2</span>');
             formattedMessage = formattedMessage.replace(/(\s|^)(https?:\/\/\S+)/gi, '$1<a href="$2" target="_blank" rel="nofollow">[url]</a>');
