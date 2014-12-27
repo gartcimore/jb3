@@ -1,4 +1,5 @@
 <#import "fortune.ftl" as fortuneMacros />
+<#setting time_zone= timezone />
 <!DOCTYPE html>
 <html>
     <head>

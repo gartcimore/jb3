@@ -1,6 +1,7 @@
 package im.bci.jb3.frontend;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -16,12 +17,21 @@ public class PostSearchRQ {
     private String nicknameFilter;
     private String messageFilter;
     private int page = 0;
+    private int timezoneOffset = 0;
     private static final int pageSize = 50;
 
     public PostSearchRQ() {
         DateTime now = DateTime.now();
         to = now.plusDays(1);
         from = now.minusWeeks(1);
+    }
+
+    public int getTimezoneOffset() {
+        return timezoneOffset;
+    }
+
+    public void setTimezoneOffset(int timezoneOffset) {
+        this.timezoneOffset = timezoneOffset;
     }
 
     public DateTime getFrom() {
