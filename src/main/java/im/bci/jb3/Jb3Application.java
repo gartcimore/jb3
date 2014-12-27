@@ -1,5 +1,8 @@
 package im.bci.jb3;
 
+import java.util.TimeZone;
+import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -21,6 +24,12 @@ public class Jb3Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         System.out.println("jb3 or not to be!");
+    }
+    
+    @Autowired
+    public void setupFreemarker(freemarker.template.Configuration conf) {
+        conf.setDateTimeFormat("yyyy/MM/dd#HH:mm:ss");
+        conf.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
     @Bean(name = "botExecutor")

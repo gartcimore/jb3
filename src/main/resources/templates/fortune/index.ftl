@@ -13,9 +13,9 @@
     <body>
     <form id="fortune-search-form">
         <label for="fortune-search-from">De</label>
-        <input id="fortune-search-from" name="from" type="text" value="${rq.from.toDate()?string["yyyy/MM/dd#HH:mm:ss"]}"></input>
+        <input id="fortune-search-from" name="from" type="text" value="${rq.from.toDate()?datetime}"></input>
         <label for="fortune-search-to">à</label>
-        <input id="fortune-search-to" name="to" type="text" value="${rq.to.toDate()?string["yyyy/MM/dd#HH:mm:ss"]}"></input>
+        <input id="fortune-search-to" name="to" type="text" value="${rq.to.toDate()?datetime}"></input>
         <label for="fortune-search-nicknameFilter">par</label>
         <input id="fortune-search-nicknameFilter" name="nicknameFilter" type="text" value="${(rq.nicknameFilter)!}"></input>
         <label for="fortune-search-messageFilter">disant</label>
@@ -32,8 +32,8 @@
     <div class="jb3-fortune-pager">
         <#if rq.page &gt; 0 >
         <form>
-            <input name="from" type="hidden" value="${(rq.from.toDate()?string["yyyy/MM/dd#HH:mm:ss"])!}"></input>
-            <input name="to" type="hidden" value="${(rq.to.toDate()?string["yyyy/MM/dd#HH:mm:ss"])!}"></input>
+            <input name="from" type="hidden" value="${(rq.from.toDate()?datetime)!}"></input>
+            <input name="to" type="hidden" value="${(rq.to.toDate()?datetime)!}"></input>
             <input name="nicknameFilter" type="hidden" value="${(rq.nicknameFilter)!}"></input>
             <input name="messageFilter" type="hidden" value="${(rq.messageFilter)!}"></input>
             <input name="page" type="hidden" value="${(rq.page - 1)!}"></input>
@@ -42,8 +42,8 @@
         </#if>
         <#if posts?? && posts?has_content >
         <form>
-            <input name="from" type="hidden" value="${(rq.from.toDate()?string["yyyy/MM/dd#HH:mm:ss"])!}"></input>
-            <input name="to" type="hidden" value="${(rq.to.toDate()?string["yyyy/MM/dd#HH:mm:ss"])!}"></input>
+            <input name="from" type="hidden" value="${(rq.from.toDate()?datetime)!}"></input>
+            <input name="to" type="hidden" value="${(rq.to.toDate()?datetime)!}"></input>
             <input name="nicknameFilter" type="hidden" value="${(rq.nicknameFilter)!}"></input>
             <input name="messageFilter" type="hidden" value="${(rq.messageFilter)!}"></input>
             <input name="page" type="hidden" value="${(rq.page + 1)!}"></input>
