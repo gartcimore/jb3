@@ -1,7 +1,6 @@
 package im.bci.jb3.frontend;
 
 import org.joda.time.DateTime;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
@@ -9,10 +8,8 @@ import org.springframework.format.annotation.DateTimeFormat;
  */
 public class PostSearchRQ {
 
-    @DateTimeFormat(pattern = "yyyy/MM/dd#HH:mm:ss")
-    private DateTime from;
-    @DateTimeFormat(pattern = "yyyy/MM/dd#HH:mm:ss")
-    private DateTime to;
+    private long from;
+    private long to;
     private String nicknameFilter;
     private String messageFilter;
     private int page = 0;
@@ -20,23 +17,23 @@ public class PostSearchRQ {
 
     public PostSearchRQ() {
         DateTime now = DateTime.now();
-        to = now.plusDays(1);
-        from = now.minusWeeks(1);
+        to = now.plusDays(1).getMillis();
+        from = now.minusWeeks(1).getMillis();
     }
 
-    public DateTime getFrom() {
+    public long getFrom() {
         return from;
     }
 
-    public void setFrom(DateTime from) {
+    public void setFrom(long from) {
         this.from = from;
     }
 
-    public DateTime getTo() {
+    public long getTo() {
         return to;
     }
 
-    public void setTo(DateTime to) {
+    public void setTo(long to) {
         this.to = to;
     }
 

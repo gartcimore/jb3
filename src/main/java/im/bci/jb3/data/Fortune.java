@@ -2,6 +2,7 @@ package im.bci.jb3.data;
 
 import java.util.Date;
 import java.util.List;
+import org.joda.time.DateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -11,7 +12,7 @@ public class Fortune {
     private String id;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private Date time = new Date();
+    private DateTime time = new DateTime();
 
     private List<Post> posts;
 
@@ -31,11 +32,11 @@ public class Fortune {
         this.posts = posts;
     }
 
-    public Date getTime() {
+    public DateTime getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(DateTime time) {
         this.time = time;
     }
 

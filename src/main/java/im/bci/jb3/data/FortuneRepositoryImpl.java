@@ -1,6 +1,7 @@
 package im.bci.jb3.data;
 
 import im.bci.jb3.frontend.PostSearchRQ;
+import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,15 +36,15 @@ public class FortuneRepositoryImpl implements FortuneRepository {
     }
 
     @Override
-    public List<Fortune> search(PostSearchRQ fo) {
-        Query query = new Query().addCriteria(Criteria.where("time").gte(fo.getFrom().toDate()).lt(fo.getTo().toDate()));
-        if (StringUtils.isNotBlank(fo.getMessageFilter())) {
-            query = query.addCriteria(Criteria.where("posts").elemMatch(Criteria.where("message").regex(fo.getMessageFilter())));
+    public List<Fortune> search(PostSearchRQ rq) {
+        Query query = new Query().addCriteria(Criteria.where("time").gte(new Date(rq.getFrom())).lt(new Date(rq.getTo())));
+        if (StringUtils.isNotBlank(rq.getMessageFilter())) {
+            query = query.addCriteria(Criteria.where("posts").elemMatch(Criteria.where("message").regex(rq.getMessageFilter())));
         }
-        if (StringUtils.isNotBlank(fo.getNicknameFilter())) {
-            query = query.addCriteria(Criteria.where("posts").elemMatch(Criteria.where("nickname").regex(fo.getNicknameFilter())));
+        if (StringUtils.isNotBlank(rq.getNicknameFilter())) {
+            query = query.addCriteria(Criteria.where("posts").elemMatch(Criteria.where("nickname").regex(rq.getNicknameFilter())));
         }
-        query = query.with(new PageRequest(fo.getPage(), fo.getPageSize(), Sort.Direction.DESC, "time"));
+        query = query.with(new PageRequest(rq.getPage(), rq.getPageSize(), Sort.Direction.DESC, "time"));
         return mongoTemplate.find(query, Fortune.class, COLLECTION_NAME);
     }
 

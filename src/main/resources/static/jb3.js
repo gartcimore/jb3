@@ -122,11 +122,7 @@ jb3 = {
         if (existingMessageDiv.length === 0) {
             var timeSpan = $('<span/>').addClass('jb3-post-time').text(moment(message.time).format(this.norlogeFormat));
             var nickSpan = $('<span/>').addClass('jb3-post-nickname').html(message.nickname);
-            var formattedMessage = message.message.replace(/(\s|^)#(\w+)/g, '$1<span class="jb3-cite" data-ref="$2">#$2</span>');
-            formattedMessage = formattedMessage.replace(/(\s|^)(https?:\/\/\S+)/gi, '$1<a href="$2" target="_blank" rel="nofollow">[url]</a>');
-            formattedMessage = formattedMessage.replace(/(\s|^)(ftp:\/\/\S+)/gi, '$1<a href="$2" target="_blank" rel="nofollow">[url]</a>');
-            formattedMessage = formattedMessage.replace(/(\s|^)\[\:([a-zA-Z0-9-_ ]*)\]/g, '$1<a class="jb3-totoz">[:$2]<img src="http://sfw.totoz.eu/gif/$2.gif"/></a>');
-            var messageSpan = $('<span/>').addClass('jb3-post-message').html(formattedMessage);
+            var messageSpan = $('<span/>').addClass('jb3-post-message').html(jb3_common.formatMessage(message.message));
             var messageDiv = $('<div/>').attr('id', message.id).addClass('jb3-post').attr('time', message.time).append(timeSpan).append(nickSpan).append(messageSpan);
             messagesContainer.append(messageDiv);
         }
@@ -140,7 +136,7 @@ jb3 = {
         $('.jb3-cite').each(function () {
             var cite = $(this);
             var referencedNorloge = $('#' + cite.data('ref')).find('.jb3-post-time');
-            if (referencedNorloge) {
+            if (referencedNorloge.length > 0) {
                 cite.text(referencedNorloge.text());
             }
         });
