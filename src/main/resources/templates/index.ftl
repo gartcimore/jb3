@@ -15,7 +15,7 @@
             <div id="jb3-posts"></div>
         </div>
         <div id="jb3-controls">
-            <input id="jb3-controls-message" type="text"></input>
+            <input id="jb3-controls-message" type="text" spellcheck="true"></input>
             <label for="jb3-controls-nickname">Nickname:</label>
             <input id="jb3-controls-nickname" type="text"></input>
             <div id="jb3-menu">
