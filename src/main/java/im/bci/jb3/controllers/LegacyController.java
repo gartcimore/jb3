@@ -61,7 +61,15 @@ public class LegacyController {
 
     @RequestMapping(value = "/xml")
     public String xml(WebRequest webRequest, Model model, HttpServletResponse response) {
-        List<Post> posts = tribune.get();
+        DateTime end = DateTime.now(DateTimeZone.UTC);
+        DateTime start = end.minusWeeks(1);
+        
+        //workaround shameful olcc new year bug
+        if(start.getYear() < end.getYear()) {
+            start = new DateTime(end.getYear(), 1, 1, 0, 0, DateTimeZone.UTC);
+        }
+
+        List<Post> posts = postPepository.findPosts(start, end);
         if (posts.isEmpty() || webRequest.checkNotModified(posts.get(0).getTime().getMillis())) {
             return null;
         } else {

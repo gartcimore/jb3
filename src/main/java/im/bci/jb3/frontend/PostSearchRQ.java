@@ -13,7 +13,7 @@ public class PostSearchRQ {
     private String nicknameFilter;
     private String messageFilter;
     private int page = 0;
-    private static final int pageSize = 50;
+    private int pageSize = 50;
 
     public PostSearchRQ() {
         DateTime now = DateTime.now();
@@ -39,6 +39,10 @@ public class PostSearchRQ {
 
     public int getPageSize() {
         return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
     public String getNicknameFilter() {

@@ -25,8 +25,4 @@ public class TribuneService {
             bots.handle(post);
         }
     }
-
-    public List<Post> get() {
-        return tribune.get();
-    }
 }

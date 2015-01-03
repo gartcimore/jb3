@@ -1,6 +1,5 @@
 package im.bci.jb3.logic;
 
-import im.bci.jb3.bot.Bots;
 import im.bci.jb3.data.Fortune;
 import im.bci.jb3.data.FortuneRepository;
 import im.bci.jb3.data.Post;
@@ -9,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -46,12 +44,6 @@ public class Tribune {
             return post;
         }
         return null;
-    }
-
-    public List<Post> get() {
-        DateTime end = DateTime.now(DateTimeZone.UTC);
-        DateTime start = end.minusWeeks(1);
-        return postPepository.findPosts(start, end);
     }
 
     public Fortune fortune(List<Norloge> norloges) {
