@@ -27,7 +27,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
 /**
@@ -47,8 +49,8 @@ public class LegacyController {
     @Autowired
     private PostRepository postPepository;
 
-    @RequestMapping("/post")
-    public void post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestHeader(value = "User-Agent", required = false) String userAgent) {
+    @RequestMapping(value = "/post", method = RequestMethod.POST)
+    public @ResponseBody void post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestHeader(value = "User-Agent", required = false) String userAgent) {
         if (StringUtils.isBlank(nickname)) {
             nickname = userAgent;
         }
@@ -63,9 +65,9 @@ public class LegacyController {
     public String xml(WebRequest webRequest, Model model, HttpServletResponse response) {
         DateTime end = DateTime.now(DateTimeZone.UTC);
         DateTime start = end.minusWeeks(1);
-        
+
         //workaround shameful olcc new year bug
-        if(start.getYear() < end.getYear()) {
+        if (start.getYear() < end.getYear()) {
             start = new DateTime(end.getYear(), 1, 1, 0, 0, DateTimeZone.UTC);
         }
 
@@ -79,11 +81,11 @@ public class LegacyController {
             List<LegacyPost> legacyPosts = new ArrayList<LegacyPost>(posts.size());
             for (Post post : posts) {
                 LegacyPost legacyPost = new LegacyPost();
-                    legacyPost.setId(post.getTime().getMillis());
-                    legacyPost.setTime(legacyPostTimeFormatter.print(post.getTime()));
-                    legacyPost.setInfo(StringEscapeUtils.escapeXml10(Jsoup.clean(post.getNickname(), Whitelist.none())));
-                    legacyPost.setMessage(StringEscapeUtils.escapeXml10(Jsoup.clean(convertToLegacyNorloges(convertUrls(post.getMessage()), post.getTime()), messageWhitelist)));
-                    legacyPosts.add(legacyPost);
+                legacyPost.setId(post.getTime().getMillis());
+                legacyPost.setTime(legacyPostTimeFormatter.print(post.getTime()));
+                legacyPost.setInfo(StringEscapeUtils.escapeXml10(Jsoup.clean(post.getNickname(), Whitelist.none())));
+                legacyPost.setMessage(StringEscapeUtils.escapeXml10(Jsoup.clean(convertToLegacyNorloges(convertUrls(post.getMessage()), post.getTime()), messageWhitelist)));
+                legacyPosts.add(legacyPost);
             }
             board.setPosts(legacyPosts);
             model.addAttribute("board", board);
@@ -112,7 +114,7 @@ public class LegacyController {
                         return;
                     }
                 }
-                matcher.appendReplacement(sb, norloge.toString());
+                matcher.appendReplacement(sb, "$0");
             }
 
             @Override
@@ -144,16 +146,20 @@ public class LegacyController {
 
             @Override
             public void process(Norloge norloge, Matcher matcher) {
-                DateTime time = norloge.getTime();
-                if (null != time) {
-                    time = time.withZoneRetainFields(legacyTimeZone);
-                    Post post = postPepository.findOne(time, time.plusSeconds(1));
-                    if (null != post) {
-                        matcher.appendReplacement(sb, Norloge.format(post));
-                        return;
+                if (StringUtils.isBlank(norloge.getBouchot())) {
+                    DateTime time = norloge.getTime();
+                    if (null != time) {
+                        time = time.withZoneRetainFields(legacyTimeZone);
+                        Post post = postPepository.findOne(time, time.plusSeconds(1));
+                        if (null != post) {
+                            matcher.appendReplacement(sb, Norloge.format(post));
+                            return;
+                        }
                     }
+                    matcher.appendReplacement(sb, norloge.toString());
+                } else {
+                    matcher.appendReplacement(sb, "$0");
                 }
-                matcher.appendReplacement(sb, norloge.toString());
             }
 
             @Override
@@ -177,6 +183,5 @@ public class LegacyController {
         matcher.appendTail(sb);
         return sb.toString();
     }
-
 
 }
