@@ -2,7 +2,13 @@ jb3 = {
     init: function () {
         var self = this;
         var controlsMessage = $('#jb3-controls-message');
+        var controlsRoom = $('#jb3-controls-room');
         var controlsNickname = $('#jb3-controls-nickname');
+        $('#jb3-controls-room').w2field('combo', { openOnFocus: true, items: [" ", "plop"] });
+        controlsRoom.change(function() {
+            $('#jb3-posts').empty();
+            self.refreshMessages();
+        });
         controlsMessage.bind('keypress', function (event) {
             if (event.altKey) {
                 if (self.handleAltShortcut(event.key)) {
@@ -10,7 +16,7 @@ jb3 = {
                     event.preventDefault();
                 }
             } else if (event.keyCode === 13) {
-                self.postMessage(controlsNickname.val(), controlsMessage.val());
+                self.postMessage(controlsNickname.val(), controlsMessage.val(), controlsRoom.val());
                 controlsMessage.val('');
             }
         });
@@ -72,12 +78,12 @@ jb3 = {
         $(".jb3-cite[data-ref='" + post.attr('id') + "']").removeClass("jb3-highlight");
         $('#jb3-post-popup').hide();
     },
-    postMessage: function (nickname, message) {
+    postMessage: function (nickname, message, room) {
         var self = this;
         $.ajax({
             type: "POST",
             url: "/api/post",
-            data: {message: message, nickname: nickname},
+            data: {message: message, nickname: nickname, room: room},
             success: function () {
                 self.refreshMessages();
             }
@@ -85,10 +91,12 @@ jb3 = {
     },
     refreshMessages: function (pollInterval) {
         var self = this;
+        var controlsRoom = $('#jb3-controls-room');
         $.ajax({
             dataType: "json",
             type: "GET",
             url: "/api/get",
+            data: {room: controlsRoom.val()},
             success: function (data) {
                 self.onNewMessages(data);
             },

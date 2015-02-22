@@ -7,6 +7,7 @@
         <meta name="robots" content="noindex,nofollow">
         <link rel="stylesheet" type="text/css" href="jb3-common.css" />
         <link rel="stylesheet" type="text/css" href="jb3-frontend.css" />
+        <link rel="stylesheet" type="text/css" href="/webjars/w2ui/1.4.2/w2ui.css"></script>
         <link rel="icon" type="image/png" href="/favicon.png" />
     </head>
     <body>
@@ -18,13 +19,16 @@
             <input id="jb3-controls-message" type="text" spellcheck="true"></input>
             <label for="jb3-controls-nickname">Nickname:</label>
             <input id="jb3-controls-nickname" type="text"></input>
+            <label for="jb3-controls-room">Room:</label>
+            <input id="jb3-controls-room" type="text"></input>
             <div id="jb3-menu">
                 <a id="jb3-archives-menu-item" href="/archive" target="_blank">Archives</a>
                 <a id="jb3-fortunes-menu-item" href="/fortune" target="_blank">Fortunes</a>
-            </div>
+        </div>
         </div>
     </body>
     <script src="/webjars/jquery/2.1.1/jquery.js" defer></script>
+    <script src="/webjars/w2ui/1.4.2/w2ui.js" defer></script>
     <script src="/webjars/momentjs/2.8.3/moment.js" defer/></script>
     <script src="/jb3-common.js" defer/></script>
     <script src="/jb3.js" defer/></script>

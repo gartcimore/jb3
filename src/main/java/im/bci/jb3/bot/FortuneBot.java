@@ -27,7 +27,7 @@ public class FortuneBot implements Bot {
             if (tribune.isBotCall(post, NAME)) {
                 Fortune fortune = tribune.fortune(Norloge.parseNorloges(post.getMessage()));
                 if (null != fortune) {
-                    tribune.post(NAME, Norloge.format(post) + " La voilà " + host + "/fortune/" + fortune.getId());
+                    tribune.post(NAME, Norloge.format(post) + " La voilà " + host + "/fortune/" + fortune.getId(), post.getRoom());
                 }
             }
         } catch (Exception ex) {

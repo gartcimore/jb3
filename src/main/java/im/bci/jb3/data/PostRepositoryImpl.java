@@ -20,8 +20,15 @@ public class PostRepositoryImpl implements PostRepository {
     private MongoTemplate mongoTemplate;
 
     @Override
-    public List<Post> findPosts(DateTime start, DateTime end) {
-        Query query = new Query().addCriteria(Criteria.where("time").gte(start.toDate()).lt(end.toDate())).with(new PageRequest(0, 1000, Sort.Direction.DESC, "time"));
+    public List<Post> findPosts(DateTime start, DateTime end, String room) {
+        Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate());
+        if(StringUtils.isNotBlank(room)) {
+            criteria = criteria.and("room").is(room);
+        } else {
+            criteria = criteria.andOperator(Criteria.where("room").exists(false).orOperator(Criteria.where("room").is(null)));
+        }
+        Query query = new Query().addCriteria(criteria).with(new PageRequest(0, 1000, Sort.Direction.DESC, "time"));
+        
         List<Post> result = mongoTemplate.find(query, Post.class, COLLECTION_NAME);
         return result;
     }

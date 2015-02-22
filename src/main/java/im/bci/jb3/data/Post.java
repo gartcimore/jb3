@@ -10,10 +10,11 @@ public class Post {
     @Id
     private String id;
 
-    @DateTimeFormat(iso=ISO.DATE_TIME)
+    @DateTimeFormat(iso = ISO.DATE_TIME)
     private DateTime time;
     private String nickname;
     private String message;
+    private String room;
 
     public String getId() {
         return id;
@@ -46,4 +47,13 @@ public class Post {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public String getRoom() {
+        return room;
+    }
+
+    public void setRoom(String room) {
+        this.room = room;
+    }
+
 }

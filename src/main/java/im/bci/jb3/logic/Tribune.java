@@ -29,16 +29,23 @@ public class Tribune {
     private final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s", "u", "tt");
     private static final int MAX_POST_LENGTH = 512;
     private static final int MAX_NICKNAME_LENGTH = 32;
+    private static final int MAX_ROOM_LENGTH = 32;
 
-    public Post post(String nickname, String message) {
+    public Post post(String nickname, String message, String room) {
         if (null != nickname) {
             nickname = StringUtils.abbreviate(Jsoup.clean(nickname, Whitelist.none()), MAX_NICKNAME_LENGTH);
+        }
+        if (null != room) {
+            nickname = StringUtils.abbreviate(Jsoup.clean(nickname, Whitelist.none()), MAX_ROOM_LENGTH);
         }
         message = StringUtils.abbreviate(Jsoup.clean(message, messageWhitelist), MAX_POST_LENGTH);
         if (StringUtils.isNotBlank(message)) {
             Post post = new Post();
             post.setNickname(StringUtils.isNotBlank(nickname) ? nickname : "AnonymousCoward");
             post.setMessage(message);
+            if (StringUtils.isNotBlank(room)) {
+                post.setRoom(room);
+            }
             post.setTime(DateTime.now(DateTimeZone.UTC));
             postPepository.save(post);
             return post;
@@ -115,7 +122,7 @@ public class Tribune {
             } else if (null != norloge.getTime()) {
                 DateTime start = norloge.getTime();
                 DateTime end = norloge.getTime().plusSeconds(1);
-                return postPepository.findPosts(start, end);
+                return postPepository.findPosts(start, end, null);
             }
         }
         return Collections.emptyList();

@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
 
 public interface PostRepository {
     
-    List<Post> findPosts(DateTime start, DateTime end);
+    List<Post> findPosts(DateTime start, DateTime end, String room);
     
     Post findOne(DateTime start, DateTime end);
 

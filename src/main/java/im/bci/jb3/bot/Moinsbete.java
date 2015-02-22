@@ -27,7 +27,7 @@ public class Moinsbete implements Bot {
                 Element anecdote = doc.select(".anecdote-content-wrapper .summary a").first();
                 anecdote.select(".read-more").remove();
                 String message = Norloge.format(post) + " " + anecdote.text();
-                tribune.post(NAME, message);
+                tribune.post(NAME, message, post.getRoom());
             }
         } catch (Exception ex) {
             Logger.getLogger(Moinsbete.class.getName()).log(Level.SEVERE, null, ex);

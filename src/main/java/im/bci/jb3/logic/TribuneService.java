@@ -2,7 +2,6 @@ package im.bci.jb3.logic;
 
 import im.bci.jb3.bot.Bots;
 import im.bci.jb3.data.Post;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +18,8 @@ public class TribuneService {
     @Autowired
     private Tribune tribune;
 
-    public void post(String nickname, String message) {
-        Post post = tribune.post(nickname, message);
+    public void post(String nickname, String message, String room) {
+        Post post = tribune.post(nickname, message, room);
         if (null != post) {
             bots.handle(post);
         }

@@ -54,7 +54,7 @@ public class LegacyController {
         if (StringUtils.isBlank(nickname)) {
             nickname = userAgent;
         }
-        tribune.post(nickname, convertFromLegacyNorloges(message));
+        tribune.post(nickname, convertFromLegacyNorloges(message), null);
     }
 
     private static final String legacyTimezoneId = "Europe/Paris";
@@ -71,7 +71,7 @@ public class LegacyController {
             start = new DateTime(end.getYear(), 1, 1, 0, 0, DateTimeZone.UTC);
         }
 
-        List<Post> posts = postPepository.findPosts(start, end);
+        List<Post> posts = postPepository.findPosts(start, end, null);
         if (posts.isEmpty() || webRequest.checkNotModified(posts.get(0).getTime().getMillis())) {
             return null;
         } else {

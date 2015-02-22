@@ -29,15 +29,15 @@ public class ApiController {
 
     
     @RequestMapping("/post")
-    public void post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message) {
-        tribune.post(nickname, message);
+    public void post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room") String room) {
+        tribune.post(nickname, message, room);
     }
 
     @RequestMapping("/get")
-    public List<Post> get() {
+    public List<Post> get(@RequestParam(value = "room") String room) {
         DateTime end = DateTime.now(DateTimeZone.UTC);
         DateTime start = end.minusWeeks(1);
-        return postRepository.findPosts(start, end);
+        return postRepository.findPosts(start, end, room);
     }
 
     private final DataFactory dataFactory = new DataFactory();
