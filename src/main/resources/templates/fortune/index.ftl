@@ -54,8 +54,8 @@
         </#if>
     </div>
     </body>
-    <script src="/jquery-2.1.1.js" defer></script>
-    <script src="/moment.js" defer/></script>
+    <script src="/webjars/jquery/2.1.1/jquery.js" defer></script>
+    <script src="/webjars/momentjs/2.8.3/moment.js" defer/></script>
     <script src="/jb3-common.js" defer/></script>
     <script src="/jb3-fortune.js" defer/></script>
 </html>
