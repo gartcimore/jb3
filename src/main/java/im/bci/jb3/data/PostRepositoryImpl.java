@@ -5,7 +5,10 @@ import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.format.ISOPeriodFormat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -22,13 +25,13 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public List<Post> findPosts(DateTime start, DateTime end, String room) {
         Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate());
-        if(StringUtils.isNotBlank(room)) {
+        if (StringUtils.isNotBlank(room)) {
             criteria = criteria.and("room").is(room);
         } else {
             criteria = criteria.andOperator(Criteria.where("room").exists(false).orOperator(Criteria.where("room").is(null)));
         }
         Query query = new Query().addCriteria(criteria).with(new PageRequest(0, 1000, Sort.Direction.DESC, "time"));
-        
+
         List<Post> result = mongoTemplate.find(query, Post.class, COLLECTION_NAME);
         return result;
     }
@@ -62,6 +65,29 @@ public class PostRepositoryImpl implements PostRepository {
         }
         query = query.with(new PageRequest(rq.getPage(), rq.getPageSize(), Sort.Direction.DESC, "time"));
         return mongoTemplate.find(query, Post.class, COLLECTION_NAME);
+    }
+
+    private Period postsTTL;
+    
+    @Value("${jb3.posts.ttl}")
+    public void setPostsTTL(String ttl) {
+        postsTTL = ISOPeriodFormat.standard().parsePeriod(ttl);
+    }
+
+    private Period roomPostsTTL;
+
+    @Value("${jb3.room.posts.ttl}")
+    public void setRoomPostsTTL(String ttl) {
+        roomPostsTTL = ISOPeriodFormat.standard().parsePeriod(ttl);
+    }
+
+    @Override
+    public void deleteOldPosts() {
+        Query roomQuery = new Query().addCriteria(Criteria.where("room").ne(null).and("time").lt(DateTime.now().minus(roomPostsTTL).toDate()));
+        mongoTemplate.remove(roomQuery, Post.class, COLLECTION_NAME);
+        
+        Query query = new Query().addCriteria(Criteria.where("room").is(null).and("time").lt(DateTime.now().minus(postsTTL).toDate()));
+        mongoTemplate.remove(query, Post.class, COLLECTION_NAME);
     }
 
 }

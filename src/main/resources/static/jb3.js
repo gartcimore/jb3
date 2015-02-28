@@ -4,9 +4,15 @@ jb3 = {
         var controlsMessage = $('#jb3-controls-message');
         var controlsRoom = $('#jb3-controls-room');
         var controlsNickname = $('#jb3-controls-nickname');
-        $('#jb3-controls-room').w2field('combo', { openOnFocus: true, items: [" ", "plop"] });
-        controlsRoom.change(function() {
+        controlsRoom.append(
+                $.map(localStorage.rooms ? JSON.parse(localStorage.rooms) : [], function (v, k) {
+                    return $("<option>").val(v.rname).text(v.rname);
+                })
+                );
+        controlsRoom.val(localStorage.selectedRoom);
+        controlsRoom.change(function () {
             $('#jb3-posts').empty();
+            localStorage.selectedRoom = controlsRoom.val();
             self.refreshMessages();
         });
         controlsMessage.bind('keypress', function (event) {
@@ -91,12 +97,16 @@ jb3 = {
     },
     refreshMessages: function (pollInterval) {
         var self = this;
-        var controlsRoom = $('#jb3-controls-room');
+        var data = {};
+        var room = $('#jb3-controls-room').val();
+        if (room) {
+            data.room = room;
+        }
         $.ajax({
             dataType: "json",
             type: "GET",
             url: "/api/get",
-            data: {room: controlsRoom.val()},
+            data: data,
             success: function (data) {
                 self.onNewMessages(data);
             },

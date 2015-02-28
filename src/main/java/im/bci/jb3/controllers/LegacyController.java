@@ -50,11 +50,11 @@ public class LegacyController {
     private PostRepository postPepository;
 
     @RequestMapping(value = "/post", method = RequestMethod.POST)
-    public @ResponseBody void post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestHeader(value = "User-Agent", required = false) String userAgent) {
+    public @ResponseBody void post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room, @RequestHeader(value = "User-Agent", required = false) String userAgent) {
         if (StringUtils.isBlank(nickname)) {
             nickname = userAgent;
         }
-        tribune.post(nickname, convertFromLegacyNorloges(message), null);
+        tribune.post(nickname, convertFromLegacyNorloges(message), room);
     }
 
     private static final String legacyTimezoneId = "Europe/Paris";
@@ -62,7 +62,7 @@ public class LegacyController {
     private static final DateTimeFormatter legacyPostTimeFormatter = DateTimeFormat.forPattern("yyyyMMddHHmmss").withZone(legacyTimeZone);
 
     @RequestMapping(value = "/xml")
-    public String xml(WebRequest webRequest, Model model, HttpServletResponse response) {
+    public String xml(@RequestParam(value = "room", required = false) String room, WebRequest webRequest, Model model, HttpServletResponse response) {
         DateTime end = DateTime.now(DateTimeZone.UTC);
         DateTime start = end.minusWeeks(1);
 
@@ -71,7 +71,7 @@ public class LegacyController {
             start = new DateTime(end.getYear(), 1, 1, 0, 0, DateTimeZone.UTC);
         }
 
-        List<Post> posts = postPepository.findPosts(start, end, null);
+        List<Post> posts = postPepository.findPosts(start, end, room);
         if (posts.isEmpty() || webRequest.checkNotModified(posts.get(0).getTime().getMillis())) {
             return null;
         } else {

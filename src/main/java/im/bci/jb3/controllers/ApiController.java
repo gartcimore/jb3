@@ -29,12 +29,12 @@ public class ApiController {
 
     
     @RequestMapping("/post")
-    public void post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room") String room) {
+    public void post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room) {
         tribune.post(nickname, message, room);
     }
 
     @RequestMapping("/get")
-    public List<Post> get(@RequestParam(value = "room") String room) {
+    public List<Post> get(@RequestParam(value = "room", required = false) String room) {
         DateTime end = DateTime.now(DateTimeZone.UTC);
         DateTime start = end.minusWeeks(1);
         return postRepository.findPosts(start, end, room);

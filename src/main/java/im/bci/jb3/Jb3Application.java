@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
@@ -18,6 +19,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @EnableAsync
 @ComponentScan
 @EnableSpringDataWebSupport
+@EnableScheduling
 public class Jb3Application implements CommandLineRunner {
 
     @Override

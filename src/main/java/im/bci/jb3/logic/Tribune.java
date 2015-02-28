@@ -36,7 +36,7 @@ public class Tribune {
             nickname = StringUtils.abbreviate(Jsoup.clean(nickname, Whitelist.none()), MAX_NICKNAME_LENGTH);
         }
         if (null != room) {
-            nickname = StringUtils.abbreviate(Jsoup.clean(nickname, Whitelist.none()), MAX_ROOM_LENGTH);
+            room = StringUtils.abbreviate(Jsoup.clean(room, Whitelist.none()), MAX_ROOM_LENGTH);
         }
         message = StringUtils.abbreviate(Jsoup.clean(message, messageWhitelist), MAX_POST_LENGTH);
         if (StringUtils.isNotBlank(message)) {

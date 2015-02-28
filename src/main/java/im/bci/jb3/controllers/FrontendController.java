@@ -12,6 +12,11 @@ public class FrontendController {
         return "index";
     }
     
+    @RequestMapping("/rooms")
+    public String rooms() {
+        return "rooms";
+    }
+    
     @RequestMapping("error")
     public String error() {
         return "error";

@@ -15,5 +15,7 @@ public interface PostRepository {
     Post findOne(String id);
     
     List<Post> search(PostSearchRQ fo);
+    
+    void deleteOldPosts();
 
 }
