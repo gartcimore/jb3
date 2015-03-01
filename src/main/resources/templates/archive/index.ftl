@@ -15,6 +15,8 @@
         <input id="archive-search-from" type="text"></input>
         <label for="archive-search-to">à</label>
         <input id="archive-search-to" type="text"></input>
+        <label for="archive-search-roomFilter">dans</label>
+        <input id="archive-search-roomFilter" name="roomFilter" type="text" value="${(rq.roomFilter)!}"></input>
         <label for="archive-search-nicknameFilter">par</label>
         <input id="archive-search-nicknameFilter" name="nicknameFilter" type="text" value="${(rq.nicknameFilter)!}"></input>
         <label for="archive-search-messageFilter">disant</label>
@@ -28,8 +30,9 @@
         <#list posts as post>
         <div id="${post.id}" class="jb3-post">
             <span class="jb3-post-time">${post.time.getMillis()?c}</span>
-            <span class="jb3-post-nickname">${post.nickname}</span>
-            <span class="jb3-post-message">${post.message}</span>
+            <span class="jb3-post-room">${(post.room)!}</span>
+            <span class="jb3-post-nickname">${(post.nickname)!}</span>
+            <span class="jb3-post-message">${(post.message)!}</span>
         </div>
         </#list>
     </div>
@@ -39,6 +42,7 @@
         <form>
             <input name="from" type="hidden" value="${(rq.from?c)!}"></input>
             <input name="to" type="hidden" value="${(rq.to?c)!}"></input>
+            <input name="roomFilter" type="hidden" value="${(rq.roomFilter)!}"></input>
             <input name="nicknameFilter" type="hidden" value="${(rq.nicknameFilter)!}"></input>
             <input name="messageFilter" type="hidden" value="${(rq.messageFilter)!}"></input>
             <input name="page" type="hidden" value="${(rq.page - 1)!}"></input>
@@ -49,6 +53,7 @@
         <form>
             <input name="from" type="hidden" value="${(rq.from?c)!}"></input>
             <input name="to" type="hidden" value="${(rq.to?c)!}"></input>
+            <input name="roomFilter" type="hidden" value="${(rq.roomFilter)!}"></input>
             <input name="nicknameFilter" type="hidden" value="${(rq.nicknameFilter)!}"></input>
             <input name="messageFilter" type="hidden" value="${(rq.messageFilter)!}"></input>
             <input name="page" type="hidden" value="${(rq.page + 1)!}"></input>

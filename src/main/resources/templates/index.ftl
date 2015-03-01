@@ -13,7 +13,7 @@
     <body>
         <div id="jb3-posts-container">
             <div id="jb3-post-popup"></div>
-            <div id="jb3-posts"></div>
+            <div id="jb3-posts" class="jb3-posts"></div>
         </div>
         <div id="jb3-controls">
             <input id="jb3-controls-message" type="text" spellcheck="true"></input>

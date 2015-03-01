@@ -12,6 +12,7 @@ public class PostSearchRQ {
     private long to;
     private String nicknameFilter;
     private String messageFilter;
+    private String roomFilter;
     private int page = 0;
     private int pageSize = 50;
 
@@ -59,6 +60,14 @@ public class PostSearchRQ {
 
     public void setMessageFilter(String messageFilter) {
         this.messageFilter = messageFilter;
+    }
+
+    public String getRoomFilter() {
+        return roomFilter;
+    }
+
+    public void setRoomFilter(String roomFilter) {
+        this.roomFilter = roomFilter;
     }
 
     public int getPage() {

@@ -35,7 +35,7 @@ jb3 = {
         });
         $('#jb3-posts').on({
             mouseenter: function (event) {
-                self.highlightPostAndReplies($(event.target).data('ref'));
+                self.highlightPostAndReplies($(event.target).data('ref'), true);
             },
             mouseleave: function (event) {
                 self.unhighlightPostAndReplies($(event.target).data('ref'));
@@ -43,7 +43,7 @@ jb3 = {
         }, ".jb3-cite");
         $('#jb3-posts').on({
             mouseenter: function (event) {
-                self.highlightPostAndReplies($(event.target).parent().attr('id'));
+                self.highlightPostAndReplies($(event.target).parent().attr('id'), false);
             },
             mouseleave: function (event) {
                 self.unhighlightPostAndReplies($(event.target).parent().attr('id'));
@@ -70,12 +70,13 @@ jb3 = {
         controlsNickname.change(function () {
             localStorage.nickname = controlsNickname.val();
         });
-    }
-    ,
-    highlightPostAndReplies: function (postId) {
+    },
+    highlightPostAndReplies: function (postId, showPopup) {
         var post = $('#' + postId);
         post.addClass("jb3-highlight");
-        $('#jb3-post-popup').html(post.html()).css('display', 'block');
+        if(showPopup) {
+            $('#jb3-post-popup').html(post.html()).css('display', 'block');
+        }
         $(".jb3-cite[data-ref='" + post.attr('id') + "']").addClass("jb3-highlight");
     },
     unhighlightPostAndReplies: function (postId) {

@@ -4,6 +4,7 @@ body {
 
 .jb3-posts {
     display : table;
+    border-spacing: 2px 1px;
 }
 
 .jb3-post {
@@ -12,19 +13,33 @@ body {
 
 .jb3-post-time {
     display : table-cell;
-    padding-right: 10px;
+    padding-right: 5px;
+    padding-left: 5px;
+    text-align: center;
     color: black;
     font-weight: bold;
+
+}
+
+.jb3-post-room {
+    display : table-cell;
+    padding-right: 5px;
+    padding-left: 5px;
+    color: #25662D;
 }
 
 .jb3-post-nickname {
     display : table-cell;
-    padding-right: 10px;
+    padding-right: 5px;
+    padding-left: 5px;
     color: #833;
 }
 
 .jb3-post-message {
     display : table-cell;
+    padding-right: 5px;
+    padding-left: 5px;
+    color: black;
 }
 
 .jb3-post-message a {

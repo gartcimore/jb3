@@ -63,12 +63,15 @@ public class PostRepositoryImpl implements PostRepository {
         if (StringUtils.isNotBlank(rq.getNicknameFilter())) {
             query = query.addCriteria(Criteria.where("nickname").regex(rq.getNicknameFilter()));
         }
+        if (StringUtils.isNotBlank(rq.getRoomFilter())) {
+            query = query.addCriteria(Criteria.where("room").regex(rq.getRoomFilter()));
+        }
         query = query.with(new PageRequest(rq.getPage(), rq.getPageSize(), Sort.Direction.DESC, "time"));
         return mongoTemplate.find(query, Post.class, COLLECTION_NAME);
     }
 
     private Period postsTTL;
-    
+
     @Value("${jb3.posts.ttl}")
     public void setPostsTTL(String ttl) {
         postsTTL = ISOPeriodFormat.standard().parsePeriod(ttl);
@@ -85,7 +88,7 @@ public class PostRepositoryImpl implements PostRepository {
     public void deleteOldPosts() {
         Query roomQuery = new Query().addCriteria(Criteria.where("room").ne(null).and("time").lt(DateTime.now().minus(roomPostsTTL).toDate()));
         mongoTemplate.remove(roomQuery, Post.class, COLLECTION_NAME);
-        
+
         Query query = new Query().addCriteria(Criteria.where("room").is(null).and("time").lt(DateTime.now().minus(postsTTL).toDate()));
         mongoTemplate.remove(query, Post.class, COLLECTION_NAME);
     }
