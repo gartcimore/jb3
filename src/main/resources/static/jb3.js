@@ -39,6 +39,13 @@ jb3 = {
             },
             mouseleave: function (event) {
                 self.unhighlightPostAndReplies($(event.target).data('ref'));
+            },
+            click: function (event) {
+                var postContainer = $('#jb3-posts-container');
+                var quoted = $('#' + $(event.target).data('ref'));
+                if (quoted.length > 0) {
+                    postContainer.scrollTop(quoted[0].offsetTop - event.clientY  + postContainer.offset().top + 10);
+                }
             }
         }, ".jb3-cite");
         $('#jb3-posts').on({
@@ -74,7 +81,7 @@ jb3 = {
     highlightPostAndReplies: function (postId, showPopup) {
         var post = $('#' + postId);
         post.addClass("jb3-highlight");
-        if(showPopup) {
+        if (showPopup) {
             $('#jb3-post-popup').html(post.html()).css('display', 'block');
         }
         $(".jb3-cite[data-ref='" + post.attr('id') + "']").addClass("jb3-highlight");
