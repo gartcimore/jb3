@@ -7,14 +7,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ScheduledTasks {
+public class ScheduledCleaning {
 
     @Autowired
     private PostRepository postPepository;
 
     @Scheduled(cron = "0 0/30 * * * *")
     public void deleteOldPosts() {
-        Logger.getLogger(ScheduledTasks.class.getName()).info("Delete old posts.");
+        Logger.getLogger(ScheduledCleaning.class.getName()).info("Delete old posts.");
         postPepository.deleteOldPosts();
     }
 }

@@ -4,6 +4,7 @@ import im.bci.jb3.data.Post;
 import im.bci.jb3.data.PostRepository;
 import im.bci.jb3.frontend.RandomNicknameMV;
 import im.bci.jb3.logic.TribuneService;
+import java.util.Collections;
 import java.util.List;
 import org.fluttercode.datafactory.impl.DataFactory;
 import org.joda.time.DateTime;
@@ -29,8 +30,9 @@ public class ApiController {
 
     
     @RequestMapping("/post")
-    public void post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room) {
+    public List<Post> post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room) {
         tribune.post(nickname, message, room);
+        return Collections.emptyList();//TODO renvoyer les nouveaux posts
     }
 
     @RequestMapping("/get")

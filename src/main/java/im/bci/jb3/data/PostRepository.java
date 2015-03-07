@@ -14,6 +14,8 @@ public interface PostRepository {
 
     Post findOne(String id);
     
+    boolean existsByGatewayPostId(GatewayPostId gpid);
+    
     List<Post> search(PostSearchRQ fo);
     
     void deleteOldPosts();

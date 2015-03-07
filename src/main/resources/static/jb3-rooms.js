@@ -1,11 +1,6 @@
 jb3_rooms = {
     init: function () {
-        var records;
-        try {
-            records = JSON.parse(localStorage.rooms);
-        } catch (e) {
-            records = [];
-        }
+        var records = jb3_common.getRooms();
         $('#jb3-rooms-grid').w2grid({
             name: 'Rooms',
             header: 'List of rooms',

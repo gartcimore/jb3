@@ -15,6 +15,7 @@ public class Post {
     private String nickname;
     private String message;
     private String room;
+    private GatewayPostId gatewayPostId;
 
     public String getId() {
         return id;
@@ -54,6 +55,14 @@ public class Post {
 
     public void setRoom(String room) {
         this.room = room;
+    }
+
+    public void setGatewayPostId(GatewayPostId gatewayPostId) {
+        this.gatewayPostId = gatewayPostId;
+    }
+
+    public GatewayPostId getGatewayPostId() {
+        return gatewayPostId;
     }
 
 }

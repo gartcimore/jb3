@@ -5,7 +5,7 @@ jb3 = {
         var controlsRoom = $('#jb3-controls-room');
         var controlsNickname = $('#jb3-controls-nickname');
         controlsRoom.append(
-                $.map(localStorage.rooms ? JSON.parse(localStorage.rooms) : [], function (v, k) {
+                $.map(jb3_common.getRooms(), function (v, k) {
                     return $("<option>").val(v.rname).text(v.rname);
                 })
                 );
@@ -197,7 +197,7 @@ jb3 = {
                 this.insertTextInMessageControl('_o/* <b>paf!</b> ');
                 return true;
             case 'a':
-                this.insertTextInMessageControl('♪ <i>' + this.getSelectedText() + '</i> ♪', 5);
+                this.insertTextInMessageControl('\u266A <i>' + this.getSelectedText() + '</i> \u266A', 5);
                 return true;
         }
         return false;

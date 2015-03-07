@@ -26,19 +26,10 @@ public class Tribune {
     @Autowired
     private FortuneRepository fortunePepository;
 
-    private final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s", "u", "tt");
-    private static final int MAX_POST_LENGTH = 512;
-    private static final int MAX_NICKNAME_LENGTH = 32;
-    private static final int MAX_ROOM_LENGTH = 32;
-
     public Post post(String nickname, String message, String room) {
-        if (null != nickname) {
-            nickname = StringUtils.abbreviate(Jsoup.clean(nickname, Whitelist.none()), MAX_NICKNAME_LENGTH);
-        }
-        if (null != room) {
-            room = StringUtils.abbreviate(Jsoup.clean(room, Whitelist.none()), MAX_ROOM_LENGTH);
-        }
-        message = StringUtils.abbreviate(Jsoup.clean(message, messageWhitelist), MAX_POST_LENGTH);
+        nickname = CleanUtils.cleanNickname(nickname);
+        room = CleanUtils.cleanRoom(room);
+        message = CleanUtils.cleanMessage(message);
         if (StringUtils.isNotBlank(message)) {
             Post post = new Post();
             post.setNickname(StringUtils.isNotBlank(nickname) ? nickname : "AnonymousCoward");

@@ -93,4 +93,10 @@ public class PostRepositoryImpl implements PostRepository {
         mongoTemplate.remove(query, Post.class, COLLECTION_NAME);
     }
 
+    @Override
+    public boolean existsByGatewayPostId(GatewayPostId gpid) {
+        Query query = new Query().addCriteria(Criteria.where("gatewayPostId.gateway").is(gpid.getGateway()).and("gatewayPostId.postId").is(gpid.getPostId()));
+        return mongoTemplate.exists(query, COLLECTION_NAME);
+    }
+
 }
