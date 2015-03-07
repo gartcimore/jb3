@@ -47,7 +47,7 @@ public class EuromusselsGateway implements Gateway {
                 if (!postPepository.existsByGatewayPostId(gatewayPostId)) {
                     Post post = new Post();
                     post.setGatewayPostId(gatewayPostId);
-                    post.setMessage(legacyUtils.convertFromLegacyNorloges(CleanUtils.cleanMessage(StringEscapeUtils.unescapeXml(postToImport.select("message").text()))));
+                    post.setMessage(legacyUtils.convertFromLegacyNorloges(CleanUtils.cleanMessage(replaceUrls(StringEscapeUtils.unescapeXml(postToImport.select("message").text())))));
                     String nickname = StringEscapeUtils.unescapeXml(postToImport.select("login").text());
                     if (StringUtils.isBlank(nickname)) {
                         nickname = StringEscapeUtils.unescapeXml(postToImport.select("info").text());
@@ -81,6 +81,14 @@ public class EuromusselsGateway implements Gateway {
     @Override
     public String getRoom() {
         return BOUCHOT_NAME;
+    }
+
+    private String replaceUrls(String message) {
+        Document doc = Jsoup.parse(message);
+        for(Element a : doc.select("a")) {
+            a.text(a.attr("href"));
+        }
+        return doc.toString();
     }
 
 }
