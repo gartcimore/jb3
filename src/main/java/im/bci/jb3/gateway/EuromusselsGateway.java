@@ -72,7 +72,7 @@ public class EuromusselsGateway implements Gateway {
     @Override
     public void post(String nickname, String message) {
         try {
-            Jsoup.connect("http://euromussels.eu/?q=tribune/post").data("message", legacyUtils.convertToLegacyNorloges(message, DateTime.now().secondOfMinute().roundFloorCopy())).userAgent(nickname).data("last_id", String.valueOf(lastPostId)).parser(Parser.xmlParser()).post();
+            Jsoup.connect("http://euromussels.eu/?q=tribune/post").data("message", legacyUtils.convertToLegacyNorloges(message, DateTime.now().withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy())).userAgent(nickname).data("last_id", String.valueOf(lastPostId)).parser(Parser.xmlParser()).post();
         } catch (IOException ex) {
             Logger.getLogger(EuromusselsGateway.class.getName()).log(Level.SEVERE, null, ex);
         }
