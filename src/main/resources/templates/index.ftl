@@ -30,6 +30,7 @@
     </body>
     <script src="/webjars/jquery/2.1.1/jquery.js" defer></script>
     <script src="/webjars/w2ui/1.4.2/w2ui.js" defer></script>
+    <script src="/webjars/URI.js/1.14.1/URI.js" defer></script>
     <script src="/webjars/momentjs/2.8.3/moment.js" defer/></script>
     <script src="/jb3-common.js" defer/></script>
     <script src="/jb3.js" defer/></script>

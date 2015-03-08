@@ -9,7 +9,7 @@ jb3 = {
                     return $("<option>").val(v.rname).text(v.rname);
                 })
                 );
-        controlsRoom.val(localStorage.selectedRoom);
+        controlsRoom.val(URI(window.location).search(true).room || localStorage.selectedRoom);
         controlsRoom.change(function () {
             $('#jb3-posts').empty();
             localStorage.selectedRoom = controlsRoom.val();
