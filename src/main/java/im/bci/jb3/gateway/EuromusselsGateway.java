@@ -6,6 +6,9 @@ import im.bci.jb3.data.PostRepository;
 import im.bci.jb3.legacy.LegacyUtils;
 import im.bci.jb3.logic.CleanUtils;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -15,6 +18,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -35,11 +39,21 @@ public class EuromusselsGateway implements Gateway {
     private long lastPostId = -1;
     private static final String BOUCHOT_NAME = "euromussels";
 
+    private static final Comparator<Element> POSTID_COMPARATOR = new Comparator<Element>() {
+
+        @Override
+        public int compare(Element o1, Element o2) {
+            return Long.compare(Long.parseLong(o1.attr("id")), Long.parseLong(o2.attr("id")));
+        }
+    };
+
     @Scheduled(cron = "0/30 * * * * *")
     public void importPosts() {
         try {
             Document doc = Jsoup.connect("http://euromussels.eu").data("q", "tribune.xml").data("last_id", String.valueOf(lastPostId)).parser(Parser.xmlParser()).get();
-            for (Element postToImport : doc.select("post")) {
+            Elements postsToImport = doc.select("post");
+            for (ListIterator<Element> iterator = postsToImport.listIterator(postsToImport.size()); iterator.hasPrevious();) {
+                Element postToImport = iterator.previous();
                 GatewayPostId gatewayPostId = new GatewayPostId();
                 gatewayPostId.setGateway(BOUCHOT_NAME);
                 long postId = Long.parseLong(postToImport.attr("id"));
@@ -85,7 +99,7 @@ public class EuromusselsGateway implements Gateway {
 
     private String replaceUrls(String message) {
         Document doc = Jsoup.parse(message);
-        for(Element a : doc.select("a")) {
+        for (Element a : doc.select("a")) {
             a.text(a.attr("href"));
         }
         return doc.toString();
