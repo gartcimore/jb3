@@ -18,6 +18,7 @@ public class Norloge {
     private String id;
     private DateTime time;
     private String bouchot;
+    private int precisionInSeconds = 1;
 
     public Norloge(Post post) {
         this.id = post.getId();
@@ -68,6 +69,14 @@ public class Norloge {
     public Norloge withBouchot(String b) {
         setBouchot(b);
         return this;
+    }
+
+    public int getPrecisionInSeconds() {
+        return precisionInSeconds;
+    }
+
+    public void setPrecisionInSeconds(int precisionInSeconds) {
+        this.precisionInSeconds = precisionInSeconds;
     }
 
     @Override
@@ -138,6 +147,9 @@ public class Norloge {
                     DateTime norlogeTime = parseNorlogeTime(time);
                     if (null != norlogeTime) {
                         norloge = new Norloge().withTime(norlogeTime).withBouchot(bouchot);
+                        if (time.length() == 5) {
+                            norloge.setPrecisionInSeconds(60);
+                        }
                     }
                 }
             }

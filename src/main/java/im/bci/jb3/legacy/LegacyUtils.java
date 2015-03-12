@@ -38,7 +38,7 @@ public class LegacyUtils {
                     DateTime time = norloge.getTime();
                     if (null != time) {
                         time = time.withZoneRetainFields(LegacyUtils.legacyTimeZone);
-                        Post post = postPepository.findOne(room, time, time.plusSeconds(1));
+                        Post post = postPepository.findOne(room, time, time.plusSeconds(norloge.getPrecisionInSeconds()));
                         if (null != post) {
                             matcher.appendReplacement(sb, Norloge.format(post));
                             return;
