@@ -6,8 +6,6 @@ import im.bci.jb3.data.PostRepository;
 import im.bci.jb3.legacy.LegacyUtils;
 import im.bci.jb3.logic.CleanUtils;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,14 +36,6 @@ public class EuromusselsGateway implements Gateway {
 
     private long lastPostId = -1;
     private static final String BOUCHOT_NAME = "euromussels";
-
-    private static final Comparator<Element> POSTID_COMPARATOR = new Comparator<Element>() {
-
-        @Override
-        public int compare(Element o1, Element o2) {
-            return Long.compare(Long.parseLong(o1.attr("id")), Long.parseLong(o2.attr("id")));
-        }
-    };
 
     @Scheduled(cron = "0/30 * * * * *")
     public void importPosts() {
