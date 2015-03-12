@@ -28,7 +28,7 @@ public class LegacyUtils {
     public static final DateTimeZone legacyTimeZone = DateTimeZone.forID(legacyTimezoneId);
     public static final DateTimeFormatter legacyPostTimeFormatter = DateTimeFormat.forPattern("yyyyMMddHHmmss").withZone(legacyTimeZone);
 
-    public String convertFromLegacyNorloges(String message) {
+    public String convertFromLegacyNorloges(final String room, final String message) {
         final StringBuffer sb = new StringBuffer();
         Norloge.forEachNorloge(message, new Norloge.NorlogeProcessor() {
 
@@ -38,7 +38,7 @@ public class LegacyUtils {
                     DateTime time = norloge.getTime();
                     if (null != time) {
                         time = time.withZoneRetainFields(LegacyUtils.legacyTimeZone);
-                        Post post = postPepository.findOne(time, time.plusSeconds(1));
+                        Post post = postPepository.findOne(room, time, time.plusSeconds(1));
                         if (null != post) {
                             matcher.appendReplacement(sb, Norloge.format(post));
                             return;

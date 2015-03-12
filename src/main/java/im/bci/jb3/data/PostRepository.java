@@ -8,7 +8,7 @@ public interface PostRepository {
     
     List<Post> findPosts(DateTime start, DateTime end, String room);
     
-    Post findOne(DateTime start, DateTime end);
+    Post findOne(String room, DateTime start, DateTime end);
 
     void save(Post post);
 

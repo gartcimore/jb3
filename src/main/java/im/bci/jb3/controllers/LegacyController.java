@@ -53,7 +53,7 @@ public class LegacyController {
         if (StringUtils.isBlank(nickname)) {
             nickname = userAgent;
         }
-        tribune.post(nickname, legacyUtils.convertFromLegacyNorloges(message), room);
+        tribune.post(nickname, legacyUtils.convertFromLegacyNorloges(room, message), room);
     }
 
     @RequestMapping(value = "/xml")

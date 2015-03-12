@@ -49,8 +49,14 @@ public class PostRepositoryImpl implements PostRepository {
     private static final String COLLECTION_NAME = "post";
 
     @Override
-    public Post findOne(DateTime start, DateTime end) {
-        Query query = new Query().addCriteria(Criteria.where("time").gte(start.toDate()).lt(end.toDate())).with(new PageRequest(0, 1000, Sort.Direction.DESC, "time"));
+    public Post findOne(String room, DateTime start, DateTime end) {
+        Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate());
+        if (StringUtils.isNotBlank(room)) {
+            criteria = criteria.and("room").is(room);
+        } else {
+            criteria = criteria.andOperator(Criteria.where("room").exists(false).orOperator(Criteria.where("room").is(null)));
+        }
+        Query query = new Query().addCriteria(criteria).with(new PageRequest(0, 1000, Sort.Direction.DESC, "time"));
         return mongoTemplate.findOne(query, Post.class, COLLECTION_NAME);
     }
 

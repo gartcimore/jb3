@@ -51,7 +51,7 @@ public class EuromusselsGateway implements Gateway {
                 if (!postPepository.existsByGatewayPostId(gatewayPostId)) {
                     Post post = new Post();
                     post.setGatewayPostId(gatewayPostId);
-                    post.setMessage(legacyUtils.convertFromLegacyNorloges(CleanUtils.cleanMessage(replaceUrls(StringEscapeUtils.unescapeXml(postToImport.select("message").text())))));
+                    post.setMessage(legacyUtils.convertFromLegacyNorloges(BOUCHOT_NAME, CleanUtils.cleanMessage(replaceUrls(StringEscapeUtils.unescapeXml(postToImport.select("message").text())))));
                     String nickname = StringEscapeUtils.unescapeXml(postToImport.select("login").text());
                     if (StringUtils.isBlank(nickname)) {
                         nickname = StringEscapeUtils.unescapeXml(postToImport.select("info").text());
