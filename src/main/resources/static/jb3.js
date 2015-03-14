@@ -98,8 +98,8 @@ jb3 = {
             type: "POST",
             url: "/api/post",
             data: {message: message, nickname: nickname, room: room},
-            success: function () {
-                self.refreshMessages();
+            success: function (data) {
+                self.onNewMessages(data);
             }
         });
     },

@@ -22,12 +22,15 @@ public class TribuneService {
     @Autowired
     private Tribune tribune;
 
-    public void post(String nickname, String message, String room) {
+    public Post post(String nickname, String message, String room) {
         if (!gateways.handlePost(nickname, message, room)) {
             Post post = tribune.post(nickname, message, room);
             if (null != post) {
                 bots.handle(post);
             }
+            return post;
+        } else {
+            return null;
         }
     }
 }

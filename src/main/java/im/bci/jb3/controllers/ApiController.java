@@ -32,7 +32,7 @@ public class ApiController {
     @RequestMapping("/post")
     public List<Post> post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room) {
         tribune.post(nickname, message, room);
-        return Collections.emptyList();//TODO renvoyer les nouveaux posts
+        return get(room);
     }
 
     @RequestMapping("/get")

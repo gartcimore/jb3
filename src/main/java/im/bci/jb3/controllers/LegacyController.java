@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
 /**
@@ -44,28 +43,26 @@ public class LegacyController {
 
     @Autowired
     private PostRepository postPepository;
-    
+
     @Autowired
     private LegacyUtils legacyUtils;
 
     @RequestMapping(value = "/post", method = RequestMethod.POST)
-    public @ResponseBody void post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room, @RequestHeader(value = "User-Agent", required = false) String userAgent) {
+    public String post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room, @RequestParam(value = "last", required = false) Long last, @RequestHeader(value = "User-Agent", required = false) String userAgent, WebRequest webRequest, Model model, HttpServletResponse response) {
         if (StringUtils.isBlank(nickname)) {
             nickname = userAgent;
         }
-        tribune.post(nickname, legacyUtils.convertFromLegacyNorloges(room, message), room);
+        Post post = tribune.post(nickname, legacyUtils.convertFromLegacyNorloges(room, message), room);
+        if (null != post) {
+            response.addHeader("X-Post-Id", Long.toString(post.getTime().getMillis()));
+        }
+        return xml(room, last, webRequest, model, response);
     }
 
     @RequestMapping(value = "/xml")
-    public String xml(@RequestParam(value = "room", required = false) String room, WebRequest webRequest, Model model, HttpServletResponse response) {
-        DateTime end = DateTime.now(DateTimeZone.UTC);
-        DateTime start = end.minusWeeks(1);
-
-        //workaround shameful olcc new year bug
-        if (start.getYear() < end.getYear()) {
-            start = new DateTime(end.getYear(), 1, 1, 0, 0, DateTimeZone.UTC);
-        }
-
+    public String xml(@RequestParam(value = "room", required = false) String room, @RequestParam(value = "last", required = false) Long lastId, WebRequest webRequest, Model model, HttpServletResponse response) {
+        DateTime end = DateTime.now(DateTimeZone.UTC).plusSeconds(1);
+        DateTime start = computeStartTime(lastId, end);
         List<Post> posts = postPepository.findPosts(start, end, room);
         if (posts.isEmpty() || webRequest.checkNotModified(posts.get(0).getTime().getMillis())) {
             return null;
@@ -89,6 +86,22 @@ public class LegacyController {
         }
     }
 
+    private DateTime computeStartTime(Long lastId, DateTime end) {
+        DateTime start;
+        if (null != lastId) {
+            start = new DateTime(lastId, DateTimeZone.UTC);
+            if (start.isAfter(end)) {
+                start = end.minusSeconds(1);
+            }
+        } else {
+            start = end.minusWeeks(1);
+        }
+        //workaround shameful olcc new year bug
+        if (start.getYear() < end.getYear()) {
+            start = new DateTime(end.getYear(), 1, 1, 0, 0, DateTimeZone.UTC);
+        }
+        return start;
+    }
 
     private static final Pattern urlPattern = Pattern.compile("(https?|ftp|gopher)://[^\\s]+");
 
