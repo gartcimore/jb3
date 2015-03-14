@@ -19,13 +19,15 @@
             <input id="jb3-controls-message" type="text" spellcheck="true"></input>
             <label for="jb3-controls-nickname">Nickname:</label>
             <input id="jb3-controls-nickname" type="text"></input>
-            <label for="jb3-controls-room">Room:</label>
-            <select id="jb3-controls-room"><option></option></select>
             <div id="jb3-menu">
                 <a id="jb3-archives-menu-item" href="/archive" target="_blank">Archives</a>
                 <a id="jb3-fortunes-menu-item" href="/fortune" target="_blank">Fortunes</a>
                 <a id="jb3-archives-menu-item" href="/rooms">Rooms</a>
             </div>
+        </div>
+        <div id="jb3-roster">
+            <label for="jb3-controls-room">Room:</label>
+            <select id="jb3-controls-room"><option></option></select>
         </div>
     </body>
     <script src="/webjars/jquery/2.1.1/jquery.js" defer></script>

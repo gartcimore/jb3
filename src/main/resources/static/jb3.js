@@ -4,11 +4,13 @@ jb3 = {
         var controlsMessage = $('#jb3-controls-message');
         var controlsRoom = $('#jb3-controls-room');
         var controlsNickname = $('#jb3-controls-nickname');
+        var rooms = jb3_common.getRooms();
         controlsRoom.append(
-                $.map(jb3_common.getRooms(), function (v, k) {
+                $.map(rooms, function (v, k) {
                     return $("<option>").val(v.rname).text(v.rname);
                 })
                 );
+        controlsRoom.attr("size", rooms.length + 1);
         controlsRoom.val(URI(window.location).search(true).room || localStorage.selectedRoom);
         controlsRoom.change(function () {
             $('#jb3-posts').empty();

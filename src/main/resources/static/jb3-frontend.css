@@ -1,7 +1,7 @@
 #jb3-posts-container {
     position: fixed;
     top: 5px;
-    right: 5px;
+    right: 150px;
     bottom: 50px;
     left: 0px;
     overflow-y: auto;
@@ -21,6 +21,17 @@
 
 #jb3-controls-message {
     width: 50%;
+}
+
+#jb3-roster {
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+}
+
+#jb3-controls-room {
+    display: block;
 }
 
 #jb3-controls {
