@@ -15,7 +15,6 @@
             <div id="jb3-layout-vertical">
                 <div id="jb3-layout-horizontal">
                     <div id="jb3-roster">
-                        <label for="jb3-controls-room">Room:</label>
                         <select id="jb3-controls-room"><option></option></select>
                     </div>
                     <div id="jb3-posts-container">
