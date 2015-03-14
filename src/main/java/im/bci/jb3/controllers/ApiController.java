@@ -37,7 +37,7 @@ public class ApiController {
 
     @RequestMapping("/get")
     public List<Post> get(@RequestParam(value = "room", required = false) String room) {
-        DateTime end = DateTime.now(DateTimeZone.UTC);
+        DateTime end = DateTime.now(DateTimeZone.UTC).plusHours(1);
         DateTime start = end.minusWeeks(1);
         return postRepository.findPosts(start, end, room);
     }

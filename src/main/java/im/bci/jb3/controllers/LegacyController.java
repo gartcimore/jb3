@@ -61,7 +61,7 @@ public class LegacyController {
 
     @RequestMapping(value = "/xml")
     public String xml(@RequestParam(value = "room", required = false) String room, @RequestParam(value = "last", required = false) Long lastId, WebRequest webRequest, Model model, HttpServletResponse response) {
-        DateTime end = DateTime.now(DateTimeZone.UTC).plusSeconds(1);
+        DateTime end = DateTime.now(DateTimeZone.UTC).plusHours(1);
         DateTime start = computeStartTime(lastId, end);
         List<Post> posts = postPepository.findPosts(start, end, room);
         if (posts.isEmpty() || webRequest.checkNotModified(posts.get(0).getTime().getMillis())) {
