@@ -9,6 +9,7 @@
 #jb3-layout-vertical {
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
     height: 100%;
 }
 
@@ -27,6 +28,9 @@
 #jb3-roster {
     resize: horizontal;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 #jb3-post-popup {
