@@ -46,7 +46,7 @@ jb3 = {
                 var postContainer = $('#jb3-posts-container');
                 var quoted = $('#' + $(event.target).data('ref'));
                 if (quoted.length > 0) {
-                    postContainer.scrollTop(quoted[0].offsetTop - event.clientY  + postContainer.offset().top + 10);
+                    postContainer.scrollTop(quoted[0].offsetTop - event.clientY + postContainer.offset().top + 10);
                 }
             }
         }, ".jb3-cite");
@@ -132,10 +132,11 @@ jb3 = {
     },
     onNewMessages: function (data) {
         var self = this;
+        var userNickname = $('#jb3-controls-nickname').val();
         var postContainer = $('#jb3-posts-container');
         var wasAtbottom = postContainer.scrollTop() + postContainer.innerHeight() >= postContainer[0].scrollHeight;
         $.each(data, function (_, value) {
-            self.onMessage(value);
+            self.onMessage(userNickname, value);
         }
         );
         self.updateNorloges();
@@ -144,14 +145,25 @@ jb3 = {
             postContainer.scrollTop(postContainer.prop("scrollHeight"));
         }
     },
-    onMessage: function (message) {
+    onMessage: function (userNickname, message) {
         var messagesContainer = $('#jb3-posts');
         var existingMessageDiv = messagesContainer.find('#' + message.id);
         if (existingMessageDiv.length === 0) {
             var timeSpan = $('<span/>').addClass('jb3-post-time').text(moment(message.time).format(this.norlogeFormat));
             var nickSpan = $('<span/>').addClass('jb3-post-nickname').html(message.nickname);
             var messageSpan = $('<span/>').addClass('jb3-post-message').html(jb3_common.formatMessage(message.message));
-            var messageDiv = $('<div/>').attr('id', message.id).addClass('jb3-post').attr('time', message.time).append(timeSpan).append(nickSpan).append(messageSpan);
+            var iconSpan = $('<span/>').addClass('jb3-post-icon');
+            var messageDiv = $('<div/>').attr('id', message.id).addClass('jb3-post').attr('time', message.time).append(iconSpan).append(timeSpan).append(nickSpan).append(messageSpan);
+            if (message.nickname === userNickname) {
+                messageDiv.addClass("jb3-post-is-mine");
+            }
+            messageSpan.find(".jb3-bigorno").each(function () {
+                var text = $(this).text();
+                if (text === "moules" || text.localeCompare(userNickname, 'fr', {usage: 'search', sensitivity: 'base', ignorePunctuation: true}) === 0) {
+                    messageDiv.addClass("jb3-post-is-bigorno");
+                    return false;
+                }
+            });
             messagesContainer.append(messageDiv);
         }
     },
@@ -163,9 +175,15 @@ jb3 = {
     updateNorloges: function () {
         $('.jb3-cite').each(function () {
             var cite = $(this);
-            var referencedNorloge = $('#' + cite.data('ref')).find('.jb3-post-time');
-            if (referencedNorloge.length > 0) {
-                cite.text(referencedNorloge.text());
+            var cited = $('#' + cite.data('ref'));
+            cited.addClass('jb3-cited');
+            var citedNorloge = cited.find('.jb3-post-time');
+            if (citedNorloge.length > 0) {
+                cite.text(citedNorloge.text());
+            }
+            if (cited.hasClass('jb3-post-is-mine')) {
+                cite.addClass('jb3-cite-mine');
+                cite.closest('.jb3-post').addClass('jb3-post-is-reply-to-mine');
             }
         });
     },

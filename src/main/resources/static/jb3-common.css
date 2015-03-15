@@ -50,6 +50,16 @@ body {
     color: #5F7FBF;
 }
 
+.jb3-cite-mine {
+    font-weight: bold;
+    color: #C00;
+}
+
+.jb3-cited .jb3-post-time {
+    font-weight: bold;
+    color: #C00;
+}
+
 .jb3-highlight {
     border: 1px solid #FA0 !important;
     background-color: #FFD202 !important;
@@ -69,4 +79,31 @@ body {
     display: inline;
     position: absolute;
     bottom: 100%;
+}
+
+.jb3-bigorno {
+    border: 1px solid #F00;
+}
+
+.jb3-bigorno:after {
+    content: "<";
+}
+
+.jb3-post-icon {
+    width: 16px;
+    height: 16px;
+    display: table-cell;
+    background-repeat: no-repeat;
+}
+
+.jb3-post-is-reply-to-mine .jb3-post-icon {
+    background-image: url("/icons/post/reply-to-mine.png");
+}
+
+.jb3-post-is-bigorno .jb3-post-icon {
+    background-image: url("/icons/post/bigorno.png");
+}
+
+.jb3-post-is-mine .jb3-post-icon {
+    background-image: url("/icons/post/mine.png");
 }
