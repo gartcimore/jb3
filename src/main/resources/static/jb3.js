@@ -176,14 +176,16 @@ jb3 = {
         $('.jb3-cite').each(function () {
             var cite = $(this);
             var cited = $('#' + cite.data('ref'));
-            cited.addClass('jb3-cited');
             var citedNorloge = cited.find('.jb3-post-time');
             if (citedNorloge.length > 0) {
                 cite.text(citedNorloge.text());
             }
             if (cited.hasClass('jb3-post-is-mine')) {
+                cited.addClass('jb3-cited-by-me');
                 cite.addClass('jb3-cite-mine');
                 cite.closest('.jb3-post').addClass('jb3-post-is-reply-to-mine');
+            } else {
+                cited.addClass('jb3-cited');
             }
         });
     },

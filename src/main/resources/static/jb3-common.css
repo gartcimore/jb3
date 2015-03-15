@@ -55,9 +55,14 @@ body {
     color: #C00;
 }
 
-.jb3-cited .jb3-post-time {
+.jb3-cited-by-me .jb3-post-time {
     font-weight: bold;
     color: #C00;
+}
+
+.jb3-cited .jb3-post-time {
+    font-weight: bold;
+    color: #5F7FBF;
 }
 
 .jb3-highlight {
