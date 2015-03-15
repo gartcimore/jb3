@@ -23,6 +23,7 @@
     margin: 0;
     padding: 0;
     overflow: auto;
+    width: 100%;
 }
 
 #jb3-roster {
