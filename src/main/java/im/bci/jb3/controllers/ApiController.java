@@ -4,7 +4,6 @@ import im.bci.jb3.data.Post;
 import im.bci.jb3.data.PostRepository;
 import im.bci.jb3.frontend.RandomNicknameMV;
 import im.bci.jb3.logic.TribuneService;
-import java.util.Collections;
 import java.util.List;
 import org.fluttercode.datafactory.impl.DataFactory;
 import org.joda.time.DateTime;
@@ -28,7 +27,12 @@ public class ApiController {
     @Autowired
     private PostRepository postRepository;
 
-    
+    private final DataFactory dataFactory = new DataFactory();
+
+    public ApiController() {
+        dataFactory.randomize(DateTime.now().getMillisOfDay());
+    }
+
     @RequestMapping("/post")
     public List<Post> post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room) {
         tribune.post(nickname, message, room);
@@ -41,8 +45,6 @@ public class ApiController {
         DateTime start = end.minusWeeks(1);
         return postRepository.findPosts(start, end, room);
     }
-
-    private final DataFactory dataFactory = new DataFactory();
 
     @RequestMapping("/random-nickname")
     public RandomNicknameMV randomNickname() {
