@@ -2,16 +2,45 @@
 
 jb3 is a KISS tribune powered by java, spring boot and mongodb.
 
+## Features
+
+
+
 # Demo
 
 A live demo is accessible [here](http://b3.bci.im).
 
-You can also configure your prefered coincoin using these parameters:
+## Coincoin configuration
+
+You can also configure your favorite coincoin using these parameters:
 
 - backend URL: http://b3.bci.im/legacy/xml
 - post URL: http://b3.bci.im/legacy/post
 - post data: message=%m
 - tags: encoded
+
+## Advanced coincoin configuration
+
+- backend using last id: http://b3.bci.im/legacy/xml?last=%last
+- post returns backend: post request to http://b3.bci.im/legacy/post include backend data (same as GET http://b3.bci.im/legacy/xml response).
+- post message using last id: message=%m&last=%last
+- xPost: post reply returns posted message id in X-Post-Id header
+
+## Rooms
+
+Rooms are like IRC channel. From a coincoin, they can be seen as independent tribune.
+
+- room backend : http://b3.bci.im/legacy/xml?room=%room
+- post message in a room: message=%m&room=%room
+
+## Gateway rooms
+
+Gateway are used to receive and post on external tribunes or other chat systems.
+
+Implemented gateways:
+
+- euromussels
+- sveetch
 
 # How to use
 
