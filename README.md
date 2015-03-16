@@ -4,7 +4,12 @@ jb3 is a KISS tribune powered by java, spring boot and mongodb.
 
 ## Features
 
-
+- archives
+- fortunes
+- bots
+- last id
+- xPost
+- rooms
 
 # Demo
 
