@@ -135,18 +135,17 @@ jb3 = {
         var userNickname = $('#jb3-controls-nickname').val();
         var postContainer = $('#jb3-posts-container');
         var wasAtbottom = postContainer.scrollTop() + postContainer.innerHeight() >= postContainer[0].scrollHeight;
+        var messagesContainer = $('#jb3-posts');
         $.each(data, function (_, value) {
-            self.onMessage(userNickname, value);
+            self.onMessage(messagesContainer, userNickname, value);
         }
         );
         self.updateNorloges();
-        self.sortMessages();
         if (wasAtbottom) {
             postContainer.scrollTop(postContainer.prop("scrollHeight"));
         }
     },
-    onMessage: function (userNickname, message) {
-        var messagesContainer = $('#jb3-posts');
+    onMessage: function (messagesContainer, userNickname, message) {
         var existingMessageDiv = messagesContainer.find('#' + message.id);
         if (existingMessageDiv.length === 0) {
             var timeSpan = $('<span/>').addClass('jb3-post-time').text(moment(message.time).format(this.norlogeFormat));
@@ -164,13 +163,23 @@ jb3 = {
                     return false;
                 }
             });
-            messagesContainer.append(messageDiv);
+            this.insertMessageDiv(messagesContainer, messageDiv, message);
         }
     },
-    sortMessages: function () {
-        $('#jb3-posts').find('.jb3-post').sort(function (a, b) {
-            return $(a).attr('time') - $(b).attr('time');
-        }).appendTo('#jb3-posts');
+    insertMessageDiv: function (messagesContainer, messageDiv, message) {
+        var t = message.time;
+        var inserted = false;
+        messagesContainer.find('.jb3-post').each(function (_, m) {
+            var msg = $(m);
+            if (t < msg.attr('time')) {
+                msg.before(messageDiv);
+                inserted = true;
+                return false;
+            }
+        });
+        if(!inserted) {
+            messagesContainer.append(messageDiv);
+        }
     },
     updateNorloges: function () {
         $('.jb3-cite').each(function () {
