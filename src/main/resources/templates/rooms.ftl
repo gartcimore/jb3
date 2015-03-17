@@ -13,7 +13,7 @@
         <div id="jb3-rooms-grid"></div>
         <a href="/">Return to chat</a>
     </body>
-    <script src="/webjars/jquery/2.1.1/jquery.js" defer></script>
+    <script src="/webjars/jquery/1.11.1/jquery.js" defer></script>
     <script src="/webjars/w2ui/1.4.2/w2ui.js" defer></script>
     <script src="/webjars/momentjs/2.8.3/moment.js" defer/></script>
     <script src="/jb3-common.js" defer/></script>

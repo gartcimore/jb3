@@ -7,7 +7,7 @@
         <meta name="robots" content="noindex,nofollow">
         <link rel="stylesheet" type="text/css" href="jb3-common.css" />
         <link rel="stylesheet" type="text/css" href="jb3-frontend.css" />
-        <link rel="stylesheet" type="text/css" href="/webjars/w2ui/1.4.2/w2ui.css"></script>
+        <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/3.3.4/css/bootstrap.css"></script>
         <link rel="icon" type="image/png" href="/favicon.png" />
     </head>
     <body>
@@ -35,8 +35,8 @@
             </div>
         </div>
     </body>
-    <script src="/webjars/jquery/2.1.1/jquery.js" defer></script>
-    <script src="/webjars/w2ui/1.4.2/w2ui.js" defer></script>
+    <script src="/webjars/jquery/1.11.1/jquery.js" defer></script>
+    <script src="/webjars/bootstrap/3.3.4/js/bootstrap.js" defer></script>
     <script src="/webjars/URI.js/1.14.1/URI.js" defer></script>
     <script src="/webjars/momentjs/2.8.3/moment.js" defer/></script>
     <script src="/jb3-common.js" defer/></script>
