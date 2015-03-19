@@ -11,7 +11,7 @@ jb3_common = {
         try {
             return JSON.parse(localStorage.rooms);
         } catch (e) {
-            return [{recid: 1, rname: "euromussels"}, {recid: 2, rname: "sveetch"}, {recid: 3, rname: "up"}];
+            return [{recid: 1, rname: "euromussels"}, {recid: 2, rname: "hadoken"}, {recid: 3, rname: "sveetch"}, {recid: 4, rname: "up"}];
         }
     }
 };
