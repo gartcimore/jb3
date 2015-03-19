@@ -91,13 +91,13 @@ public class LegacyUtils {
     }
 
     private DateTimeFormatter findLegacyNorlogeFormatter(DateTime postTime, DateTime referencedPostTime) {
-        if (Days.daysBetween(postTime, referencedPostTime).isLessThan(Days.ONE)) {
+        if (Days.daysBetween(referencedPostTime, postTime).isLessThan(Days.ONE)) {
             if (referencedPostTime.getSecondOfMinute() == 0) {
                 return toLegacyShortNorlogeFormatter;
             } else {
                 return toLegacyNormalNorlogeFormatter;
             }
-        } else if (Years.yearsBetween(postTime, referencedPostTime).isLessThan(Years.ONE)) {
+        } else if (Years.yearsBetween(referencedPostTime, postTime).isLessThan(Years.ONE)) {
             return toLegacyLongNorlogeFormatter;
         } else {
             return toLegacyFullNorlogeFormatter;
