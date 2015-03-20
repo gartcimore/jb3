@@ -10,6 +10,7 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    overflow: hidden;
 }
 
 #jb3-layout-horizontal {
@@ -22,7 +23,8 @@
 #jb3-posts-container {
     margin: 0;
     padding: 0;
-    overflow: auto;
+    overflow-x: visible;
+    overflow-y: scroll;
     width: 100%;
 }
 
