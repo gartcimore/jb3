@@ -28,7 +28,6 @@ jb3 = {
                 controlsMessage.val('');
             }
         });
-        $('#jb3-post-popup').hide();
         $('#jb3-posts').on('click', '.jb3-post-time', function (e) {
             var postId = $(e.target).parent().attr('id');
             if (postId) {
@@ -86,7 +85,6 @@ jb3 = {
         post.addClass("jb3-highlight");
         if (showPopup) {
             $('#jb3-post-popup-content').html(post.html());
-            $('#jb3-post-popup').show();
         }
         $(".jb3-cite[data-ref='" + post.attr('id') + "']").addClass("jb3-highlight");
     },
@@ -94,7 +92,7 @@ jb3 = {
         var post = $('#' + postId);
         post.removeClass("jb3-highlight");
         $(".jb3-cite[data-ref='" + post.attr('id') + "']").removeClass("jb3-highlight");
-        $('#jb3-post-popup').hide();
+        $('#jb3-post-popup-content').empty();
     },
     postMessage: function (nickname, message, room) {
         var self = this;

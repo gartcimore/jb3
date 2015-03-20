@@ -35,18 +35,15 @@
 }
 
 #jb3-post-popup {
-    position: fixed;
-    bottom: 0px;
     display: flex;
     justify-content: center;
     width: 100%;
-    padding: 2px 8px 2px 4px;
-    z-index: 75;
+    margin: 0;
+    height: 1.5em;
 }
 
 #jb3-post-popup-content {
     background-color: #CCCCCC;
-    border: 2px solid #FFA500;
 }
 
 #jb3-controls-message {

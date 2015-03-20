@@ -31,7 +31,6 @@
                         <input id="jb3-controls-nickname" type="text"></input>
                         <div id="jb3-post-popup">
                             <div id="jb3-post-popup-content"></div>
-                        </div>
                     </div>
                 </div>
             </div>
