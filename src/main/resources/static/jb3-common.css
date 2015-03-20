@@ -90,10 +90,6 @@ body {
     border: 1px solid #F00;
 }
 
-.jb3-bigorno:after {
-    content: "<";
-}
-
 .jb3-post-icon {
     width: 16px;
     height: 16px;
