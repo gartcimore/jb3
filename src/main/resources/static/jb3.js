@@ -85,7 +85,8 @@ jb3 = {
         var post = $('#' + postId);
         post.addClass("jb3-highlight");
         if (showPopup) {
-            $('#jb3-post-popup').html(post.html()).show();
+            $('#jb3-post-popup-content').html(post.html());
+            $('#jb3-post-popup').show();
         }
         $(".jb3-cite[data-ref='" + post.attr('id') + "']").addClass("jb3-highlight");
     },

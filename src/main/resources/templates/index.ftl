@@ -18,7 +18,6 @@
                         <a href="/rooms">Rooms</a>
                         <select id="jb3-controls-room"><option></option></select>
                     </div>
-                    <div id="jb3-post-popup"></div>
                     <div id="jb3-posts-container">
                         <div id="jb3-posts" class="jb3-posts"></div>
                     </div>
@@ -30,6 +29,9 @@
                     <div id="jb3-menu">
                         <a id="jb3-archives-menu-item" href="/archive" target="_blank">Archives</a>
                         <a id="jb3-fortunes-menu-item" href="/fortune" target="_blank">Fortunes</a>
+                    </div>
+                    <div id="jb3-post-popup">
+                        <div id="jb3-post-popup-content"></div>
                     </div>
                 </div>
             </div>
