@@ -28,6 +28,7 @@ jb3 = {
                 controlsMessage.val('');
             }
         });
+        $('#jb3-post-popup').hide();
         $('#jb3-posts').on('click', '.jb3-post-time', function (e) {
             var postId = $(e.target).parent().attr('id');
             if (postId) {
@@ -84,7 +85,7 @@ jb3 = {
         var post = $('#' + postId);
         post.addClass("jb3-highlight");
         if (showPopup) {
-            $('#jb3-post-popup').html(post.html()).css('display', 'block');
+            $('#jb3-post-popup').html(post.html()).show();
         }
         $(".jb3-cite[data-ref='" + post.attr('id') + "']").addClass("jb3-highlight");
     },
