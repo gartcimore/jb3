@@ -10,13 +10,13 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    height: 100%;
 }
 
 #jb3-layout-horizontal {
     display: flex;
     resize: vertical;
     overflow: auto;
+    height: 100%;
 }
 
 #jb3-posts-container {
