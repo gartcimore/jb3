@@ -37,6 +37,7 @@
     </body>
     <script src="/webjars/jquery/1.11.1/jquery.js" defer></script>
     <script src="/webjars/bootstrap/3.3.4/js/bootstrap.js" defer></script>
+    <script src="/webjars/mustachejs/0.8.2/mustache.js" defer></script>
     <script src="/webjars/URI.js/1.14.1/URI.js" defer></script>
     <script src="/webjars/momentjs/2.8.3/moment.js" defer/></script>
     <script src="/jb3-common.js" defer/></script>

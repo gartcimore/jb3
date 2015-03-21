@@ -144,19 +144,20 @@ jb3 = {
         if (wasAtbottom) {
             postContainer.scrollTop(postContainer.prop("scrollHeight"));
         }
-    },
-    onMessage: function (messagesContainer, userNickname, message) {
+    }
+    , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}" data-time="{{time}}"><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
+    , onMessage: function (messagesContainer, userNickname, message) {
         var existingMessageDiv = messagesContainer.find('#' + message.id);
         if (existingMessageDiv.length === 0) {
-            var timeSpan = $('<span/>').addClass('jb3-post-time').text(moment(message.time).format(this.norlogeFormat));
-            var nickSpan = $('<span/>').addClass('jb3-post-nickname').html(message.nickname);
-            var messageSpan = $('<span/>').addClass('jb3-post-message').html(jb3_common.formatMessage(message.message));
-            var iconSpan = $('<span/>').addClass('jb3-post-icon');
-            var messageDiv = $('<div/>').attr('id', message.id).addClass('jb3-post').attr('time', message.time).append(iconSpan).append(timeSpan).append(nickSpan).append(messageSpan);
-            if (message.nickname === userNickname) {
-                messageDiv.addClass("jb3-post-is-mine");
-            }
-            messageSpan.find(".jb3-bigorno").each(function () {
+            var messageDiv = $(Mustache.render(this.messageTemplate, {
+                id:message.id,
+                time:message.time,
+                norloge:moment(message.time).format(this.norlogeFormat),
+                nickname:message.nickname,
+                message:jb3_common.formatMessage(message.message),
+                postIsMine: message.nickname === userNickname ? " jb3-post-is-mine" : ""
+            }));
+            messageDiv.find(".jb3-bigorno").each(function () {
                 var text = $(this).text();
                 if (text === "moules" || text.localeCompare(userNickname, 'fr', {usage: 'search', sensitivity: 'base', ignorePunctuation: true}) === 0) {
                     messageDiv.addClass("jb3-post-is-bigorno");
