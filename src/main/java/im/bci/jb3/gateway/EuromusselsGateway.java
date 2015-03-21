@@ -10,6 +10,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class EuromusselsGateway extends AbstractBouchotGateway {
 
+    private static BouchotConfig createConf() {
+        BouchotConfig conf = new BouchotConfig();
+        conf.setRoom("euromussels");
+        conf.setGetUrl("http://euromussels.eu/?q=tribune.xml");
+        conf.setPostUrl("http://euromussels.eu/?q=tribune/post");
+        conf.setLastIdParameterName("last_id");
+        conf.setMessageContentParameterName("message");
+        return conf;
+    }
+
+    public EuromusselsGateway() {
+        super(createConf());
+    }
+
     @Scheduled(cron = "0/30 * * * * *")
     public synchronized void scheduledPostsImport() {
         importPosts();

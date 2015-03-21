@@ -13,12 +13,14 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 /**
@@ -35,36 +37,40 @@ public abstract class AbstractBouchotGateway implements Gateway {
     private SimpMessagingTemplate simpMessagingTemplate;
     private long lastPostId = -1;
 
-    private final String room = "euromussels";
-    private final String getUrl = "http://euromussels.eu/?q=tribune.xml";
-    private final String postUrl = "http://euromussels.eu/?q=tribune/post";
-    private final String lastIdParameterName = "last_id";
-    private final String messageContentParameterName= "message";
+    private final BouchotConfig config;
+
+    protected AbstractBouchotGateway(BouchotConfig config) {
+        this.config = config;
+    }
 
     public synchronized void importPosts() {
         try {
-            Document doc = Jsoup.connect(getUrl).data(lastIdParameterName, String.valueOf(lastPostId)).parser(Parser.xmlParser()).get();
+            Connection connect = Jsoup.connect(config.getGetUrl());
+            if (null != config.getLastIdParameterName()) {
+                connect = connect.data(config.getLastIdParameterName(), String.valueOf(lastPostId));
+            }
+            Document doc = connect.parser(Parser.xmlParser()).get();
             Elements postsToImport = doc.select("post");
             ArrayList<Post> newPosts = new ArrayList<Post>();
             for (ListIterator<Element> iterator = postsToImport.listIterator(postsToImport.size()); iterator.hasPrevious();) {
                 Element postToImport = iterator.previous();
                 GatewayPostId gatewayPostId = new GatewayPostId();
-                gatewayPostId.setGateway(room);
+                gatewayPostId.setGateway(config.getRoom());
                 long postId = Long.parseLong(postToImport.attr("id"));
                 gatewayPostId.setPostId(String.valueOf(postId));
                 if (!postPepository.existsByGatewayPostId(gatewayPostId)) {
                     Post post = new Post();
                     post.setGatewayPostId(gatewayPostId);
-                    post.setMessage(legacyUtils.convertFromLegacyNorloges(room, CleanUtils.cleanMessage(replaceUrls(StringEscapeUtils.unescapeXml(postToImport.select("message").text())))));
-                    String nickname = StringEscapeUtils.unescapeXml(postToImport.select("login").text());
+                    post.setMessage(legacyUtils.convertFromLegacyNorloges(config.getRoom(), CleanUtils.cleanMessage(replaceUrls(decodeTags(postToImport.select("message").text())))));
+                    String nickname = decodeTags(postToImport.select("login").text());
                     if (StringUtils.isBlank(nickname)) {
-                        nickname = StringEscapeUtils.unescapeXml(postToImport.select("info").text());
+                        nickname = decodeTags(postToImport.select("info").text());
                         if (StringUtils.isBlank(nickname)) {
                             nickname = "AnonymousMussels";
                         }
                     }
                     post.setNickname(CleanUtils.cleanNickname(nickname));
-                    post.setRoom(room);
+                    post.setRoom(config.getRoom());
                     post.setTime(LegacyUtils.legacyPostTimeFormatter.parseDateTime(postToImport.attr("time")));
                     postPepository.save(post);
                     newPosts.add(post);
@@ -76,24 +82,32 @@ public abstract class AbstractBouchotGateway implements Gateway {
             if (!newPosts.isEmpty()) {
                 simpMessagingTemplate.convertAndSend("/topic/posts", newPosts);
             }
+        } catch (org.jsoup.HttpStatusException ex) {
+            if (ex.getStatusCode() != HttpStatus.NOT_MODIFIED.value()) {
+                Logger.getLogger(getClass().getName()).log(Level.WARNING, null, ex);
+            }
         } catch (IOException ex) {
-            Logger.getLogger(EuromusselsGateway.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
     public void post(String nickname, String message) {
         try {
-            Jsoup.connect(postUrl).data(messageContentParameterName, legacyUtils.convertToLegacyNorloges(message, DateTime.now().withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy())).userAgent(nickname).data(lastIdParameterName, String.valueOf(lastPostId)).parser(Parser.xmlParser()).post();
+            Connection connect = Jsoup.connect(config.getPostUrl()).data(config.getMessageContentParameterName(), legacyUtils.convertToLegacyNorloges(message, DateTime.now().withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy())).userAgent(nickname);
+            if (null != config.getLastIdParameterName()) {
+                connect = connect.data(config.getLastIdParameterName(), String.valueOf(lastPostId));
+            }
+            connect.parser(Parser.xmlParser()).post();
             importPosts();
         } catch (IOException ex) {
-            Logger.getLogger(EuromusselsGateway.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
     public String getRoom() {
-        return room;
+        return config.getRoom();
     }
 
     private String replaceUrls(String message) {
@@ -102,6 +116,14 @@ public abstract class AbstractBouchotGateway implements Gateway {
             a.text(a.attr("href"));
         }
         return doc.toString();
+    }
+
+    private String decodeTags(String text) {
+        if (config.isTagsEncoded()) {
+            return StringEscapeUtils.unescapeXml(text);
+        } else {
+            return text;
+        }
     }
 
 }
