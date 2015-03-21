@@ -15,6 +15,7 @@ import org.joda.time.DateTimeZone;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,6 +26,9 @@ public class Tribune {
 
     @Autowired
     private FortuneRepository fortunePepository;
+
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     public Post post(String nickname, String message, String room) {
         nickname = CleanUtils.cleanNickname(nickname);
@@ -39,6 +43,7 @@ public class Tribune {
             }
             post.setTime(DateTime.now(DateTimeZone.UTC));
             postPepository.save(post);
+            simpMessagingTemplate.convertAndSend("/topic/posts",  Arrays.asList(post));
             return post;
         }
         return null;

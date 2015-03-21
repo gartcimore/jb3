@@ -6,6 +6,7 @@ import im.bci.jb3.data.PostRepository;
 import im.bci.jb3.legacy.LegacyUtils;
 import im.bci.jb3.logic.CleanUtils;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +19,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +36,9 @@ public class EuromusselsGateway implements Gateway {
     @Autowired
     private LegacyUtils legacyUtils;
 
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+
     private long lastPostId = -1;
     private static final String BOUCHOT_NAME = "euromussels";
 
@@ -42,6 +47,7 @@ public class EuromusselsGateway implements Gateway {
         try {
             Document doc = Jsoup.connect("http://euromussels.eu").data("q", "tribune.xml").data("last_id", String.valueOf(lastPostId)).parser(Parser.xmlParser()).get();
             Elements postsToImport = doc.select("post");
+            ArrayList<Post> newPosts = new ArrayList<Post>();
             for (ListIterator<Element> iterator = postsToImport.listIterator(postsToImport.size()); iterator.hasPrevious();) {
                 Element postToImport = iterator.previous();
                 GatewayPostId gatewayPostId = new GatewayPostId();
@@ -63,10 +69,14 @@ public class EuromusselsGateway implements Gateway {
                     post.setRoom(BOUCHOT_NAME);
                     post.setTime(LegacyUtils.legacyPostTimeFormatter.parseDateTime(postToImport.attr("time")));
                     postPepository.save(post);
+                    newPosts.add(post);
                 }
                 if (postId > lastPostId) {
                     lastPostId = postId;
                 }
+            }
+            if (!newPosts.isEmpty()) {
+                simpMessagingTemplate.convertAndSend("/topic/posts", newPosts);
             }
         } catch (IOException ex) {
             Logger.getLogger(EuromusselsGateway.class.getName()).log(Level.SEVERE, null, ex);

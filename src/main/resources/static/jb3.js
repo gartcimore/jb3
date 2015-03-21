@@ -2,19 +2,19 @@ jb3 = {
     init: function () {
         var self = this;
         var controlsMessage = $('#jb3-controls-message');
-        var controlsRoom = $('#jb3-controls-room');
+        self.controlsRoom = $('#jb3-controls-room');
         var controlsNickname = $('#jb3-controls-nickname');
         var rooms = jb3_common.getRooms();
-        controlsRoom.append(
+        self.controlsRoom.append(
                 $.map(rooms, function (v, k) {
                     return $("<option>").val(v.rname).text(v.rname);
                 })
                 );
-        controlsRoom.attr("size", rooms.length + 1);
-        controlsRoom.val(URI(window.location).search(true).room || localStorage.selectedRoom);
-        controlsRoom.change(function () {
+        self.controlsRoom.attr("size", rooms.length + 1);
+        self.controlsRoom.val(URI(window.location).search(true).room || localStorage.selectedRoom);
+        self.controlsRoom.change(function () {
             $('#jb3-posts').empty();
-            localStorage.selectedRoom = controlsRoom.val();
+            localStorage.selectedRoom = self.controlsRoom.val();
             self.refreshMessages();
         });
         controlsMessage.bind('keypress', function (event) {
@@ -24,7 +24,7 @@ jb3 = {
                     event.preventDefault();
                 }
             } else if (event.keyCode === 13) {
-                self.postMessage(controlsNickname.val(), controlsMessage.val(), controlsRoom.val());
+                self.postMessage(controlsNickname.val(), controlsMessage.val(), self.controlsRoom.val());
                 controlsMessage.val('');
             }
         });
@@ -59,6 +59,7 @@ jb3 = {
             }
         }, ".jb3-post-time");
         self.initNickname();
+        self.initWebsockets();
         self.refreshMessages(30000);
     },
     norlogeFormat: "HH:mm:ss",
@@ -80,7 +81,18 @@ jb3 = {
             localStorage.nickname = controlsNickname.val();
         });
     },
-    highlightPostAndReplies: function (postId, showPopup) {
+    initWebsockets: function () {
+        var self = this;
+        var socket = new SockJS('/plop');
+        var stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/posts', function (postsMessage) {
+                self.onNewMessages(JSON.parse(postsMessage.body));
+            });
+        });
+        },
+        highlightPostAndReplies: function (postId, showPopup) {
         var post = $('#' + postId);
         post.addClass("jb3-highlight");
         if (showPopup) {
@@ -108,7 +120,7 @@ jb3 = {
     refreshMessages: function (pollInterval) {
         var self = this;
         var data = {};
-        var room = $('#jb3-controls-room').val();
+        var room = self.controlsRoom.val();
         if (room) {
             data.room = room;
         }
@@ -145,16 +157,20 @@ jb3 = {
             postContainer.scrollTop(postContainer.prop("scrollHeight"));
         }
     }
+    , isCurrentRoom: function(room) {
+        var currentRoom = this.controlsRoom.val();
+        return (!room && !currentRoom) || currentRoom == room;
+    }
     , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}" data-time="{{time}}"><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
     , onMessage: function (messagesContainer, userNickname, message) {
         var existingMessageDiv = messagesContainer.find('#' + message.id);
-        if (existingMessageDiv.length === 0) {
+        if (existingMessageDiv.length === 0 && this.isCurrentRoom(message.room)) {
             var messageDiv = $(Mustache.render(this.messageTemplate, {
-                id:message.id,
-                time:message.time,
-                norloge:moment(message.time).format(this.norlogeFormat),
-                nickname:message.nickname,
-                message:jb3_common.formatMessage(message.message),
+                id: message.id,
+                time: message.time,
+                norloge: moment(message.time).format(this.norlogeFormat),
+                nickname: message.nickname,
+                message: jb3_common.formatMessage(message.message),
                 postIsMine: message.nickname === userNickname ? " jb3-post-is-mine" : ""
             }));
             messageDiv.find(".jb3-bigorno").each(function () {
@@ -178,7 +194,7 @@ jb3 = {
                 return false;
             }
         });
-        if(!inserted) {
+        if (!inserted) {
             messagesContainer.append(messageDiv);
         }
     },
