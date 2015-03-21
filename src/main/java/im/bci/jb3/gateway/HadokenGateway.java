@@ -38,7 +38,7 @@ public class HadokenGateway implements Gateway {
     private static final String BOUCHOT_NAME = "hadoken";
 
     @Scheduled(cron = "0/30 * * * * *")
-    public void importPosts() {
+    public synchronized void importPosts() {
         try {
             Document doc = Jsoup.connect("http://hadoken.free.fr/board/remote.php").data("id", String.valueOf(lastPostId)).parser(Parser.xmlParser()).get();
             Elements postsToImport = doc.select("post");
@@ -77,6 +77,7 @@ public class HadokenGateway implements Gateway {
     public void post(String nickname, String message) {
         try {
             Jsoup.connect("http://hadoken.free.fr/board/post.php").data("message", legacyUtils.convertToLegacyNorloges(message, DateTime.now().withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy())).userAgent(nickname).parser(Parser.xmlParser()).post();
+            importPosts();
         } catch (IOException ex) {
             Logger.getLogger(HadokenGateway.class.getName()).log(Level.SEVERE, null, ex);
         }

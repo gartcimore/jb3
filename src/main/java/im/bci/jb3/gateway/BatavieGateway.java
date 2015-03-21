@@ -38,7 +38,7 @@ public class BatavieGateway implements Gateway {
     private static final String BOUCHOT_NAME = "batavie";
 
     @Scheduled(cron = "0/30 * * * * *")
-    public void importPosts() {
+    public synchronized void importPosts() {
         try {
             Document doc = Jsoup.connect("http://batavie.leguyader.eu/remote.xml").parser(Parser.xmlParser()).get();
             Elements postsToImport = doc.select("post");
@@ -74,6 +74,7 @@ public class BatavieGateway implements Gateway {
     public void post(String nickname, String message) {
         try {
             Jsoup.connect("http://batavie.leguyader.eu/index.php/add").data("message", legacyUtils.convertToLegacyNorloges(message, DateTime.now().withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy())).userAgent(nickname).parser(Parser.xmlParser()).method(Connection.Method.POST).post();
+            importPosts();
         } catch (IOException ex) {
             Logger.getLogger(BatavieGateway.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -39,7 +39,7 @@ public class SveetchGateway implements Gateway {
     private static final String BOUCHOT_NAME = "sveetch";
 
     @Scheduled(cron = "0/30 * * * * *")
-    public void importPosts() {
+    public synchronized void importPosts() {
         try {
             Document doc = Jsoup.connect("http://www.sveetch.net/tribune/remote/xml/").data("last_id", String.valueOf(lastPostId)).parser(Parser.xmlParser()).get();
             Elements postsToImport = doc.select("post");
@@ -82,6 +82,7 @@ public class SveetchGateway implements Gateway {
     public void post(String nickname, String message) {
         try {
             Jsoup.connect("http://www.sveetch.net/tribune/post/xml/").data("content", legacyUtils.convertToLegacyNorloges(message, DateTime.now().withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy())).userAgent(nickname).data("last_id", String.valueOf(lastPostId)).parser(Parser.xmlParser()).post();
+            importPosts();
         } catch (IOException ex) {
             Logger.getLogger(SveetchGateway.class.getName()).log(Level.SEVERE, null, ex);
         }

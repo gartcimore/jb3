@@ -38,7 +38,7 @@ public class EuromusselsGateway implements Gateway {
     private static final String BOUCHOT_NAME = "euromussels";
 
     @Scheduled(cron = "0/30 * * * * *")
-    public void importPosts() {
+    public synchronized void importPosts() {
         try {
             Document doc = Jsoup.connect("http://euromussels.eu").data("q", "tribune.xml").data("last_id", String.valueOf(lastPostId)).parser(Parser.xmlParser()).get();
             Elements postsToImport = doc.select("post");
@@ -77,6 +77,7 @@ public class EuromusselsGateway implements Gateway {
     public void post(String nickname, String message) {
         try {
             Jsoup.connect("http://euromussels.eu/?q=tribune/post").data("message", legacyUtils.convertToLegacyNorloges(message, DateTime.now().withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy())).userAgent(nickname).data("last_id", String.valueOf(lastPostId)).parser(Parser.xmlParser()).post();
+            importPosts();
         } catch (IOException ex) {
             Logger.getLogger(EuromusselsGateway.class.getName()).log(Level.SEVERE, null, ex);
         }
