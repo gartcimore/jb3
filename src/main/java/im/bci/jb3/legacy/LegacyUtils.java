@@ -6,9 +6,9 @@ import im.bci.jb3.logic.Norloge;
 import java.util.regex.Matcher;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
+import org.joda.time.DateTimeFieldType;
 import org.joda.time.DateTimeZone;
-import org.joda.time.Days;
-import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,15 +89,18 @@ public class LegacyUtils {
         });
         return sb.toString();
     }
+    
+    private static final DateTimeComparator dayComparator = DateTimeComparator.getDateOnlyInstance();
+    private static final DateTimeComparator yearComparator = DateTimeComparator.getInstance(DateTimeFieldType.year());
 
     private DateTimeFormatter findLegacyNorlogeFormatter(DateTime postTime, DateTime referencedPostTime) {
-        if (Days.daysBetween(referencedPostTime, postTime).isLessThan(Days.ONE)) {
+        if (dayComparator.compare(referencedPostTime, postTime) == 0) {
             if (referencedPostTime.getSecondOfMinute() == 0) {
                 return toLegacyShortNorlogeFormatter;
             } else {
                 return toLegacyNormalNorlogeFormatter;
             }
-        } else if (Years.yearsBetween(referencedPostTime, postTime).isLessThan(Years.ONE)) {
+        } else if (yearComparator.compare(referencedPostTime, postTime) == 0) {
             return toLegacyLongNorlogeFormatter;
         } else {
             return toLegacyFullNorlogeFormatter;
