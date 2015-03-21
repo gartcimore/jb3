@@ -4,7 +4,7 @@ jb3_common = {
         formattedMessage = formattedMessage.replace(/(\s|^)(https?:\/\/\S+)/gi, '$1<a href="$2" target="_blank" rel="nofollow">[url]</a>');
         formattedMessage = formattedMessage.replace(/(\s|^)(ftp:\/\/\S+)/gi, '$1<a href="$2" target="_blank" rel="nofollow">[url]</a>');
         formattedMessage = formattedMessage.replace(/\[\:([^\t\)\]]+)\]/g, '<a class="jb3-totoz">[:$1]<img src="https://nsfw.totoz.eu/gif/$1.gif"/></a>');
-        formattedMessage = formattedMessage.replace(/(\s|^)([a-zA-Z0-9-_]*)&lt;(\s|$)/g, '$1<span class="jb3-bigorno">$2&lt;</span>');
+        formattedMessage = formattedMessage.replace(/(\s|^)([a-zA-Z0-9-_]*)&lt;(\s|$)/g, '$1<span class="jb3-bigorno">$2&lt;</span> ');
         return formattedMessage;
     },
     getRooms: function () {
