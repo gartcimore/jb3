@@ -84,7 +84,7 @@ jb3 = {
         var post = $('#' + postId);
         post.addClass("jb3-highlight");
         if (showPopup) {
-            $('#jb3-post-popup').html(post.html()).css('display', 'block');
+            $('#jb3-post-popup-content').html(post.html());
         }
         $(".jb3-cite[data-ref='" + post.attr('id') + "']").addClass("jb3-highlight");
     },
@@ -92,7 +92,7 @@ jb3 = {
         var post = $('#' + postId);
         post.removeClass("jb3-highlight");
         $(".jb3-cite[data-ref='" + post.attr('id') + "']").removeClass("jb3-highlight");
-        $('#jb3-post-popup').hide();
+        $('#jb3-post-popup-content').empty();
     },
     postMessage: function (nickname, message, room) {
         var self = this;

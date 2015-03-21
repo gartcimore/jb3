@@ -10,19 +10,21 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    height: 100%;
+    overflow: hidden;
 }
 
 #jb3-layout-horizontal {
     display: flex;
     resize: vertical;
     overflow: auto;
+    height: 100%;
 }
 
 #jb3-posts-container {
     margin: 0;
     padding: 0;
-    overflow: auto;
+    overflow-x: visible;
+    overflow-y: scroll;
     width: 100%;
 }
 
@@ -35,14 +37,15 @@
 }
 
 #jb3-post-popup {
-    border: 2px solid #FFA500;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 0;
+    height: 1.5em;
+}
+
+#jb3-post-popup-content {
     background-color: #CCCCCC;
-    position: fixed;
-    top: 0px;
-    right: 4px;
-    padding: 2px 8px 2px 4px;
-    z-index: 75;
-    display: none;
 }
 
 #jb3-controls-message {

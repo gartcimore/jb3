@@ -12,24 +12,25 @@
     </head>
     <body>
         <div id="jb3-layout">
-            <div id="jb3-layout-vertical">
-                <div id="jb3-layout-horizontal">
-                    <div id="jb3-roster">
-                        <a href="/rooms">Rooms</a>
-                        <select id="jb3-controls-room"><option></option></select>
-                    </div>
-                    <div id="jb3-post-popup"></div>
-                    <div id="jb3-posts-container">
-                        <div id="jb3-posts" class="jb3-posts"></div>
-                    </div>
-                </div>
-                <div id="jb3-controls">
-                    <input id="jb3-controls-message" type="text" spellcheck="true"></input>
-                    <label for="jb3-controls-nickname">Nickname:</label>
-                    <input id="jb3-controls-nickname" type="text"></input>
+            <div id="jb3-layout-horizontal">
+                <div id="jb3-roster">
+                    <a href="/rooms">Rooms</a>
+                    <select id="jb3-controls-room"><option></option></select>
                     <div id="jb3-menu">
                         <a id="jb3-archives-menu-item" href="/archive" target="_blank">Archives</a>
                         <a id="jb3-fortunes-menu-item" href="/fortune" target="_blank">Fortunes</a>
+                    </div>
+                </div>
+                <div id="jb3-layout-vertical">
+                    <div id="jb3-posts-container">
+                        <div id="jb3-posts" class="jb3-posts"></div>
+                    </div>
+                    <div id="jb3-controls">
+                        <input id="jb3-controls-message" type="text" spellcheck="true"></input>
+                        <label for="jb3-controls-nickname">Nickname:</label>
+                        <input id="jb3-controls-nickname" type="text"></input>
+                        <div id="jb3-post-popup">
+                            <div id="jb3-post-popup-content"></div>
                     </div>
                 </div>
             </div>
