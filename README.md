@@ -8,7 +8,8 @@ jb3 is a KISS tribune powered by java, spring boot and mongodb.
 - fortunes
 - bots
 - last id
-- xPost
+- XPost
+- X-Post-Id
 - rooms
 
 # Demo
@@ -29,7 +30,8 @@ You can also configure your favorite coincoin using these parameters:
 - backend using last id: http://b3.bci.im/legacy/xml?last=%last
 - post returns backend: post request to http://b3.bci.im/legacy/post include backend data (same as GET http://b3.bci.im/legacy/xml response).
 - post message using last id: message=%m&last=%last
-- xPost: post reply returns posted message id in X-Post-Id header
+- XPOST: post reply body contains last messages
+- X-Post-Id: post reply returns posted message id in X-Post-Id header
 
 ## Rooms
 
