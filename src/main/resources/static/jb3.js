@@ -172,7 +172,7 @@ jb3 = {
         var inserted = false;
         messagesContainer.find('.jb3-post').each(function (_, m) {
             var msg = $(m);
-            if (t < msg.attr('time')) {
+            if (t < msg.data('time')) {
                 msg.before(messageDiv);
                 inserted = true;
                 return false;
