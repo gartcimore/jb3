@@ -11,7 +11,7 @@ jb3 = {
                 })
                 );
         self.controlsRoom.attr("size", rooms.length + 1);
-        self.controlsRoom.val(URI(window.location).search(true).room || localStorage.selectedRoom);
+        self.controlsRoom.val(URI(window.location).search(true).room || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
         self.controlsRoom.change(function () {
             $('#jb3-posts').empty();
             localStorage.selectedRoom = self.controlsRoom.val();
@@ -91,8 +91,8 @@ jb3 = {
                 self.onNewMessages(JSON.parse(postsMessage.body));
             });
         });
-        },
-        highlightPostAndReplies: function (postId, showPopup) {
+    },
+    highlightPostAndReplies: function (postId, showPopup) {
         var post = $('#' + postId);
         post.addClass("jb3-highlight");
         if (showPopup) {
@@ -157,7 +157,7 @@ jb3 = {
             postContainer.scrollTop(postContainer.prop("scrollHeight"));
         }
     }
-    , isCurrentRoom: function(room) {
+    , isCurrentRoom: function (room) {
         return this.controlsRoom.val() === room;
     }
     , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}" data-time="{{time}}"><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
