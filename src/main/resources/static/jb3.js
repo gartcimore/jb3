@@ -158,8 +158,7 @@ jb3 = {
         }
     }
     , isCurrentRoom: function(room) {
-        var currentRoom = this.controlsRoom.val();
-        return (!room && !currentRoom) || currentRoom == room;
+        return this.controlsRoom.val() === room;
     }
     , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}" data-time="{{time}}"><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
     , onMessage: function (messagesContainer, userNickname, message) {

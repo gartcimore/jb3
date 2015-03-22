@@ -1,7 +1,9 @@
 package im.bci.jb3;
 
+import freemarker.template.TemplateModelException;
 import java.util.TimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -22,15 +24,19 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @EnableScheduling
 public class Jb3Application implements CommandLineRunner {
 
+    @Value("${jb3.room.default}")
+    private String defaultRoom;
+
     @Override
     public void run(String... args) throws Exception {
         System.out.println("jb3 or not to be!");
     }
-    
+
     @Autowired
-    public void setupFreemarker(freemarker.template.Configuration conf) {
+    public void setupFreemarker(freemarker.template.Configuration conf) throws TemplateModelException {
         conf.setDateTimeFormat("yyyy/MM/dd#HH:mm:ss");
         conf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        conf.setSharedVariable("jb3DefaultRoom", defaultRoom);
     }
 
     @Bean(name = "botExecutor")

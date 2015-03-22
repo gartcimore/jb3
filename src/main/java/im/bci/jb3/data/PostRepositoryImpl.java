@@ -22,22 +22,24 @@ public class PostRepositoryImpl implements PostRepository {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    @Value("${jb3.room.default}")
+    private String defaultRoom;
+   
+    private String roomOrDefault(String room) {
+        return StringUtils.isNotBlank(room) ? room : defaultRoom;
+    }
+
     @Override
     public List<Post> findPosts(DateTime start, DateTime end, String room) {
-        Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate());
-        if (StringUtils.isNotBlank(room)) {
-            criteria = criteria.and("room").is(room);
-        } else {
-            criteria = criteria.andOperator(Criteria.where("room").exists(false).orOperator(Criteria.where("room").is(null)));
-        }
+        Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate()).and("room").is(roomOrDefault(room));
         Query query = new Query().addCriteria(criteria).with(new PageRequest(0, 1000, Sort.Direction.DESC, "time"));
-
         List<Post> result = mongoTemplate.find(query, Post.class, COLLECTION_NAME);
         return result;
     }
 
     @Override
     public void save(Post post) {
+        post.setRoom(roomOrDefault(post.getRoom()));
         mongoTemplate.save(post, COLLECTION_NAME);
     }
 
@@ -50,12 +52,7 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public Post findOne(String room, DateTime start, DateTime end) {
-        Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate());
-        if (StringUtils.isNotBlank(room)) {
-            criteria = criteria.and("room").is(room);
-        } else {
-            criteria = criteria.andOperator(Criteria.where("room").exists(false).orOperator(Criteria.where("room").is(null)));
-        }
+        Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate()).and("room").is(roomOrDefault(room));
         Query query = new Query().addCriteria(criteria).with(new PageRequest(0, 1000, Sort.Direction.DESC, "time"));
         return mongoTemplate.findOne(query, Post.class, COLLECTION_NAME);
     }
@@ -92,10 +89,10 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public void deleteOldPosts() {
-        Query roomQuery = new Query().addCriteria(Criteria.where("room").ne(null).and("time").lt(DateTime.now().minus(roomPostsTTL).toDate()));
+        Query roomQuery = new Query().addCriteria(Criteria.where("room").ne(defaultRoom).and("time").lt(DateTime.now().minus(roomPostsTTL).toDate()));
         mongoTemplate.remove(roomQuery, Post.class, COLLECTION_NAME);
 
-        Query query = new Query().addCriteria(Criteria.where("room").is(null).and("time").lt(DateTime.now().minus(postsTTL).toDate()));
+        Query query = new Query().addCriteria(Criteria.where("room").is(defaultRoom).and("time").lt(DateTime.now().minus(postsTTL).toDate()));
         mongoTemplate.remove(query, Post.class, COLLECTION_NAME);
     }
 

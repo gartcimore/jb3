@@ -14,7 +14,7 @@
             <div id="jb3-layout-horizontal">
                 <div id="jb3-roster">
                     <a href="/rooms">Rooms</a>
-                    <select id="jb3-controls-room"><option></option></select>
+                    <select id="jb3-controls-room"><option>${jb3DefaultRoom}</option></select>
                     <div id="jb3-menu">
                         <a id="jb3-archives-menu-item" href="/archive" target="_blank">Archives</a>
                         <a id="jb3-fortunes-menu-item" href="/fortune" target="_blank">Fortunes</a>

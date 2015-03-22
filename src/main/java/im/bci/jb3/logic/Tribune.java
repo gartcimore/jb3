@@ -38,9 +38,7 @@ public class Tribune {
             Post post = new Post();
             post.setNickname(StringUtils.isNotBlank(nickname) ? nickname : "AnonymousCoward");
             post.setMessage(message);
-            if (StringUtils.isNotBlank(room)) {
-                post.setRoom(room);
-            }
+            post.setRoom(room);
             post.setTime(DateTime.now(DateTimeZone.UTC));
             postPepository.save(post);
             simpMessagingTemplate.convertAndSend("/topic/posts",  Arrays.asList(post));
