@@ -1,6 +1,7 @@
 jb3 = {
     init: function () {
         var self = this;
+        self.postsCacheByRoom = {};
         var controlsMessage = $('#jb3-controls-message');
         self.controlsRoom = $('#jb3-controls-room');
         var controlsNickname = $('#jb3-controls-nickname');
@@ -11,10 +12,19 @@ jb3 = {
                 })
                 );
         self.controlsRoom.attr("size", rooms.length + 1);
-        self.controlsRoom.val(URI(window.location).search(true).room || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
+        self.previouslySelectedRoom = URI(window.location).search(true).room || localStorage.selectedRoom || self.controlsRoom.find('option:first').val();
+        self.controlsRoom.val(self.previouslySelectedRoom);
         self.controlsRoom.change(function () {
-            $('#jb3-posts').empty();
-            localStorage.selectedRoom = self.controlsRoom.val();
+            self.postsCacheByRoom[self.previouslySelectedRoom] = $('#jb3-posts .jb3-post').detach();
+            var selectedRoom = localStorage.selectedRoom = self.previouslySelectedRoom = self.controlsRoom.val();
+            var cached = self.postsCacheByRoom[selectedRoom];
+            if (cached) {
+                var wasAtbottom = self.isPostsContainerAtBottom();
+                self.postsCacheByRoom[selectedRoom].appendTo('#jb3-posts');
+                if (wasAtbottom) {
+                    self.scrollPostsContainerToBottom();
+                }
+            }
             self.refreshMessages();
         });
         controlsMessage.bind('keypress', function (event) {
@@ -142,11 +152,18 @@ jb3 = {
             timeout: 15000
         });
     },
+    isPostsContainerAtBottom: function () {
+        var postContainer = $('#jb3-posts-container');
+        return postContainer.scrollTop() + postContainer.innerHeight() >= postContainer[0].scrollHeight;
+    },
+    scrollPostsContainerToBottom: function () {
+        var postContainer = $('#jb3-posts-container');
+        postContainer.scrollTop(postContainer.prop("scrollHeight"));
+    },
     onNewMessages: function (data) {
         var self = this;
         var userNickname = $('#jb3-controls-nickname').val();
-        var postContainer = $('#jb3-posts-container');
-        var wasAtbottom = postContainer.scrollTop() + postContainer.innerHeight() >= postContainer[0].scrollHeight;
+        var wasAtbottom = self.isPostsContainerAtBottom();
         var messagesContainer = $('#jb3-posts');
         $.each(data, function (_, value) {
             self.onMessage(messagesContainer, userNickname, value);
@@ -154,7 +171,7 @@ jb3 = {
         );
         self.updateNorloges();
         if (wasAtbottom) {
-            postContainer.scrollTop(postContainer.prop("scrollHeight"));
+            self.scrollPostsContainerToBottom();
         }
     }
     , isCurrentRoom: function (room) {
