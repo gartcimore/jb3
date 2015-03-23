@@ -37,18 +37,32 @@
     justify-content: flex-end;
 }
 
+#jb3-controls {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+#jb3-controls label {
+    flex: 0 1 auto;
+}
+#jb3-controls-nickname {
+    flex: 0 1 auto;
+}
+
+#jb3-controls-message {
+    flex: 1 1 auto;
+}
+
 #jb3-post-popup {
     display: flex;
     justify-content: center;
     width: 100%;
     margin: 0;
     height: 1.5em;
+    flex: 1 1 auto;
 }
 
 #jb3-post-popup-content {
     background-color: #CCCCCC;
 }
 
-#jb3-controls-message {
-    width: 50%;
-}
