@@ -61,10 +61,10 @@ public abstract class AbstractBouchotGateway implements Gateway {
                 if (!postPepository.existsByGatewayPostId(gatewayPostId)) {
                     Post post = new Post();
                     post.setGatewayPostId(gatewayPostId);
-                    post.setMessage(legacyUtils.convertFromLegacyNorloges(config.getRoom(), CleanUtils.cleanMessage(replaceUrls(decodeTags(postToImport.select("message").text())))));
-                    String nickname = decodeTags(postToImport.select("login").text());
+                    post.setMessage(legacyUtils.convertFromLegacyNorloges(config.getRoom(), CleanUtils.cleanMessage(replaceUrls(decodeTags(postToImport.select("message").first())))));
+                    String nickname = decodeTags(postToImport.select("login").first()).text();
                     if (StringUtils.isBlank(nickname)) {
-                        nickname = decodeTags(postToImport.select("info").text());
+                        nickname = decodeTags(postToImport.select("info").first()).text();
                         if (StringUtils.isBlank(nickname)) {
                             nickname = "AnonymousMussels";
                         }
@@ -110,19 +110,18 @@ public abstract class AbstractBouchotGateway implements Gateway {
         return config.getRoom();
     }
 
-    private String replaceUrls(String message) {
-        Document doc = Jsoup.parse(message);
-        for (Element a : doc.select("a")) {
+    private String replaceUrls(Element message) {
+        for (Element a : message.select("a")) {
             a.text(a.attr("href"));
         }
-        return doc.toString();
+        return message.html();
     }
 
-    private String decodeTags(String text) {
+    private Element decodeTags(Element message) {
         if (config.isTagsEncoded()) {
-            return StringEscapeUtils.unescapeXml(text);
+            return Jsoup.parse(StringEscapeUtils.unescapeXml(message.text()));
         } else {
-            return text;
+            return message;
         }
     }
 
