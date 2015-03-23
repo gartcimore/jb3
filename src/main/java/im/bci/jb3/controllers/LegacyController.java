@@ -61,11 +61,31 @@ public class LegacyController {
 
     @RequestMapping(value = "/xml")
     public String xml(@RequestParam(value = "room", required = false) String room, @RequestParam(value = "last", required = false) Long lastId, WebRequest webRequest, Model model, HttpServletResponse response) {
+        if (get(lastId, room, webRequest, model, xmlEscaper)) {
+            response.setContentType("text/xml");
+            return "legacy/xml";
+        } else {
+            return null;
+        }
+    }
+
+    @RequestMapping(value = "/tsv")
+    public String tsv(@RequestParam(value = "room", required = false) String room, @RequestParam(value = "last", required = false) Long lastId, WebRequest webRequest, Model model, HttpServletResponse response) {
+        if (get(lastId, room, webRequest, model, csvEscaper)) {
+            response.setContentType("text/tab-separated-values");
+            response.setHeader("Content-Disposition", "attachment; filename=\"backend.tsv\"");
+            return "legacy/tsv";
+        } else {
+            return null;
+        }
+    }
+
+    private boolean get(Long lastId, String room, WebRequest webRequest, Model model, Escaper escaper) {
         DateTime end = DateTime.now(DateTimeZone.UTC).plusHours(1);
         DateTime start = computeStartTime(lastId, end);
         List<Post> posts = postPepository.findPosts(start, end, room);
         if (posts.isEmpty() || webRequest.checkNotModified(posts.get(0).getTime().getMillis())) {
-            return null;
+            return false;
         } else {
             LegacyBoard board = new LegacyBoard();
             board.setSite(site);
@@ -75,16 +95,38 @@ public class LegacyController {
                 LegacyPost legacyPost = new LegacyPost();
                 legacyPost.setId(post.getTime().getMillis());
                 legacyPost.setTime(LegacyUtils.legacyPostTimeFormatter.print(post.getTime()));
-                legacyPost.setInfo(StringEscapeUtils.escapeXml10(Jsoup.clean(post.getNickname(), Whitelist.none())));
-                legacyPost.setMessage(StringEscapeUtils.escapeXml10(Jsoup.clean(legacyUtils.convertToLegacyNorloges(convertUrls(post.getMessage()), post.getTime()), messageWhitelist)));
+                String info = Jsoup.clean(post.getNickname(), Whitelist.none());
+                String message = Jsoup.clean(legacyUtils.convertToLegacyNorloges(convertUrls(post.getMessage()), post.getTime()), messageWhitelist);
+                legacyPost.setInfo(escaper.escape(info));
+                legacyPost.setMessage(escaper.escape(message));
                 legacyPosts.add(legacyPost);
             }
             board.setPosts(legacyPosts);
             model.addAttribute("board", board);
-            response.setContentType("text/xml");
-            return "legacy/xml";
+            return true;
         }
     }
+
+    private static interface Escaper {
+
+        String escape(String s);
+    }
+
+    private static final Escaper xmlEscaper = new Escaper() {
+
+        @Override
+        public String escape(String s) {
+            return StringEscapeUtils.escapeXml10(s);
+        }
+    };
+    private static final Escaper csvEscaper = new Escaper() {
+
+        @Override
+        public String escape(String s) {
+            return s.replaceAll("\\p{C}", " ");
+
+        }
+    };
 
     private DateTime computeStartTime(Long lastId, DateTime end) {
         DateTime start;
