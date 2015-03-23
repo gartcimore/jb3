@@ -11,6 +11,7 @@
     flex-direction: column;
     justify-content: flex-end;
     overflow: hidden;
+    width: 100%;
 }
 
 #jb3-layout-horizontal {
