@@ -180,7 +180,7 @@ jb3 = {
     , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}" data-time="{{time}}"><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
     , onMessage: function (messagesContainer, userNickname, message) {
         var existingMessageDiv = messagesContainer.find('#' + message.id);
-        if (existingMessageDiv.length === 0 && this.isCurrentRoom(message.room)) {
+        if (existingMessageDiv.length === 0) {
             var messageDiv = $(Mustache.render(this.messageTemplate, {
                 id: message.id,
                 time: message.time,
@@ -196,7 +196,17 @@ jb3 = {
                     return false;
                 }
             });
-            this.insertMessageDiv(messagesContainer, messageDiv, message);
+            if(this.isCurrentRoom(message.room)) {
+                this.insertMessageDiv(messagesContainer, messageDiv, message);
+            } else {
+                var tempDiv = $("<div>");
+                var cached = this.postsCacheByRoom[message.room];
+                if(cached) {
+                    cached.appendTo(tempDiv);
+                }
+                this.insertMessageDiv(tempDiv, messageDiv, message);
+                this.postsCacheByRoom[message.room] = tempDiv.find('.jb3-post').detach();
+            }
         }
     },
     insertMessageDiv: function (messagesContainer, messageDiv, message) {
