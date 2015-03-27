@@ -5,9 +5,9 @@
         <meta charset="UTF-8">
         <meta name="viewport" messageFilter="width=device-width, initial-scale=1.0">
         <meta name="robots" messageFilter="noindex,nofollow">
-        <link rel="stylesheet" type="text/css" href="/jb3-common.css" />
-        <link rel="stylesheet" type="text/css" href="/jb3-archive.css" />
-        <link rel="icon" type="image/png" href="/favicon.png" />
+        <link rel="stylesheet" type="text/css" href="/jb3-common.css">
+        <link rel="stylesheet" type="text/css" href="/jb3-archive.css">
+        <link rel="icon" type="image/png" href="/favicon.png">
     </head>
     <body>
     <form id="archive-search-form">
@@ -63,7 +63,7 @@
     </div>
     </body>
     <script src="/webjars/jquery/2.1.1/jquery.js" defer></script>
-    <script src="/webjars/momentjs/2.8.3/moment.js" defer/></script>
-    <script src="/jb3-common.js" defer/></script>
-    <script src="/jb3-archive.js" defer/></script>
+    <script src="/webjars/momentjs/2.8.3/moment.js" defer></script>
+    <script src="/jb3-common.js" defer></script>
+    <script src="/jb3-archive.js" defer></script>
 </html>

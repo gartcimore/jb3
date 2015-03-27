@@ -5,9 +5,9 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="robots" content="noindex,nofollow">
-        <link rel="stylesheet" type="text/css" href="jb3-common.css" />
-        <link rel="stylesheet" type="text/css" href="jb3-frontend.css" />
-        <link rel="icon" type="image/png" href="/favicon.png" />
+        <link rel="stylesheet" type="text/css" href="jb3-common.css">
+        <link rel="stylesheet" type="text/css" href="jb3-frontend.css">
+        <link rel="icon" type="image/png" href="/favicon.png">
     </head>
     <body>
         <div id="jb3-layout">
@@ -38,9 +38,9 @@
     <script src="/webjars/jquery/2.1.1/jquery.js" defer></script>
     <script src="/webjars/mustachejs/0.8.2/mustache.js" defer></script>
     <script src="/webjars/URI.js/1.14.1/URI.js" defer></script>
-    <script src="/webjars/momentjs/2.8.3/moment.js" defer/></script>
-    <script src="/webjars/stomp-websocket/2.3.1-1/stomp.js" defer/></script>
-    <script src="/webjars/sockjs-client/0.3.4-1/sockjs.js" defer/></script>
-    <script src="/jb3-common.js" defer/></script>
-    <script src="/jb3.js" defer/></script>
+    <script src="/webjars/momentjs/2.8.3/moment.js" defer></script>
+    <script src="/webjars/stomp-websocket/2.3.1-1/stomp.js" defer></script>
+    <script src="/webjars/sockjs-client/0.3.4-1/sockjs.js" defer></script>
+    <script src="/jb3-common.js" defer></script>
+    <script src="/jb3.js" defer></script>
 </html>
