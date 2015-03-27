@@ -13,16 +13,16 @@
     <body>
     <form id="fortune-search-form">
         <label for="fortune-search-from">De</label>
-        <input id="fortune-search-from" type="text"></input>
+        <input id="fortune-search-from" type="text">
         <label for="fortune-search-to">à</label>
-        <input id="fortune-search-to" type="text"></input>
+        <input id="fortune-search-to" type="text">
         <label for="fortune-search-nicknameFilter">par</label>
-        <input id="fortune-search-nicknameFilter" name="nicknameFilter" type="text" value="${(rq.nicknameFilter)!}"></input>
+        <input id="fortune-search-nicknameFilter" name="nicknameFilter" type="text" value="${(rq.nicknameFilter)!}">
         <label for="fortune-search-messageFilter">disant</label>
-        <input id="fortune-search-messageFilter" name="messageFilter" type="text" value="${(rq.messageFilter)!}"></input>
-        <input id="fortune-search-from-hidden" name="from" type="hidden" value="${(rq.from?c)!}"></input>
-        <input id="fortune-search-to-hidden" name="to" type="hidden" value="${(rq.to?c)!}"></input>
-        <input type="submit"></input>
+        <input id="fortune-search-messageFilter" name="messageFilter" type="text" value="${(rq.messageFilter)!}">
+        <input id="fortune-search-from-hidden" name="from" type="hidden" value="${(rq.from?c)!}">
+        <input id="fortune-search-to-hidden" name="to" type="hidden" value="${(rq.to?c)!}">
+        <input type="submit">
     </form>
     <#if fortunes?? >
     <div class="jb3-fortunes">
@@ -34,22 +34,22 @@
     <div class="jb3-fortune-pager">
         <#if rq.page &gt; 0 >
         <form>
-            <input name="from" type="hidden" value="${(rq.from?c)!}"></input>
-            <input name="to" type="hidden" value="${(rq.to?c)!}"></input>
-            <input name="nicknameFilter" type="hidden" value="${(rq.nicknameFilter)!}"></input>
-            <input name="messageFilter" type="hidden" value="${(rq.messageFilter)!}"></input>
-            <input name="page" type="hidden" value="${(rq.page - 1)!}"></input>
-            <input type="submit" value="Précédents"></input>
+            <input name="from" type="hidden" value="${(rq.from?c)!}">
+            <input name="to" type="hidden" value="${(rq.to?c)!}">
+            <input name="nicknameFilter" type="hidden" value="${(rq.nicknameFilter)!}">
+            <input name="messageFilter" type="hidden" value="${(rq.messageFilter)!}">
+            <input name="page" type="hidden" value="${(rq.page - 1)!}">
+            <input type="submit" value="Précédents">
         </form>
         </#if>
         <#if posts?? && posts?has_content >
         <form>
-            <input name="from" type="hidden" value="${(rq.from?c)!}"></input>
-            <input name="to" type="hidden" value="${(rq.to?c)!}"></input>
-            <input name="nicknameFilter" type="hidden" value="${(rq.nicknameFilter)!}"></input>
-            <input name="messageFilter" type="hidden" value="${(rq.messageFilter)!}"></input>
-            <input name="page" type="hidden" value="${(rq.page + 1)!}"></input>
-            <input type="submit" value="Suivants"></input>
+            <input name="from" type="hidden" value="${(rq.from?c)!}">
+            <input name="to" type="hidden" value="${(rq.to?c)!}">
+            <input name="nicknameFilter" type="hidden" value="${(rq.nicknameFilter)!}">
+            <input name="messageFilter" type="hidden" value="${(rq.messageFilter)!}">
+            <input name="page" type="hidden" value="${(rq.page + 1)!}">
+            <input type="submit" value="Suivants">
         </form>
         </#if>
     </div>

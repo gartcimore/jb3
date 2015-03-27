@@ -25,9 +25,9 @@
                         <div id="jb3-posts" class="jb3-posts"></div>
                     </div>
                     <div id="jb3-controls">
-                        <input id="jb3-controls-message" type="text" spellcheck="true"></input>
+                        <input id="jb3-controls-message" type="text" spellcheck="true">
                         <label for="jb3-controls-nickname">Nickname:</label>
-                        <input id="jb3-controls-nickname" type="text"></input>
+                        <input id="jb3-controls-nickname" type="text">
                         <div id="jb3-post-popup">
                             <div id="jb3-post-popup-content"></div>
                         </div>
