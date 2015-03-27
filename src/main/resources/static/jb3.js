@@ -14,13 +14,10 @@ jb3 = {
         self.previouslySelectedRoom = URI(window.location).search(true).room || localStorage.selectedRoom || self.controlsRoom.find('option:first').val();
         self.controlsRoom.val(self.previouslySelectedRoom);
         self.controlsRoom.change(function () {
-        	$('.jb3-post-room-' + self.previouslySelectedRoom).hide();
+            $('.jb3-post-room-' + self.previouslySelectedRoom).hide();
             var selectedRoom = localStorage.selectedRoom = self.previouslySelectedRoom = self.controlsRoom.val();
-        	$('.jb3-post-room-' + selectedRoom).show();
-            var wasAtbottom = self.isPostsContainerAtBottom();
-            if (wasAtbottom) {
-                self.scrollPostsContainerToBottom();
-            }
+            $('.jb3-post-room-' + selectedRoom).show();
+            self.scrollPostsContainerToBottom();
             self.refreshMessages();
         });
         controlsMessage.bind('keypress', function (event) {
