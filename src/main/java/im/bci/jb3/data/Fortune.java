@@ -1,6 +1,5 @@
 package im.bci.jb3.data;
 
-import java.util.Date;
 import java.util.List;
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.Id;

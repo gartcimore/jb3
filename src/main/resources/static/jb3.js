@@ -1,7 +1,6 @@
 jb3 = {
     init: function () {
         var self = this;
-        self.postsCacheByRoom = {};
         var controlsMessage = $('#jb3-controls-message');
         self.controlsRoom = $('#jb3-controls-room');
         var controlsNickname = $('#jb3-controls-nickname');
@@ -15,15 +14,12 @@ jb3 = {
         self.previouslySelectedRoom = URI(window.location).search(true).room || localStorage.selectedRoom || self.controlsRoom.find('option:first').val();
         self.controlsRoom.val(self.previouslySelectedRoom);
         self.controlsRoom.change(function () {
-            self.postsCacheByRoom[self.previouslySelectedRoom] = $('#jb3-posts .jb3-post').detach();
+        	$('.jb3-post-room-' + self.previouslySelectedRoom).hide();
             var selectedRoom = localStorage.selectedRoom = self.previouslySelectedRoom = self.controlsRoom.val();
-            var cached = self.postsCacheByRoom[selectedRoom];
-            if (cached) {
-                var wasAtbottom = self.isPostsContainerAtBottom();
-                self.postsCacheByRoom[selectedRoom].appendTo('#jb3-posts');
-                if (wasAtbottom) {
-                    self.scrollPostsContainerToBottom();
-                }
+        	$('.jb3-post-room-' + selectedRoom).show();
+            var wasAtbottom = self.isPostsContainerAtBottom();
+            if (wasAtbottom) {
+                self.scrollPostsContainerToBottom();
             }
             self.refreshMessages();
         });
@@ -177,13 +173,14 @@ jb3 = {
     , isCurrentRoom: function (room) {
         return this.controlsRoom.val() === room;
     }
-    , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}" data-time="{{time}}"><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
+    , messageTemplate: '<div id="{{id}}" class="jb3-post-room-{{room}} jb3-post{{postIsMine}}" data-time="{{time}}"><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
     , onMessage: function (messagesContainer, userNickname, message) {
         var existingMessageDiv = messagesContainer.find('#' + message.id);
         if (existingMessageDiv.length === 0) {
             var messageDiv = $(Mustache.render(this.messageTemplate, {
                 id: message.id,
                 time: message.time,
+                room: message.room,
                 norloge: moment(message.time).format(this.norlogeFormat),
                 nickname: message.nickname,
                 message: jb3_common.formatMessage(message.message),
@@ -196,17 +193,7 @@ jb3 = {
                     return false;
                 }
             });
-            if(this.isCurrentRoom(message.room)) {
-                this.insertMessageDiv(messagesContainer, messageDiv, message);
-            } else {
-                var tempDiv = $("<div>");
-                var cached = this.postsCacheByRoom[message.room];
-                if(cached) {
-                    cached.appendTo(tempDiv);
-                }
-                this.insertMessageDiv(tempDiv, messageDiv, message);
-                this.postsCacheByRoom[message.room] = tempDiv.find('.jb3-post').detach();
-            }
+            this.insertMessageDiv(messagesContainer, messageDiv, message);
         }
     },
     insertMessageDiv: function (messagesContainer, messageDiv, message) {
