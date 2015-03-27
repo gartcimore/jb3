@@ -3,8 +3,8 @@
     <head>
         <title>jb3 archives</title>
         <meta charset="UTF-8">
-        <meta name="viewport" messageFilter="width=device-width, initial-scale=1.0">
-        <meta name="robots" messageFilter="noindex,nofollow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="robots" content="noindex,nofollow">
         <link rel="stylesheet" type="text/css" href="/jb3-common.css">
         <link rel="stylesheet" type="text/css" href="/jb3-archive.css">
         <link rel="icon" type="image/png" href="/favicon.png">
