@@ -11,12 +11,11 @@ jb3 = {
                 })
                 );
         self.controlsRoom.attr("size", rooms.length + 1);
-        self.previouslySelectedRoom = URI(window.location).search(true).room || localStorage.selectedRoom || self.controlsRoom.find('option:first').val();
-        self.controlsRoom.val(self.previouslySelectedRoom);
+        self.controlsRoom.val(URI(window.location).search(true).room || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
         self.controlsRoom.change(function () {
-            $('.jb3-post-room-' + self.previouslySelectedRoom).hide();
             var selectedRoom = localStorage.selectedRoom = self.previouslySelectedRoom = self.controlsRoom.val();
-            $('.jb3-post-room-' + selectedRoom).show();
+            $('.jb3-post[data-room!="' + selectedRoom +'"]').hide();
+            $('.jb3-post[data-room="' + selectedRoom +'"]').show();
             self.scrollPostsContainerToBottom();
             self.refreshMessages();
         });
@@ -170,7 +169,7 @@ jb3 = {
     , isCurrentRoom: function (room) {
         return this.controlsRoom.val() === room;
     }
-    , messageTemplate: '<div id="{{id}}" class="jb3-post-room-{{room}} jb3-post{{postIsMine}}" data-time="{{time}}"><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
+    , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}" data-room="{{{room}}}" data-time="{{time}}"><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
     , onMessage: function (messagesContainer, userNickname, message) {
         var existingMessageDiv = messagesContainer.find('#' + message.id);
         if (existingMessageDiv.length === 0) {
@@ -190,6 +189,9 @@ jb3 = {
                     return false;
                 }
             });
+            if(!this.isCurrentRoom(message.room)) {
+                messageDiv.hide();
+            }
             this.insertMessageDiv(messagesContainer, messageDiv, message);
         }
     },
