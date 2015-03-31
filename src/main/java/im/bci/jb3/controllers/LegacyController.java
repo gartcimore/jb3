@@ -6,15 +6,20 @@ import im.bci.jb3.data.Post;
 import im.bci.jb3.data.PostRepository;
 import im.bci.jb3.legacy.LegacyUtils;
 import im.bci.jb3.logic.TribuneService;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.Period;
+import org.joda.time.format.ISOPeriodFormat;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +51,13 @@ public class LegacyController {
 
     @Autowired
     private LegacyUtils legacyUtils;
+
+    private Period postsGetPeriod;
+    
+    @Value("${jb3.posts.get.period}")
+    public void setPostsGetPeriod(String p) {
+        postsGetPeriod = ISOPeriodFormat.standard().parsePeriod(p);
+    }
 
     @RequestMapping(value = "/post", method = RequestMethod.POST)
     public String post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room, @RequestParam(value = "last", required = false) Long last, @RequestHeader(value = "User-Agent", required = false) String userAgent, WebRequest webRequest, Model model, HttpServletResponse response) {
@@ -136,7 +148,7 @@ public class LegacyController {
                 start = end.minusSeconds(1);
             }
         } else {
-            start = end.minusWeeks(1);
+            start = end.minus(postsGetPeriod);
         }
         //workaround shameful olcc new year bug
         if (start.getYear() < end.getYear()) {

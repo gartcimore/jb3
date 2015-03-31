@@ -12,7 +12,7 @@ public class ScheduledCleaning {
     @Autowired
     private PostRepository postPepository;
 
-    @Scheduled(cron = "0 0/30 * * * *")
+    @Scheduled(cron = "0 3 * * * *")
     public void deleteOldPosts() {
         Logger.getLogger(ScheduledCleaning.class.getName()).info("Delete old posts.");
         postPepository.deleteOldPosts();
