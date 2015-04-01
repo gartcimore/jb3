@@ -12,6 +12,8 @@ public class BouchotConfig {
     private String lastIdParameterName;
     private String messageContentParameterName;
     private boolean tagsEncoded = true;
+    private String referrer;
+    private String cookieName;
 
     public String getRoom() {
         return room;
@@ -59,6 +61,22 @@ public class BouchotConfig {
 
     public void setTagsEncoded(boolean tagsEncoded) {
         this.tagsEncoded = tagsEncoded;
+    }
+
+    public void setReferrer(String referrer) {
+        this.referrer = referrer;
+    }
+
+    public String getReferrer() {
+        return referrer;
+    }
+
+    public String getCookieName() {
+        return cookieName;
+    }
+
+    public void setCookieName(String cookieName) {
+        this.cookieName = cookieName;
     }
 
 }

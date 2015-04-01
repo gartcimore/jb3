@@ -60,11 +60,11 @@ public class LegacyController {
     }
 
     @RequestMapping(value = "/post", method = RequestMethod.POST)
-    public String post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room, @RequestParam(value = "last", required = false) Long last, @RequestHeader(value = "User-Agent", required = false) String userAgent, WebRequest webRequest, Model model, HttpServletResponse response) {
+    public String post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room, @RequestParam(value = "last", required = false) Long last, @RequestHeader(value = "User-Agent", required = false) String userAgent, WebRequest webRequest, @RequestParam(value = "auth", required = false) String auth, Model model, HttpServletResponse response) {
         if (StringUtils.isBlank(nickname)) {
             nickname = userAgent;
         }
-        Post post = tribune.post(nickname, legacyUtils.convertFromLegacyNorloges(room, message), room);
+        Post post = tribune.post(nickname, legacyUtils.convertFromLegacyNorloges(room, message), room, auth);
         if (null != post) {
             response.addHeader("X-Post-Id", Long.toString(post.getTime().getMillis()));
         }

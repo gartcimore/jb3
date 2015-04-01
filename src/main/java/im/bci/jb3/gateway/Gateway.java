@@ -6,5 +6,5 @@ package im.bci.jb3.gateway;
  */
 public interface Gateway {
     String getRoom();
-    void post(String nickname, String message);
+    void post(String nickname, String message, String auth);
 }

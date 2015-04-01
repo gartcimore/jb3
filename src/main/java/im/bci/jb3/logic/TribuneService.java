@@ -22,8 +22,8 @@ public class TribuneService {
     @Autowired
     private Tribune tribune;
 
-    public Post post(String nickname, String message, String room) {
-        if (!gateways.handlePost(nickname, message, room)) {
+    public Post post(String nickname, String message, String room, String auth) {
+        if (!gateways.handlePost(nickname, message, room, auth)) {
             Post post = tribune.post(nickname, message, room);
             if (null != post) {
                 bots.handle(post);

@@ -14,7 +14,8 @@ jb3_rooms = {
                 footer: true
             },
             columns: [
-                {field: 'rname', caption: 'Name', size: '30%', editable: {type: 'text'}}
+                {field: 'rname', caption: 'Name', size: '50%', editable: {type: 'text'}},
+                {field: 'rauth', caption: 'Auth', size: '50%', editable: {type: 'text'}}
             ],
             records: records,
             onAdd: function () {

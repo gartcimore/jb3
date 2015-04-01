@@ -41,8 +41,8 @@ public class ApiController {
     }
 
     @RequestMapping("/post")
-    public List<Post> post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room) {
-        tribune.post(nickname, message, room);
+    public List<Post> post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room, @RequestParam(value = "auth", required = false) String auth) {
+        tribune.post(nickname, message, room, auth);
         return get(room);
     }
 

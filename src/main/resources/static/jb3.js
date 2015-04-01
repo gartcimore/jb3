@@ -7,7 +7,7 @@ jb3 = {
         var rooms = jb3_common.getRooms();
         self.controlsRoom.append(
                 $.map(rooms, function (v, k) {
-                    return $("<option>").val(v.rname).text(v.rname);
+                    return $("<option>").val(v.rname).data('auth', v.rauth).text(v.rname);
                 })
                 );
         self.controlsRoom.attr("size", rooms.length + 1);
@@ -26,7 +26,7 @@ jb3 = {
                     event.preventDefault();
                 }
             } else if (event.keyCode === 13) {
-                self.postMessage(controlsNickname.val(), controlsMessage.val(), self.controlsRoom.val());
+                self.postMessage(controlsNickname.val(), controlsMessage.val(), self.controlsRoom.val(), self.controlsRoom.find(':selected').data('auth'));
                 controlsMessage.val('');
             }
         });
@@ -108,12 +108,12 @@ jb3 = {
         $(".jb3-cite[data-ref='" + post.attr('id') + "']").removeClass("jb3-highlight");
         $('#jb3-post-popup-content').empty();
     },
-    postMessage: function (nickname, message, room) {
+    postMessage: function (nickname, message, room, auth) {
         var self = this;
         $.ajax({
             type: "POST",
             url: "/api/post",
-            data: {message: message, nickname: nickname, room: room},
+            data: {message: message, nickname: nickname, room: room, auth: auth},
             success: function (data) {
                 self.onNewMessages(data);
             }
