@@ -92,6 +92,7 @@ jb3 = {
             stompClient.subscribe('/topic/posts', function (postsMessage) {
                 self.onNewMessages(JSON.parse(postsMessage.body));
             });
+            self.stompClient = stompClient;
         });
     },
     highlightPostAndReplies: function (postId, showPopup) {
@@ -126,23 +127,27 @@ jb3 = {
         if (room) {
             data.room = room;
         }
-        $.ajax({
-            dataType: "json",
-            type: "GET",
-            url: "/api/get",
-            data: data,
-            success: function (data) {
-                self.onNewMessages(data);
-            },
-            complete: function () {
-                if (pollInterval) {
-                    setTimeout(function () {
-                        self.refreshMessages(pollInterval);
-                    }, pollInterval);
-                }
-            },
-            timeout: 15000
-        });
+        if(self.stompClient) {
+            self.stompClient.send("/app/get", {}, JSON.stringify(data));
+        } else {        
+            $.ajax({
+                dataType: "json",
+                type: "GET",
+                url: "/api/get",
+                data: data,
+                success: function (data) {
+                    self.onNewMessages(data);
+                },
+                complete: function () {
+                    if (pollInterval) {
+                        setTimeout(function () {
+                            self.refreshMessages(pollInterval);
+                        }, pollInterval);
+                    }
+                },
+                timeout: 15000
+            });
+        }
     },
     isPostsContainerAtBottom: function () {
         var postContainer = $('#jb3-posts-container');
