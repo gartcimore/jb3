@@ -150,7 +150,7 @@ jb3 = {
         var userNickname = $('#jb3-controls-nickname').val();
         var wasAtbottom = self.isPostsContainerAtBottom();
         var messagesContainer = $('#jb3-posts');
-        for(var d in data) {
+        for (var d in data) {
             self.onMessage(messagesContainer, userNickname, data[d]);
         }
         self.updateNorloges();
@@ -158,23 +158,15 @@ jb3 = {
             self.scrollPostsContainerToBottom();
         }
     }
-    , isCurrentRoom: function (room) {
-        return this.controlsRoom.val() === room;
-    }
-    , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}{{postIsBirgorno}}" data-room="{{{room}}}" data-time="{{time}}"{{postStyle}}><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
+    , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}{{postIsBigorno}}" data-room="{{{room}}}" data-time="{{time}}"{{postStyle}}><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
     , onMessage: function (messagesContainer, userNickname, message) {
         if (!document.getElementById(message.id)) {
-            var messageDiv = Mustache.render(this.messageTemplate, {
-                id: message.id,
-                time: message.time,
-                room: message.room,
-                norloge: moment(message.time).format(this.norlogeFormat),
-                nickname: message.nickname,
-                message: jb3_common.formatMessage(message.message),
-                postIsMine: message.nickname === userNickname ? " jb3-post-is-mine" : "",
-                postIsBirgorno: message.message.search(new RegExp("(moules|"+userNickname+")&lt;", "i")) >= 0 ? " jb3-post-is-bigorno" : "",
-                postStyle: this.isCurrentRoom(message.room) ? "" : " style=display:none" 
-            });
+            message.message = jb3_common.formatMessage(message.message);
+            message.norloge = moment(message.time).format(this.norlogeFormat);
+            message.postIsMine = message.nickname === userNickname ? " jb3-post-is-mine" : "";
+            message.postIsBigorno = message.message.search(new RegExp("(moules|" + userNickname + ")&lt;", "i")) >= 0 ? " jb3-post-is-bigorno" : "";
+            message.postStyle = this.controlsRoom.val() === message.room ? "" : " style=display:none";
+            var messageDiv = Mustache.render(this.messageTemplate, message);
             this.insertMessageDiv(messagesContainer, messageDiv, message);
         }
     },
