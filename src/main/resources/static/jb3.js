@@ -1,6 +1,7 @@
 jb3 = {
     init: function () {
         var self = this;
+        self.messagesContainer = document.getElementById('jb3-posts');
         var controlsMessage = $('#jb3-controls-message');
         self.controlsRoom = $('#jb3-controls-room');
         var controlsNickname = $('#jb3-controls-nickname');
@@ -149,9 +150,8 @@ jb3 = {
         var self = this;
         var userNickname = $('#jb3-controls-nickname').val();
         var wasAtbottom = self.isPostsContainerAtBottom();
-        var messagesContainer = $('#jb3-posts');
         for (var d in data) {
-            self.onMessage(messagesContainer, userNickname, data[d]);
+            self.onMessage(userNickname, data[d]);
         }
         self.updateNorloges();
         if (wasAtbottom) {
@@ -159,7 +159,7 @@ jb3 = {
         }
     }
     , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}{{postIsBigorno}}" data-room="{{{room}}}" data-time="{{time}}"{{postStyle}}><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
-    , onMessage: function (messagesContainer, userNickname, message) {
+    , onMessage: function (userNickname, message) {
         if (!document.getElementById(message.id)) {
             message.message = jb3_common.formatMessage(message.message);
             message.norloge = moment(message.time).format(this.norlogeFormat);
@@ -167,23 +167,20 @@ jb3 = {
             message.postIsBigorno = message.message.search(new RegExp("(moules|" + userNickname + ")&lt;", "i")) >= 0 ? " jb3-post-is-bigorno" : "";
             message.postStyle = this.controlsRoom.val() === message.room ? "" : " style=display:none";
             var messageDiv = Mustache.render(this.messageTemplate, message);
-            this.insertMessageDiv(messagesContainer, messageDiv, message);
+            this.insertMessageDiv(messageDiv, message);
         }
     },
-    insertMessageDiv: function (messagesContainer, messageDiv, message) {
+    insertMessageDiv: function (messageDiv, message) {
         var t = message.time;
-        var inserted = false;
-        messagesContainer.find('.jb3-post').each(function (_, m) {
-            var msg = $(m);
-            if (t < msg.data('time')) {
-                msg.before(messageDiv);
-                inserted = true;
-                return false;
+        var posts = this.messagesContainer.getElementsByClassName('jb3-post');
+        for(var p = 0; p<posts.length; ++p) {
+            var post = posts[p];
+            if (t < post.dataset.time) {
+                post.insertAdjacentHTML('beforebegin', messageDiv);
+                return;
             }
-        });
-        if (!inserted) {
-            messagesContainer.append(messageDiv);
         }
+        this.messagesContainer.insertAdjacentHTML('beforeend', messageDiv);
     },
     updateNorloges: function () {
         $('.jb3-cite').each(function () {
