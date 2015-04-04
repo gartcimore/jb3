@@ -62,7 +62,6 @@ jb3 = {
         }, ".jb3-post-time");
         self.initNickname();
         self.initWebsockets();
-        self.refreshMessages(30000);
     },
     norlogeFormat: "HH:mm:ss",
     initNickname: function () {
@@ -85,15 +84,22 @@ jb3 = {
     },
     initWebsockets: function () {
         var self = this;
-        var socket = new SockJS('/plop');
+        var socket = new SockJS('/webdirectcoin');
         var stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
-            console.log('Connected: ' + frame);
+            console.log('WebDirectCoin connected: ' + frame);
             stompClient.subscribe('/topic/posts', function (postsMessage) {
                 self.onNewMessages(JSON.parse(postsMessage.body));
             });
             self.stompClient = stompClient;
-        });
+            self.refreshMessages();
+        }, function(error) {
+                console.log('WebDirectCoin error: ' + error + "\nTry to reconnect...");
+                setTimeout(function () {
+                            self.initWebsockets();
+                        }, 30000);
+            }
+        );
     },
     highlightPostAndReplies: function (postId, showPopup) {
         var post = $('#' + postId);
@@ -110,44 +116,12 @@ jb3 = {
         $('#jb3-post-popup-content').empty();
     },
     postMessage: function (nickname, message, room, auth) {
-        var self = this;
-        $.ajax({
-            type: "POST",
-            url: "/api/post",
-            data: {message: message, nickname: nickname, room: room, auth: auth},
-            success: function (data) {
-                self.onNewMessages(data);
-            }
-        });
+        var data = {message: message, nickname: nickname, room: room, auth: auth};
+        this.stompClient.send("/webdirectcoin/post", {}, JSON.stringify(data));
     },
-    refreshMessages: function (pollInterval) {
-        var self = this;
-        var data = {};
-        var room = self.controlsRoom.val();
-        if (room) {
-            data.room = room;
-        }
-        if(self.stompClient) {
-            self.stompClient.send("/app/get", {}, JSON.stringify(data));
-        } else {        
-            $.ajax({
-                dataType: "json",
-                type: "GET",
-                url: "/api/get",
-                data: data,
-                success: function (data) {
-                    self.onNewMessages(data);
-                },
-                complete: function () {
-                    if (pollInterval) {
-                        setTimeout(function () {
-                            self.refreshMessages(pollInterval);
-                        }, pollInterval);
-                    }
-                },
-                timeout: 15000
-            });
-        }
+    refreshMessages: function () {
+        var data = { room: this.controlsRoom.val() };
+        this.stompClient.send("/webdirectcoin/get", {}, JSON.stringify(data));
     },
     isPostsContainerAtBottom: function () {
         var postContainer = $('#jb3-posts-container');

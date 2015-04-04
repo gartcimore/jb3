@@ -17,12 +17,11 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/topic/posts");
-        config.setApplicationDestinationPrefixes("/app");
+        config.setApplicationDestinationPrefixes("/webdirectcoin");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/plop").withSockJS();
+        registry.addEndpoint("/webdirectcoin").withSockJS();
     }
-
 }
