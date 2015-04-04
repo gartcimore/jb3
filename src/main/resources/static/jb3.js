@@ -150,10 +150,9 @@ jb3 = {
         var userNickname = $('#jb3-controls-nickname').val();
         var wasAtbottom = self.isPostsContainerAtBottom();
         var messagesContainer = $('#jb3-posts');
-        $.each(data, function (_, value) {
-            self.onMessage(messagesContainer, userNickname, value);
+        for(var d in data) {
+            self.onMessage(messagesContainer, userNickname, data[d]);
         }
-        );
         self.updateNorloges();
         if (wasAtbottom) {
             self.scrollPostsContainerToBottom();
@@ -162,29 +161,20 @@ jb3 = {
     , isCurrentRoom: function (room) {
         return this.controlsRoom.val() === room;
     }
-    , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}" data-room="{{{room}}}" data-time="{{time}}"><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
+    , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}{{postIsBirgorno}}" data-room="{{{room}}}" data-time="{{time}}"{{postStyle}}><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
     , onMessage: function (messagesContainer, userNickname, message) {
-        var existingMessageDiv = messagesContainer.find('#' + message.id);
-        if (existingMessageDiv.length === 0) {
-            var messageDiv = $(Mustache.render(this.messageTemplate, {
+        if (!document.getElementById(message.id)) {
+            var messageDiv = Mustache.render(this.messageTemplate, {
                 id: message.id,
                 time: message.time,
                 room: message.room,
                 norloge: moment(message.time).format(this.norlogeFormat),
                 nickname: message.nickname,
                 message: jb3_common.formatMessage(message.message),
-                postIsMine: message.nickname === userNickname ? " jb3-post-is-mine" : ""
-            }));
-            messageDiv.find(".jb3-bigorno").each(function () {
-                var text = $(this).text();
-                if (text === "moules" || text.localeCompare(userNickname, 'fr', {usage: 'search', sensitivity: 'base', ignorePunctuation: true}) === 0) {
-                    messageDiv.addClass("jb3-post-is-bigorno");
-                    return false;
-                }
+                postIsMine: message.nickname === userNickname ? " jb3-post-is-mine" : "",
+                postIsBirgorno: message.message.search(new RegExp("(moules|"+userNickname+")&lt;", "i")) >= 0 ? " jb3-post-is-bigorno" : "",
+                postStyle: this.isCurrentRoom(message.room) ? "" : " style=display:none" 
             });
-            if (!this.isCurrentRoom(message.room)) {
-                messageDiv.hide();
-            }
             this.insertMessageDiv(messagesContainer, messageDiv, message);
         }
     },
