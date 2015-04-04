@@ -5,19 +5,23 @@ jb3 = {
         self.controlsRoom = $('#jb3-controls-room');
         var controlsNickname = $('#jb3-controls-nickname');
         var rooms = jb3_common.getRooms();
+        self.rooms = {};
+        self.rooms[self.controlsRoom.val()] = {};
         self.controlsRoom.append(
                 $.map(rooms, function (v, k) {
-                    return $("<option>").val(v.rname).data('auth', v.rauth).text(v.rname);
+                    self.rooms[v.rname] = {
+                        auth: v.rauth
+                    };
+                    return $("<option>").val(v.rname).text(v.rname);
                 })
                 );
         self.controlsRoom.attr("size", rooms.length + 1);
         self.controlsRoom.val(URI(window.location).search(true).room || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
         self.controlsRoom.change(function () {
             var selectedRoom = localStorage.selectedRoom = self.previouslySelectedRoom = self.controlsRoom.val();
-            $('.jb3-post[data-room!="' + selectedRoom +'"]').hide();
-            $('.jb3-post[data-room="' + selectedRoom +'"]').show();
+            $('.jb3-post[data-room!="' + selectedRoom + '"]').hide();
+            $('.jb3-post[data-room="' + selectedRoom + '"]').show();
             self.scrollPostsContainerToBottom();
-            self.refreshMessages();
         });
         controlsMessage.bind('keypress', function (event) {
             if (event.altKey) {
@@ -26,7 +30,8 @@ jb3 = {
                     event.preventDefault();
                 }
             } else if (event.keyCode === 13) {
-                self.postMessage(controlsNickname.val(), controlsMessage.val(), self.controlsRoom.val(), self.controlsRoom.find(':selected').data('auth'));
+                var selectedRoom = self.controlsRoom.val();
+                self.postMessage(controlsNickname.val(), controlsMessage.val(), selectedRoom, self.rooms[selectedRoom].auth);
                 controlsMessage.val('');
             }
         });
@@ -93,12 +98,12 @@ jb3 = {
             });
             self.stompClient = stompClient;
             self.refreshMessages();
-        }, function(error) {
-                console.log('WebDirectCoin error: ' + error + "\nTry to reconnect...");
-                setTimeout(function () {
-                            self.initWebsockets();
-                        }, 30000);
-            }
+        }, function (error) {
+            console.log('WebDirectCoin error: ' + error + "\nTry to reconnect...");
+            setTimeout(function () {
+                self.initWebsockets();
+            }, 30000);
+        }
         );
     },
     highlightPostAndReplies: function (postId, showPopup) {
@@ -120,7 +125,16 @@ jb3 = {
         this.stompClient.send("/webdirectcoin/post", {}, JSON.stringify(data));
     },
     refreshMessages: function () {
-        var data = { room: this.controlsRoom.val() };
+        var selectedRoom = this.controlsRoom.val();
+        this.refreshRoom(selectedRoom);
+        for (var room in this.rooms) {
+            if (room !== selectedRoom) {
+                this.refreshRoom(room);
+            }
+        }
+    },
+    refreshRoom: function (room) {
+        var data = {room: room};
         this.stompClient.send("/webdirectcoin/get", {}, JSON.stringify(data));
     },
     isPostsContainerAtBottom: function () {
@@ -168,7 +182,7 @@ jb3 = {
                     return false;
                 }
             });
-            if(!this.isCurrentRoom(message.room)) {
+            if (!this.isCurrentRoom(message.room)) {
                 messageDiv.hide();
             }
             this.insertMessageDiv(messagesContainer, messageDiv, message);
