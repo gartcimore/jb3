@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -40,12 +38,8 @@ public class WebDirectCoinController {
     }
 
     @MessageMapping("/post")
-    @SendTo("/topic/posts")
-    public List<Post> post(PostRQ rq) {
+    public void post(PostRQ rq) {
         tribune.post(rq.getNickname(), rq.getMessage(), rq.getRoom(), rq.getAuth());
-        GetRQ grq = new GetRQ();
-        grq.setRoom(rq.getRoom());
-        return get(grq);
     }
 
     @Value("${jb3.posts.get.period}")
