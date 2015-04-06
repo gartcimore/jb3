@@ -66,6 +66,7 @@ jb3 = {
                 self.unhighlightPostAndReplies($(event.target).parent().attr('id'));
             }
         }, ".jb3-post-time");
+        jb3_common.initTotozLazyLoading();
         self.initNickname();
         self.initWebsockets();
     },

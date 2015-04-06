@@ -47,6 +47,7 @@ jb3_archive = {
                 self.unhighlightPostAndReplies($(event.target).parent().attr('id'));
             }
         }, ".jb3-post-time");
+        jb3_common.initTotozLazyLoading();
     },
     norlogeFormat: "YYYY/MM/DD#HH:mm:ss",
     highlightPostAndReplies: function (postId) {

@@ -30,6 +30,7 @@ jb3_fortune = {
             var time = moment(input.val(), self.norlogeFormat);
             $('#fortune-search-to-hidden').val(time.valueOf());
         });
+        jb3_common.initTotozLazyLoading();
     },
     norlogeFormat: "YYYY/MM/DD#HH:mm:ss"
 };
