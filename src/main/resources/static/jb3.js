@@ -68,7 +68,20 @@ jb3 = {
         }, ".jb3-post-time");
         jb3_common.initTotozLazyLoading();
         self.initNickname();
-        self.initWebsockets();
+        self.webdirectcoin = new Worker("/webdirectcoin.js");
+        self.webdirectcoin.onmessage = function (event) {
+            switch (event.data.type) {
+                case "posts":
+                    self.onNewMessages(event.data.posts);
+                    break;
+                case "connected":
+                    self.refreshMessages();
+                    break;
+            }
+        }
+        var url = URI();
+        url = url.protocol(url.protocol() === "https" ? "wss" : "ws").path("/webdirectcoin");
+        self.webdirectcoin.postMessage({type: "connect", url: url.toString()});
     },
     norlogeFormat: "HH:mm:ss",
     initNickname: function () {
@@ -89,25 +102,6 @@ jb3 = {
             localStorage.nickname = controlsNickname.val();
         });
     },
-    initWebsockets: function () {
-        var self = this;
-        var socket = new SockJS('/webdirectcoin');
-        var stompClient = Stomp.over(socket);
-        stompClient.connect({}, function (frame) {
-            console.log('WebDirectCoin connected: ' + frame);
-            stompClient.subscribe('/topic/posts', function (postsMessage) {
-                self.onNewMessages(JSON.parse(postsMessage.body));
-            });
-            self.stompClient = stompClient;
-            self.refreshMessages();
-        }, function (error) {
-            console.log('WebDirectCoin error: ' + error + "\nTry to reconnect...");
-            setTimeout(function () {
-                self.initWebsockets();
-            }, 30000);
-        }
-        );
-    },
     highlightPostAndReplies: function (postId, showPopup) {
         var post = $('#' + postId);
         post.addClass("jb3-highlight");
@@ -123,8 +117,7 @@ jb3 = {
         $('#jb3-post-popup-content').empty();
     },
     postMessage: function (nickname, message, room, auth) {
-        var data = {message: message, nickname: nickname, room: room, auth: auth};
-        this.stompClient.send("/webdirectcoin/post", {}, JSON.stringify(data));
+        this.webdirectcoin.postMessage({type: "send", destination: "/webdirectcoin/post", body: {message: message, nickname: nickname, room: room, auth: auth}});
     },
     refreshMessages: function () {
         var selectedRoom = this.controlsRoom.val();
@@ -136,8 +129,7 @@ jb3 = {
         }
     },
     refreshRoom: function (room) {
-        var data = {room: room};
-        this.stompClient.send("/webdirectcoin/get", {}, JSON.stringify(data));
+        this.webdirectcoin.postMessage({type: "send", destination: "/webdirectcoin/get", body: {room: room}});
     },
     isPostsContainerAtBottom: function () {
         var postContainer = $('#jb3-posts-container');
@@ -174,7 +166,7 @@ jb3 = {
     insertMessageDiv: function (messageDiv, message) {
         var t = message.time;
         var posts = this.messagesContainer.getElementsByClassName('jb3-post');
-        for(var p = 0; p<posts.length; ++p) {
+        for (var p = 0; p < posts.length; ++p) {
             var post = posts[p];
             if (t < post.dataset.time) {
                 post.insertAdjacentHTML('beforebegin', messageDiv);
