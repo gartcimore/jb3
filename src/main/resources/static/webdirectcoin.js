@@ -5,8 +5,6 @@ function Webdirectcoin() {
 
 Webdirectcoin.prototype.initWebsocket = function (url) {
     if (typeof WebSocket === "function") {
-        postMessage({type: "webdirectcoin_not_available"});
-    } else {
         var self = this;
         var stompClient = Stomp.client(url);
         stompClient.connect({}, function (frame) {
@@ -23,6 +21,8 @@ Webdirectcoin.prototype.initWebsocket = function (url) {
             }, 30000);
         }
         );
+    } else {
+        postMessage({type: "webdirectcoin_not_available"});
     }
 };
 
