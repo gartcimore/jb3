@@ -38,25 +38,25 @@ Restocoin.prototype.startRefreshRoom = function (room) {
 
 Restocoin.prototype.refreshRoom = function (room) {
     var request = new XMLHttpRequest();
-    request.overrideMimeType('application/json');
     request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             postMessage({type: "posts", posts: JSON.parse(this.responseText)});
         }
     };
     request.open('GET', "/restocoin/get?room=" + room, true);
+    request.overrideMimeType('application/json');
     request.send();
 };
 
 Restocoin.prototype.post = function (message) {
     var request = new XMLHttpRequest();
-    request.overrideMimeType('application/json');
     request.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             postMessage({type: "posts", posts: JSON.parse(this.responseText)});
         }
     };
     request.open('POST', "/restocoin/post", true);
+    request.overrideMimeType('application/json');
     var formData = new FormData();
     formData.append("room", message.room);
     formData.append("nickname", message.nickname);
