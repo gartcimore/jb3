@@ -1,10 +1,9 @@
-importScripts("/webjars/stomp-websocket/2.3.1-1/stomp.js");
-
 function Webdirectcoin() {
 }
 
 Webdirectcoin.prototype.initWebsocket = function (url) {
     if (typeof WebSocket === "function") {
+        importScripts("/webjars/stomp-websocket/2.3.1-1/stomp.js");
         var self = this;
         var stompClient = Stomp.client(url);
         stompClient.connect({}, function (frame) {
@@ -17,7 +16,7 @@ Webdirectcoin.prototype.initWebsocket = function (url) {
         }, function (error) {
             console.log('WebDirectCoin error: ' + error + "\nTry to reconnect...");
             setTimeout(function () {
-                self.initWebsockets(url);
+                self.initWebsocket(url);
             }, 30000);
         }
         );
