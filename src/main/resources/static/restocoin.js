@@ -57,12 +57,20 @@ Restocoin.prototype.post = function (message) {
     };
     request.open('POST', "/restocoin/post", true);
     request.overrideMimeType('application/json');
-    var formData = new FormData();
-    formData.append("room", message.room);
-    formData.append("nickname", message.nickname);
-    formData.append("message", message.message);
-    formData.append("auth", message.auth);
-    request.send(formData);
+    if (typeof FormData === "function") {
+        var formData = new FormData();
+        formData.append("room", message.room);
+        formData.append("nickname", message.nickname);
+        formData.append("message", message.message);
+        formData.append("auth", message.auth);
+        request.send(formData);
+    } else {
+        var urlEncodedData = ("room=" + encodeURIComponent(message.room) + "&nickname=" + encodeURIComponent(message.nickname) + "&auth=" + message.auth + "&message=" + message.message).replace(/%20/g, '+');
+        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        request.setRequestHeader('Content-Length', urlEncodedData.length);
+        request.send(urlEncodedData);
+    }
+
 };
 
 var restocoin = new Restocoin();
