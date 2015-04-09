@@ -68,20 +68,33 @@ jb3 = {
         }, ".jb3-post-time");
         jb3_common.initTotozLazyLoading();
         self.initNickname();
-        self.webdirectcoin = new Worker("/webdirectcoin.js");
-        self.webdirectcoin.onmessage = function (event) {
-            switch (event.data.type) {
-                case "posts":
-                    self.onNewMessages(event.data.posts);
-                    break;
-                case "connected":
-                    self.refreshMessages();
-                    break;
-            }
-        }
+        self.coin = new Worker("/webdirectcoin.js");
+        self.coin.onmessage = function (event) {
+            self.onCoinMessage(event);
+        };
         var url = URI();
         url = url.protocol(url.protocol() === "https" ? "wss" : "ws").path("/webdirectcoin");
-        self.webdirectcoin.postMessage({type: "connect", url: url.toString()});
+        self.coin.postMessage({type: "connect", url: url.toString()});
+    },
+    onCoinMessage: function (event) {
+        var self = this;
+        switch (event.data.type) {
+            case "posts":
+                self.onNewMessages(event.data.posts);
+                break;
+            case "connected":
+                self.refreshMessages();
+                break;
+            case "webdirectcoin_not_available":
+                console.log("webdirectcoin is not available, use restocoin instead");
+                self.coin.terminate();
+                self.coin = new Worker("/restocoin.js");
+                self.coin.onmessage = function (event) {
+                    self.onCoinMessage(event);
+                };
+                self.coin.postMessage({type: "connect"});
+                break;
+        }
     },
     norlogeFormat: "HH:mm:ss",
     initNickname: function () {
@@ -117,7 +130,7 @@ jb3 = {
         $('#jb3-post-popup-content').empty();
     },
     postMessage: function (nickname, message, room, auth) {
-        this.webdirectcoin.postMessage({type: "send", destination: "/webdirectcoin/post", body: {message: message, nickname: nickname, room: room, auth: auth}});
+        this.coin.postMessage({type: "send", destination: "post", body: {message: message, nickname: nickname, room: room, auth: auth}});
     },
     refreshMessages: function () {
         var selectedRoom = this.controlsRoom.val();
@@ -129,7 +142,7 @@ jb3 = {
         }
     },
     refreshRoom: function (room) {
-        this.webdirectcoin.postMessage({type: "send", destination: "/webdirectcoin/get", body: {room: room}});
+        this.coin.postMessage({type: "send", destination: "get", body: {room: room}});
     },
     isPostsContainerAtBottom: function () {
         var postContainer = $('#jb3-posts-container');
