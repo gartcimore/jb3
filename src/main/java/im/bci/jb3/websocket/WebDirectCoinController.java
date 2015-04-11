@@ -42,6 +42,12 @@ public class WebDirectCoinController {
         tribune.post(rq.getNickname(), rq.getMessage(), rq.getRoom(), rq.getAuth());
     }
 
+    @MessageMapping("/presence")
+    @SendTo("/topic/debug")
+    public String presence(String presence) {
+        return "nan dsl";
+    }
+
     @Value("${jb3.posts.get.period}")
     public void setPostsGetPeriod(String p) {
         postsGetPeriod = ISOPeriodFormat.standard().parsePeriod(p);

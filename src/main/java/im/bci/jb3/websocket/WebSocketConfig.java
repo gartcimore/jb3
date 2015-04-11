@@ -16,7 +16,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic/posts");
+        config.enableSimpleBroker("/topic/posts", "/topic/debug");
         config.setApplicationDestinationPrefixes("/webdirectcoin");
     }
 
