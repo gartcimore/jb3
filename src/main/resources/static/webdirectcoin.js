@@ -6,6 +6,7 @@ Webdirectcoin.prototype.initWebsocket = function (url) {
         importScripts("/webjars/stomp-websocket/2.3.1-1/stomp.js");
         var self = this;
         var stompClient = Stomp.client(url);
+        stompClient.heartbeat.outgoing = 30000;
         stompClient.connect({}, function (frame) {
             console.log('WebDirectCoin connected: ' + frame);
             stompClient.subscribe('/topic/posts', function (postsMessage) {
