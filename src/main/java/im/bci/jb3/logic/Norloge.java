@@ -2,7 +2,6 @@ package im.bci.jb3.logic;
 
 import im.bci.jb3.data.Post;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -18,7 +17,7 @@ public class Norloge {
     private String id;
     private DateTime time;
     private String bouchot;
-    private int precisionInSeconds = 1;
+    private boolean hasYear, hasMonth, hasDay, hasSeconds;
 
     public Norloge(Post post) {
         this.id = post.getId();
@@ -71,12 +70,56 @@ public class Norloge {
         return this;
     }
 
-    public int getPrecisionInSeconds() {
-        return precisionInSeconds;
+    public boolean getHasYear() {
+        return hasYear;
     }
 
-    public void setPrecisionInSeconds(int precisionInSeconds) {
-        this.precisionInSeconds = precisionInSeconds;
+    public void setHasYear(boolean hasYear) {
+        this.hasYear = hasYear;
+    }
+
+    public Norloge withHasYear(boolean hasYear) {
+        setHasYear(hasYear);
+        return this;
+    }
+
+    public boolean getHasMonth() {
+        return hasMonth;
+    }
+
+    public void setHasMonth(boolean hasMonth) {
+        this.hasMonth = hasMonth;
+    }
+
+    public Norloge withHasMonth(boolean hasMonth) {
+        setHasMonth(hasMonth);
+        return this;
+    }
+
+    public boolean getHasDay() {
+        return hasDay;
+    }
+
+    public void setHasDay(boolean hasDay) {
+        this.hasDay = hasDay;
+    }
+
+    public Norloge withHasDay(boolean hasDay) {
+        setHasDay(hasDay);
+        return this;
+    }
+
+    public boolean getHasSeconds() {
+        return hasSeconds;
+    }
+
+    public void setHasSeconds(boolean hasSeconds) {
+        this.hasSeconds = hasSeconds;
+    }
+
+    public Norloge withHasSeconds(boolean hasSeconds) {
+        setHasSeconds(hasSeconds);
+        return this;
     }
 
     @Override
@@ -107,7 +150,10 @@ public class Norloge {
     }
 
     private static final DateTimeFormatter norlogePrintFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZoneUTC();
-    private static final List<DateTimeFormatter> norlogeParseFormatters = Arrays.asList(DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZoneUTC(), DateTimeFormat.forPattern("MM/dd#HH:mm:ss").withZoneUTC(), DateTimeFormat.forPattern("HH:mm:ss").withZoneUTC(), DateTimeFormat.forPattern("HH:mm").withZoneUTC());
+    private static final DateTimeFormatter norlogeParseFullFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZoneUTC();
+    private static final DateTimeFormatter norlogeParseLongFormatter = DateTimeFormat.forPattern("MM/dd#HH:mm:ss").withZoneUTC();
+    private static final DateTimeFormatter norlogeParseNormalFormatter = DateTimeFormat.forPattern("HH:mm:ss").withZoneUTC();
+    private static final DateTimeFormatter norlogeParseShortFormatter = DateTimeFormat.forPattern("HH:mm:ss").withZoneUTC();
     private static final Pattern norlogesPattern = Pattern.compile("((#(?<id>\\w+))|(?<time>(?<date>((?<year>\\d\\d\\d\\d)/)?(?:1[0-2]|0[1-9])/(?:3[0-1]|[1-2][0-9]|0[1-9])#)?((?:2[0-3]|[0-1][0-9])):([0-5][0-9])(:(?<seconds>[0-5][0-9]))?)(?<exp>[¹²³]|[:\\^][1-9]|[:\\^][1-9][0-9])?)(@(?<bouchot>[\\w.]+))?");
 
     public static List<Norloge> parseNorloges(String message) {
@@ -124,6 +170,10 @@ public class Norloge {
             }
         });
         return result;
+    }
+
+    public int getPrecisionInSeconds() {
+        return hasSeconds ? 1 : 60;
     }
 
     public interface NorlogeProcessor {
@@ -144,12 +194,9 @@ public class Norloge {
             } else {
                 final String time = matcher.group("time");
                 if (null != time) {
-                    DateTime norlogeTime = parseNorlogeTime(time);
-                    if (null != norlogeTime) {
-                        norloge = new Norloge().withTime(norlogeTime).withBouchot(bouchot);
-                        if (time.length() == 5) {
-                            norloge.setPrecisionInSeconds(60);
-                        }
+                    norloge = parseNorlogeTime(time);
+                    if (null != norloge) {
+                        norloge.setBouchot(bouchot);
                     }
                 }
             }
@@ -160,12 +207,22 @@ public class Norloge {
         processor.end(matcher);
     }
 
-    private static DateTime parseNorlogeTime(String item) {
-        for (DateTimeFormatter format : norlogeParseFormatters) {
-            DateTime norlogeTime = parseNorlogeTimeWithFormat(item, format);
-            if (null != norlogeTime) {
-                return norlogeTime;
-            }
+    private static Norloge parseNorlogeTime(String item) {
+        DateTime norlogeTime = parseNorlogeTimeWithFormat(item, norlogeParseFullFormatter);
+        if (null != norlogeTime) {
+            return new Norloge().withTime(norlogeTime).withHasYear(true).withHasMonth(true).withHasDay(true).withHasSeconds(true);
+        }
+        norlogeTime = parseNorlogeTimeWithFormat(item, norlogeParseLongFormatter);
+        if (null != norlogeTime) {
+            return new Norloge().withTime(norlogeTime).withHasMonth(true).withHasDay(true).withHasSeconds(true);
+        }
+        norlogeTime = parseNorlogeTimeWithFormat(item, norlogeParseNormalFormatter);
+        if (null != norlogeTime) {
+            return new Norloge().withTime(norlogeTime).withHasSeconds(true);
+        }
+        norlogeTime = parseNorlogeTimeWithFormat(item, norlogeParseShortFormatter);
+        if (null != norlogeTime) {
+            return new Norloge().withTime(norlogeTime);
         }
         return null;
     }

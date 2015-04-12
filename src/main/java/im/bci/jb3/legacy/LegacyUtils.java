@@ -38,10 +38,14 @@ public class LegacyUtils {
                     DateTime time = norloge.getTime();
                     if (null != time) {
                         time = time.withZoneRetainFields(LegacyUtils.legacyTimeZone);
-                        Post post = postPepository.findOne(room, time, time.plusSeconds(norloge.getPrecisionInSeconds()));
-                        if (null != post) {
-                            matcher.appendReplacement(sb, Norloge.format(post));
-                            return;
+                        int maxDayBefore = norloge.getHasDay() ? 0 : 100;
+                        for (int day = 0; day <= maxDayBefore; ++day) {
+                            DateTime tryTime = time.minusDays(day);
+                            Post post = postPepository.findOne(room, tryTime, tryTime.plusSeconds(norloge.getPrecisionInSeconds()));
+                            if (null != post) {
+                                matcher.appendReplacement(sb, Norloge.format(post));
+                                return;
+                            }
                         }
                     }
                     matcher.appendReplacement(sb, norloge.toString());
@@ -89,7 +93,7 @@ public class LegacyUtils {
         });
         return sb.toString();
     }
-    
+
     private static final DateTimeComparator dayComparator = DateTimeComparator.getDateOnlyInstance();
     private static final DateTimeComparator yearComparator = DateTimeComparator.getInstance(DateTimeFieldType.year());
 
