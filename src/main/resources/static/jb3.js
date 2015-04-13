@@ -1,6 +1,7 @@
 jb3 = {
     init: function () {
         var self = this;
+        self.newMessages = [];
         self.messagesContainer = document.getElementById('jb3-posts');
         var controlsMessage = $('#jb3-controls-message');
         self.controlsRoom = $('#jb3-controls-room');
@@ -68,6 +69,9 @@ jb3 = {
         }, ".jb3-post-time");
         jb3_common.initTotozLazyLoading();
         self.initNickname();
+        setInterval(function() {
+            self.onNewMessages(self.newMessages.splice(0, 500));;
+        }, 1000);
         self.coin = new Worker("/webdirectcoin.js");
         self.coin.onmessage = function (event) {
             self.onCoinMessage(event);
@@ -80,7 +84,7 @@ jb3 = {
         var self = this;
         switch (event.data.type) {
             case "posts":
-                self.onNewMessages(event.data.posts);
+            	self.newMessages = self.newMessages.concat(event.data.posts);
                 break;
             case "connected":
                 self.refreshMessages();
@@ -153,16 +157,18 @@ jb3 = {
         postContainer.scrollTop(postContainer.prop("scrollHeight"));
     },
     onNewMessages: function (data) {
-        var self = this;
-        var userNickname = $('#jb3-controls-nickname').val();
-        var wasAtbottom = self.isPostsContainerAtBottom();
-        for (var d in data) {
-            self.onMessage(userNickname, data[d]);
-        }
-        self.updateNorloges();
-        if (wasAtbottom) {
-            self.scrollPostsContainerToBottom();
-        }
+    	if(data && data.length > 0) {
+	        var self = this;
+	        var userNickname = $('#jb3-controls-nickname').val();
+	        var wasAtbottom = self.isPostsContainerAtBottom();
+	        for (var d in data) {
+	            self.onMessage(userNickname, data[d]);
+	        }
+	        self.updateNorloges();
+	        if (wasAtbottom) {
+	            self.scrollPostsContainerToBottom();
+	        }
+    	}
     }
     , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}{{postIsBigorno}}" data-room="{{{room}}}" data-time="{{time}}"{{postStyle}}><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
     , onMessage: function (userNickname, message) {
