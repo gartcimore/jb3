@@ -1,6 +1,6 @@
 jb3_common = {
     formatMessage: function (message) {
-        var formattedMessage = message.replace(/(\s|^)#(\w+)/g, '$1<span class="jb3-cite" data-ref="$2">#$2</span>');
+        var formattedMessage = message.replace(/(\s|^)#(\w+)/g, '$1<span class="jb3-cite jb3-cite-raw" data-ref="$2">#$2</span>');
         formattedMessage = formattedMessage.replace(/(\s|^)(https?:\/\/\S+)/gi, '$1<a href="$2" target="_blank" rel="nofollow">[url]</a>');
         formattedMessage = formattedMessage.replace(/(\s|^)(ftp:\/\/\S+)/gi, '$1<a href="$2" target="_blank" rel="nofollow">[url]</a>');
         formattedMessage = formattedMessage.replace(/\[\:([^\t\)\]]+)\]/g, '<a class="jb3-totoz">[:$1]</a>');

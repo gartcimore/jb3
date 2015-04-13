@@ -189,12 +189,13 @@ jb3 = {
         this.messagesContainer.insertAdjacentHTML('beforeend', messageDiv);
     },
     updateNorloges: function () {
-        $('.jb3-cite').each(function () {
+        $('.jb3-cite-raw').each(function () {
             var cite = $(this);
             var cited = $('#' + cite.data('ref'));
             var citedNorloge = cited.find('.jb3-post-time');
             if (citedNorloge.length > 0) {
                 cite.text(citedNorloge.text());
+                cite.removeClass('jb3-cite-raw');
             }
             if (cited.hasClass('jb3-post-is-mine')) {
                 cited.addClass('jb3-cited-by-me');
