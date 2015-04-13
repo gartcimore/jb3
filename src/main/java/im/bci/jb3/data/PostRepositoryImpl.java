@@ -32,7 +32,7 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public List<Post> findPosts(DateTime start, DateTime end, String room) {
         Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate()).and("room").is(roomOrDefault(room));
-        Query query = new Query().addCriteria(criteria).with(new PageRequest(0, 1000, Sort.Direction.DESC, "time"));
+        Query query = new Query().addCriteria(criteria).with(new PageRequest(0, 5000, Sort.Direction.DESC, "time"));
         List<Post> result = mongoTemplate.find(query, Post.class, COLLECTION_NAME);
         return result;
     }
@@ -53,7 +53,7 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public Post findOne(String room, DateTime start, DateTime end) {
         Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate()).and("room").is(roomOrDefault(room));
-        Query query = new Query().addCriteria(criteria).with(new PageRequest(0, 1000, Sort.Direction.DESC, "time"));
+        Query query = new Query().addCriteria(criteria).with(new PageRequest(0, 1, Sort.Direction.DESC, "time"));
         return mongoTemplate.findOne(query, Post.class, COLLECTION_NAME);
     }
 
