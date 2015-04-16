@@ -69,9 +69,6 @@ jb3 = {
         }, ".jb3-post-time");
         jb3_common.initTotozLazyLoading();
         self.initNickname();
-        setInterval(function() {
-            self.onNewMessages(self.newMessages.splice(0, 500));;
-        }, 1000);
         self.coin = new Worker("/webdirectcoin.js");
         self.coin.onmessage = function (event) {
             self.onCoinMessage(event);
@@ -79,6 +76,14 @@ jb3 = {
         var url = URI();
         url = url.protocol(url.protocol() === "https" ? "wss" : "ws").path("/webdirectcoin");
         self.coin.postMessage({type: "connect", url: url.toString()});
+        self.updateMessages();
+    },
+    updateMessages: function() {
+    	var self = this;
+    	self.onNewMessages(self.newMessages.splice(0, 500));
+        setTimeout(function() {
+            self.updateMessages();
+        }, 1000);
     },
     onCoinMessage: function (event) {
         var self = this;
