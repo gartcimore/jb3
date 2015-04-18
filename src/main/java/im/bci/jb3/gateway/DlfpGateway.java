@@ -13,11 +13,12 @@ public class DlfpGateway extends AbstractBouchotGateway {
     private static BouchotConfig createConf() {
         BouchotConfig conf = new BouchotConfig();
         conf.setRoom("dlfp");
-        conf.setGetUrl("http://linuxfr.org/board/index.xml");
-        conf.setPostUrl("http://linuxfr.org/board");
+        conf.setGetUrl("https://linuxfr.org/board/index.xml");
+        conf.setPostUrl("https://linuxfr.org/board");
         conf.setCookieName("linuxfr.org_session");
-        conf.setReferrer("http://linuxfr.org/board");
+        conf.setReferrer("https://linuxfr.org/board");
         conf.setMessageContentParameterName("board[message]");
+        conf.setUsingCrapCertificate(true);
         return conf;
     }
 

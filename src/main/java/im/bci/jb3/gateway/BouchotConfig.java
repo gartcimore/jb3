@@ -14,6 +14,7 @@ public class BouchotConfig {
     private boolean tagsEncoded = true;
     private String referrer;
     private String cookieName;
+    private boolean usingCrapCertificate = false;
 
     public String getRoom() {
         return room;
@@ -77,6 +78,14 @@ public class BouchotConfig {
 
     public void setCookieName(String cookieName) {
         this.cookieName = cookieName;
+    }
+
+    public boolean isUsingCrapCertificate() {
+        return usingCrapCertificate;
+    }
+
+    public void setUsingCrapCertificate(boolean crapCertificate) {
+        this.usingCrapCertificate = crapCertificate;
     }
 
 }

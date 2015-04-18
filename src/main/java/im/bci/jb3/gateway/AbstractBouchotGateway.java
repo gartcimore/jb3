@@ -45,7 +45,7 @@ public abstract class AbstractBouchotGateway implements Gateway {
 
     public synchronized void importPosts() {
         try {
-            Connection connect = Jsoup.connect(config.getGetUrl());
+            Connection connect = Jsoup.connect(config.getGetUrl()).validateTLSCertificates(!config.isUsingCrapCertificate());
             if (null != config.getLastIdParameterName()) {
                 connect = connect.data(config.getLastIdParameterName(), String.valueOf(lastPostId));
             }
@@ -94,11 +94,11 @@ public abstract class AbstractBouchotGateway implements Gateway {
     @Override
     public void post(String nickname, String message, String auth) {
         try {
-            Connection connect = Jsoup.connect(config.getPostUrl()).data(config.getMessageContentParameterName(), legacyUtils.convertToLegacyNorloges(message, DateTime.now().withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy())).userAgent(nickname);
-            if(null != config.getCookieName()) {
+            Connection connect = Jsoup.connect(config.getPostUrl()).data(config.getMessageContentParameterName(), legacyUtils.convertToLegacyNorloges(message, DateTime.now().withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy())).userAgent(nickname).validateTLSCertificates(!config.isUsingCrapCertificate());
+            if (null != config.getCookieName()) {
                 connect = connect.cookie(config.getCookieName(), auth);
             }
-            if(null != config.getReferrer()) {
+            if (null != config.getReferrer()) {
                 connect = connect.referrer(config.getReferrer());
             }
             if (null != config.getLastIdParameterName()) {
