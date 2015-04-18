@@ -20,6 +20,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
@@ -36,6 +37,9 @@ public abstract class AbstractBouchotGateway implements Gateway {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
     private long lastPostId = -1;
+    
+    @Value("${jb3.secure}")
+    private boolean validateCrapCertificate;
 
     private final BouchotConfig config;
 
@@ -45,7 +49,7 @@ public abstract class AbstractBouchotGateway implements Gateway {
 
     public synchronized void importPosts() {
         try {
-            Connection connect = Jsoup.connect(config.getGetUrl()).validateTLSCertificates(!config.isUsingCrapCertificate());
+            Connection connect = Jsoup.connect(config.getGetUrl()).validateTLSCertificates(validateCrapCertificate || !config.isUsingCrapCertificate());
             if (null != config.getLastIdParameterName()) {
                 connect = connect.data(config.getLastIdParameterName(), String.valueOf(lastPostId));
             }
@@ -94,7 +98,7 @@ public abstract class AbstractBouchotGateway implements Gateway {
     @Override
     public void post(String nickname, String message, String auth) {
         try {
-            Connection connect = Jsoup.connect(config.getPostUrl()).data(config.getMessageContentParameterName(), legacyUtils.convertToLegacyNorloges(message, DateTime.now().withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy())).userAgent(nickname).validateTLSCertificates(!config.isUsingCrapCertificate());
+            Connection connect = Jsoup.connect(config.getPostUrl()).data(config.getMessageContentParameterName(), legacyUtils.convertToLegacyNorloges(message, DateTime.now().withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy())).userAgent(nickname).validateTLSCertificates(validateCrapCertificate || !config.isUsingCrapCertificate());
             if (null != config.getCookieName()) {
                 connect = connect.cookie(config.getCookieName(), auth);
             }

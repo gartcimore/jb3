@@ -13,10 +13,11 @@ public class EuromusselsGateway extends AbstractBouchotGateway {
     private static BouchotConfig createConf() {
         BouchotConfig conf = new BouchotConfig();
         conf.setRoom("euromussels");
-        conf.setGetUrl("http://euromussels.eu/?q=tribune.xml");
-        conf.setPostUrl("http://euromussels.eu/?q=tribune/post");
+        conf.setGetUrl("https://euromussels.eu/?q=tribune.xml");
+        conf.setPostUrl("https://euromussels.eu/?q=tribune/post");
         conf.setLastIdParameterName("last_id");
         conf.setMessageContentParameterName("message");
+        conf.setUsingCrapCertificate(true);
         return conf;
     }
 

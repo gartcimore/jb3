@@ -13,10 +13,11 @@ public class BatavieGateway extends AbstractBouchotGateway {
     private static BouchotConfig createConf() {
         BouchotConfig conf = new BouchotConfig();
         conf.setRoom("batavie");
-        conf.setGetUrl("http://batavie.leguyader.eu/remote.xml");
-        conf.setPostUrl("http://batavie.leguyader.eu/index.php/add");
+        conf.setGetUrl("https://batavie.leguyader.eu/remote.xml");
+        conf.setPostUrl("https://batavie.leguyader.eu/index.php/add");
         conf.setMessageContentParameterName("message");
         conf.setTagsEncoded(false);
+        conf.setUsingCrapCertificate(true);
         return conf;
     }
 

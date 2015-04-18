@@ -86,6 +86,23 @@ Edit the application.properties file and change the jb3.host property:
 
     jb3.host=http://mydomain.me
 
+### Security
+
+In production environnement, please add
+
+    jb3.secure=true
+
+to your application.properties configuration. If you don't do it, jb3 will do
+VERY INSECURE operations like:
+
+- not verifying self signed HTTPS certificates.
+- not verifying untrusted HTTPS certificates (like linuxfr.org CACERT certificate).
+
+It is VERY RECOMMENDED, to use jb3.secure=true and add certificates to your
+keystore. For example to add CACERT, use this guide:
+
+http://wiki.cacert.org/FAQ/ImportRootCert?action=show&redirect=ImportRootCert#Java
+
 ### Deployment
 
 1. Build and launch jb3 on the server.
