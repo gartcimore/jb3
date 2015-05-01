@@ -17,12 +17,12 @@ public class CleanUtils {
     private static final int MAX_POST_LENGTH = 512;
     private static final int MAX_NICKNAME_LENGTH = 32;
     private static final int MAX_ROOM_LENGTH = 32;
-    private static final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s", "u", "tt");
+    private static final Whitelist messageWhitelist = Whitelist.none().addTags("a", "b", "i", "s", "u", "tt").addAttributes("a", "href");
 
     public static String cleanMessage(String message) {
         message = StringUtils.abbreviate(message, MAX_POST_LENGTH);
         Document doc = Jsoup.parseBodyFragment(message);
-        for (Element element : doc.body().children().select(":not(b,i,s,u,tt)")) {
+        for (Element element : doc.body().children().select(":not(a,b,i,s,u,tt)")) {
             element.replaceWith(TextNode.createFromEncoded(element.toString(), null));
         }
         Cleaner cleaner = new Cleaner(messageWhitelist);
