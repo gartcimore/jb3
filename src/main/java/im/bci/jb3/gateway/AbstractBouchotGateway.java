@@ -65,10 +65,10 @@ public abstract class AbstractBouchotGateway implements Gateway {
                 if (!postPepository.existsByGatewayPostId(gatewayPostId)) {
                     Post post = new Post();
                     post.setGatewayPostId(gatewayPostId);
-                    post.setMessage(legacyUtils.convertFromLegacyNorloges(config.getRoom(), CleanUtils.cleanMessage(replaceUrls(decodeTags(postToImport.select("message").first())))));
-                    String nickname = decodeTags(postToImport.select("login").first()).text();
+                    post.setMessage(legacyUtils.convertFromLegacyNorloges(config.getRoom(), CleanUtils.cleanMessage(decodeTags(postToImport.select("message").first()))));
+                    String nickname = decodeTags(postToImport.select("login").first());
                     if (StringUtils.isBlank(nickname)) {
-                        nickname = decodeTags(postToImport.select("info").first()).text();
+                        nickname = decodeTags(postToImport.select("info").first());
                         if (StringUtils.isBlank(nickname)) {
                             nickname = "AnonymousMussels";
                         }
@@ -120,18 +120,11 @@ public abstract class AbstractBouchotGateway implements Gateway {
         return config.getRoom();
     }
 
-    private String replaceUrls(Element message) {
-        for (Element a : message.select("a")) {
-            a.text(a.attr("href"));
-        }
-        return message.html();
-    }
-
-    private Element decodeTags(Element message) {
+    private String decodeTags(Element message) {
         if (config.isTagsEncoded()) {
-            return Jsoup.parse(StringEscapeUtils.unescapeXml(message.text()));
+            return Jsoup.parse(StringEscapeUtils.unescapeXml(message.text())).html();
         } else {
-            return message;
+            return message.html();
         }
     }
 
