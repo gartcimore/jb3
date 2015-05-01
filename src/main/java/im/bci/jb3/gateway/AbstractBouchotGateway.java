@@ -122,7 +122,7 @@ public abstract class AbstractBouchotGateway implements Gateway {
 
     private String decodeTags(Element message) {
         if (config.isTagsEncoded()) {
-            return Jsoup.parse(StringEscapeUtils.unescapeXml(message.text())).html();
+            return StringEscapeUtils.unescapeXml(message.text());
         } else {
             return message.html();
         }
