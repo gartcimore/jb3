@@ -2,6 +2,9 @@ package im.bci.jb3.logic;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.safety.Whitelist;
 
 /**
@@ -10,13 +13,17 @@ import org.jsoup.safety.Whitelist;
  */
 public class CleanUtils {
 
-    private static final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s", "u", "tt");
     private static final int MAX_POST_LENGTH = 512;
     private static final int MAX_NICKNAME_LENGTH = 32;
     private static final int MAX_ROOM_LENGTH = 32;
 
     public static String cleanMessage(String message) {
-        message = StringUtils.abbreviate(Jsoup.clean(message, messageWhitelist), MAX_POST_LENGTH);
+        message = StringUtils.abbreviate(message, MAX_POST_LENGTH);
+        Document doc = Jsoup.parseBodyFragment(message);
+        for (Element element : doc.body().children().select(":not(b,i,s,u,tt)")) {
+            element.replaceWith(TextNode.createFromEncoded(element.toString(), null));
+        }
+        message = doc.body().html();
         return message;
     }
 
