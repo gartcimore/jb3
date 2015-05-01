@@ -5,6 +5,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
+import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
 
 /**
@@ -16,6 +17,7 @@ public class CleanUtils {
     private static final int MAX_POST_LENGTH = 512;
     private static final int MAX_NICKNAME_LENGTH = 32;
     private static final int MAX_ROOM_LENGTH = 32;
+    private static final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s", "u", "tt");
 
     public static String cleanMessage(String message) {
         message = StringUtils.abbreviate(message, MAX_POST_LENGTH);
@@ -23,6 +25,8 @@ public class CleanUtils {
         for (Element element : doc.body().children().select(":not(b,i,s,u,tt)")) {
             element.replaceWith(TextNode.createFromEncoded(element.toString(), null));
         }
+        Cleaner cleaner = new Cleaner(messageWhitelist);
+        doc = cleaner.clean(doc);
         message = doc.body().html();
         return message;
     }
