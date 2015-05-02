@@ -40,7 +40,7 @@ jb3 = {
         $('#jb3-posts').on('click', '.jb3-post-time', function (e) {
             var postId = $(e.target).parent().attr('id');
             if (postId) {
-                controlsMessage.val(controlsMessage.val() + '#' + postId + ' ');
+                controlsMessage.val(controlsMessage.val() + '<c>' + postId + '</c> ');
                 controlsMessage.focus();
             }
         });
@@ -202,9 +202,11 @@ jb3 = {
     updateNorloges: function () {
         $('.jb3-cite-raw').each(function () {
             var cite = $(this);
-            var cited = $('#' + cite.data('ref'));
+            var citeId = $.trim(cite.text());
+            var cited = $('#' + citeId);
             var citedNorloge = cited.find('.jb3-post-time');
             if (citedNorloge.length > 0) {
+                cite.attr('data-ref', citeId);
                 cite.text(citedNorloge.text());
                 cite.removeClass('jb3-cite-raw');
             }
@@ -219,9 +221,6 @@ jb3 = {
     },
     handleAltShortcut: function (keychar) {
         switch (keychar) {
-            case 'o':
-                this.insertTextInMessageControl('_o/* <b>BLAM</b>! ');
-                return true;
             case 'm':
                 this.insertTextInMessageControl('====> <b>Moment ' + this.getSelectedText() + '</b> <====', 16);
                 return true;
@@ -243,8 +242,11 @@ jb3 = {
             case 't':
                 this.insertTextInMessageControl('<tt>' + this.getSelectedText() + '</tt>', 4);
                 return true;
-            case 'p':
-                this.insertTextInMessageControl('_o/* <b>paf!</b> ');
+            case 'z':
+                this.insertTextInMessageControl('<z>' + this.getSelectedText() + '</z>', 3);
+                return true;
+            case 'h':
+                this.insertTextInMessageControl('<h>' + this.getSelectedText() + '</h>', 3);
                 return true;
             case 'a':
                 this.insertTextInMessageControl('\u266A <i>' + this.getSelectedText() + '</i> \u266A', 5);

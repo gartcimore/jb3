@@ -65,7 +65,7 @@ public abstract class AbstractBouchotGateway implements Gateway {
                 if (!postPepository.existsByGatewayPostId(gatewayPostId)) {
                     Post post = new Post();
                     post.setGatewayPostId(gatewayPostId);
-                    post.setMessage(legacyUtils.convertFromLegacyNorloges(config.getRoom(), CleanUtils.cleanMessage(decodeTags(postToImport.select("message").first()))));
+                    post.setMessage(CleanUtils.cleanMessage(legacyUtils.convertFromLegacyPost(config.getRoom(), decodeTags(postToImport.select("message").first()))));
                     String nickname = decodeTags(postToImport.select("login").first());
                     if (StringUtils.isBlank(nickname)) {
                         nickname = decodeTags(postToImport.select("info").first());
@@ -98,7 +98,7 @@ public abstract class AbstractBouchotGateway implements Gateway {
     @Override
     public void post(String nickname, String message, String auth) {
         try {
-            Connection connect = Jsoup.connect(config.getPostUrl()).data(config.getMessageContentParameterName(), legacyUtils.convertToLegacyNorloges(message, DateTime.now().withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy())).userAgent(nickname).validateTLSCertificates(validateCrapCertificate || !config.isUsingCrapCertificate());
+            Connection connect = Jsoup.connect(config.getPostUrl()).data(config.getMessageContentParameterName(), legacyUtils.convertToLegacyPostable(message, DateTime.now().withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy())).userAgent(nickname).validateTLSCertificates(validateCrapCertificate || !config.isUsingCrapCertificate());
             if (null != config.getCookieName()) {
                 connect = connect.cookie(config.getCookieName(), auth);
             }

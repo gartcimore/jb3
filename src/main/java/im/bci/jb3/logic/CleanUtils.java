@@ -2,6 +2,7 @@ package im.bci.jb3.logic;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.DataNode;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
@@ -17,16 +18,18 @@ public class CleanUtils {
     private static final int MAX_POST_LENGTH = 512;
     private static final int MAX_NICKNAME_LENGTH = 32;
     private static final int MAX_ROOM_LENGTH = 32;
-    private static final Whitelist messageWhitelist = Whitelist.none().addTags("a", "b", "i", "s", "u", "tt").addAttributes("a", "href");
+    private static final Whitelist messageWhitelist = Whitelist.none().addTags("c", "z", "h", "a", "b", "i", "s", "u", "tt").addAttributes("a", "href");
 
     public static String cleanMessage(String message) {
         message = StringUtils.abbreviate(message, MAX_POST_LENGTH);
         Document doc = Jsoup.parseBodyFragment(message);
-        for (Element element : doc.body().children().select(":not(a,b,i,s,u,tt)")) {
+        UrlUtils.convertRawUrls(doc);
+        for (Element element : doc.body().children().select(":not(c,z,h,a,b,i,s,u,tt)")) {
             element.replaceWith(TextNode.createFromEncoded(element.toString(), null));
         }
         Cleaner cleaner = new Cleaner(messageWhitelist);
         doc = cleaner.clean(doc);
+        doc.outputSettings().prettyPrint(false);
         message = doc.body().html();
         return message;
     }

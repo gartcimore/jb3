@@ -53,7 +53,7 @@ public class LegacyController {
     private LegacyUtils legacyUtils;
 
     private Period postsGetPeriod;
-    
+
     @Value("${jb3.posts.get.period}")
     public void setPostsGetPeriod(String p) {
         postsGetPeriod = ISOPeriodFormat.standard().parsePeriod(p);
@@ -64,7 +64,7 @@ public class LegacyController {
         if (StringUtils.isBlank(nickname)) {
             nickname = userAgent;
         }
-        Post post = tribune.post(nickname, legacyUtils.convertFromLegacyNorloges(room, message), room, auth);
+        Post post = tribune.post(nickname, legacyUtils.convertFromLegacyPostable(room, message), room, auth);
         if (null != post) {
             response.addHeader("X-Post-Id", Long.toString(post.getTime().getMillis()));
         }
@@ -108,7 +108,7 @@ public class LegacyController {
                 legacyPost.setId(post.getTime().getMillis());
                 legacyPost.setTime(LegacyUtils.legacyPostTimeFormatter.print(post.getTime()));
                 String info = Jsoup.clean(post.getNickname(), Whitelist.none());
-                String message = Jsoup.clean(legacyUtils.convertToLegacyNorloges(convertUrls(post.getMessage()), post.getTime()), messageWhitelist);
+                String message = Jsoup.clean(legacyUtils.convertToLegacyPost(post.getMessage(), post.getTime()), messageWhitelist);
                 legacyPost.setInfo(escaper.escape(info));
                 legacyPost.setMessage(escaper.escape(message));
                 legacyPosts.add(legacyPost);
@@ -156,19 +156,6 @@ public class LegacyController {
         }
         return start;
     }
-
-    private static final Pattern urlPattern = Pattern.compile("(https?|ftp|gopher)://[^\\s]+");
-
-    private final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s", "u", "tt", "a").addAttributes("a", "href", "rel", "target");
-
-    private String convertUrls(String message) {
-        Matcher matcher = urlPattern.matcher(message);
-        final StringBuffer sb = new StringBuffer();
-        while (matcher.find()) {
-            matcher.appendReplacement(sb, "<a href=\"$0\" rel=\"nofollow\" target=\"_blank\">[url]</a>");
-        }
-        matcher.appendTail(sb);
-        return sb.toString();
-    }
+    private final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s", "u", "tt", "a").addAttributes("a", "href").addEnforcedAttribute("a", "rel", "nofollow").addEnforcedAttribute("a", "target", "_blank");
 
 }
