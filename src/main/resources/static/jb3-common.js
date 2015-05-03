@@ -1,15 +1,39 @@
 jb3_common = {
     formatMessage: function (message) {
-        var formattedMessage = message.replace(/<c>/g, '<span class="jb3-cite jb3-cite-raw">');
-        formattedMessage = formattedMessage.replace(/<\/c>/g, '</span>');
-        
-        formattedMessage = formattedMessage.replace(/<z>/g, '<a class="jb3-totoz">[:');
-        formattedMessage = formattedMessage.replace(/<\/z>/g, ']</a>');
-        
-        formattedMessage = formattedMessage.replace(/<h>/g, '<span class="jb3-bigorno">');
-        formattedMessage = formattedMessage.replace(/<\/h>/g, '&lt;</span>');
-        
-        return formattedMessage;
+        try {
+            var parser = new DOMParser();
+            var doc = parser.parseFromString('<span class="jb3-post-message">' + message + '</span>', 'text/xml');
+            var cites = doc.getElementsByTagName('c');
+            while (cites.length) {
+                var cite = cites[0];
+                var citeSpan = doc.createElement('span');
+                citeSpan.textContent = cite.textContent;
+                citeSpan.setAttribute('class', 'jb3-cite jb3-cite-raw');
+                cite.parentNode.replaceChild(citeSpan, cite);
+            }
+            var totozs = doc.getElementsByTagName('z');
+            while(totozs.length) {
+                var totoz = totozs[0];
+                var totozA = doc.createElement('a');
+                totozA.textContent = '[:' + totoz.textContent + ']';
+                totozA.setAttribute('class', 'jb3-totoz');
+                totoz.parentNode.replaceChild(totozA, totoz);
+            }
+            var bigornos = doc.getElementsByTagName('h');
+            while(bigornos.length) {
+                var bigorno = bigornos[0];
+                var birgornoSpan = doc.createElement('a');
+                birgornoSpan.textContent = bigorno.textContent + '<';
+                birgornoSpan.setAttribute('class', 'jb3-bigorno');
+                bigorno.parentNode.replaceChild(birgornoSpan, bigorno);
+            }
+            var serializer = new XMLSerializer();
+            var post = serializer.serializeToString(doc);
+            return post;
+        } catch(e) {
+            console.log(e);
+            return "CENSURAI";
+        }
     },
     getRooms: function () {
         try {

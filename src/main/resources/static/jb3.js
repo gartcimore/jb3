@@ -175,7 +175,7 @@ jb3 = {
 	        }
     	}
     }
-    , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}{{postIsBigorno}}" data-room="{{{room}}}" data-time="{{time}}"{{postStyle}}><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
+    , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}{{postIsBigorno}}" data-room="{{{room}}}" data-time="{{time}}"{{postStyle}}><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span>{{{message}}}</div>'
     , onMessage: function (userNickname, message) {
         if (!document.getElementById(message.id)) {
             message.message = jb3_common.formatMessage(message.message);
