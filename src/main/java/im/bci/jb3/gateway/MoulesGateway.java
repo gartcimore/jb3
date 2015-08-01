@@ -16,6 +16,7 @@ public class MoulesGateway extends AbstractBouchotGateway {
         conf.setGetUrl("http://moules.org/board/backend/xml");
         conf.setPostUrl("http://moules.org/board/add.php");
         conf.setMessageContentParameterName("message");
+        conf.setTagsEncoded(false);
         return conf;
     }
 
