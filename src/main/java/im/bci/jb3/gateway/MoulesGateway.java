@@ -8,19 +8,18 @@ import org.springframework.stereotype.Component;
  * @author devnewton <devnewton@bci.im>
  */
 @Component
-public class HadokenGateway extends AbstractBouchotGateway {
+public class MoulesGateway extends AbstractBouchotGateway {
 
     private static BouchotConfig createConf() {
         BouchotConfig conf = new BouchotConfig();
-        conf.setRoom("hadoken");
-        conf.setGetUrl("http://hadoken.free.fr/board/remote.php");
-        conf.setPostUrl("http://hadoken.free.fr/board/post.php");
-        conf.setLastIdParameterName("id");
+        conf.setRoom("moules");
+        conf.setGetUrl("http://moules.org/board/backend/xml");
+        conf.setPostUrl("http://moules.org/board/add.php");
         conf.setMessageContentParameterName("message");
         return conf;
     }
 
-    public HadokenGateway() {
+    public MoulesGateway() {
         super(createConf());
     }
 
