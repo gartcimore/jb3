@@ -14,7 +14,8 @@ public class MoulesGateway extends AbstractBouchotGateway {
         BouchotConfig conf = new BouchotConfig();
         conf.setRoom("moules");
         conf.setGetUrl("http://moules.org/board/backend/xml");
-        conf.setPostUrl("http://moules.org/board/add.php");
+        conf.setPostUrl("http://moules.org/board/add.php?backend=xml");
+        conf.setLastIdParameterName("id");
         conf.setMessageContentParameterName("message");
         conf.setTagsEncoded(false);
         return conf;
