@@ -13,8 +13,8 @@ public class SveetchGateway extends AbstractBouchotGateway {
     private static BouchotConfig createConf() {
         BouchotConfig conf = new BouchotConfig();
         conf.setRoom("sveetch");
-        conf.setGetUrl("http://www.sveetch.net/tribune/remote/xml/");
-        conf.setPostUrl("http://www.sveetch.net/tribune/post/xml/");
+        conf.setGetUrl("http://sveetch.net/tribune/remote/xml/");
+        conf.setPostUrl("http://sveetch.net/tribune/post/xml/");
         conf.setLastIdParameterName("last_id");
         conf.setMessageContentParameterName("content");
         conf.setTagsEncoded(false);
