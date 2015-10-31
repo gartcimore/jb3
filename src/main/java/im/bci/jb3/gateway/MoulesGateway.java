@@ -18,6 +18,7 @@ public class MoulesGateway extends AbstractBouchotGateway {
         conf.setLastIdParameterName("id");
         conf.setMessageContentParameterName("message");
         conf.setTagsEncoded(false);
+        conf.setUsingXPost(true);
         return conf;
     }
 
@@ -26,7 +27,7 @@ public class MoulesGateway extends AbstractBouchotGateway {
     }
 
     @Scheduled(cron = "0/30 * * * * *")
-    public synchronized void scheduledPostsImport() {
+    public void scheduledPostsImport() {
         importPosts();
     }
 }

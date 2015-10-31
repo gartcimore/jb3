@@ -15,6 +15,7 @@ public class BouchotConfig {
     private String referrer;
     private String cookieName;
     private boolean usingCrapCertificate = false;
+    private boolean usingXPost = false;
 
     public String getRoom() {
         return room;
@@ -87,5 +88,13 @@ public class BouchotConfig {
     public void setUsingCrapCertificate(boolean crapCertificate) {
         this.usingCrapCertificate = crapCertificate;
     }
+
+	public boolean isUsingXPost() {
+		return usingXPost;
+	}
+
+	public void setUsingXPost(boolean usingXPost) {
+		this.usingXPost = usingXPost;
+	}
 
 }

@@ -18,6 +18,7 @@ public class SveetchGateway extends AbstractBouchotGateway {
         conf.setLastIdParameterName("last_id");
         conf.setMessageContentParameterName("content");
         conf.setTagsEncoded(false);
+        conf.setUsingXPost(true);
         return conf;
     }
 
@@ -26,7 +27,7 @@ public class SveetchGateway extends AbstractBouchotGateway {
     }
 
     @Scheduled(cron = "0/30 * * * * *")
-    public synchronized void scheduledPostsImport() {
+    public void scheduledPostsImport() {
         importPosts();
     }
 }

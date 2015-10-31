@@ -26,7 +26,7 @@ public class BatavieGateway extends AbstractBouchotGateway {
     }
 
     @Scheduled(cron = "0/30 * * * * *")
-    public synchronized void scheduledPostsImport() {
+    public void scheduledPostsImport() {
         importPosts();
     }
 }
