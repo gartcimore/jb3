@@ -12,7 +12,8 @@ jb3 = {
         self.controlsRoom.append(
                 $.map(rooms, function (v, k) {
                     self.rooms[v.rname] = {
-                        auth: v.rauth
+                        auth: v.rauth,
+                        login: v.rlogin
                     };
                     return $("<option>").val(v.rname).text(v.rname);
                 })
@@ -180,7 +181,7 @@ jb3 = {
         if (!document.getElementById(message.id)) {
             message.message = jb3_common.formatMessage(message.message);
             message.norloge = moment(message.time).format(this.norlogeFormat);
-            message.postIsMine = message.nickname === userNickname ? " jb3-post-is-mine" : "";
+            message.postIsMine = message.nickname === userNickname || message.nickname === this.rooms[message.room].login ? " jb3-post-is-mine" : "";
             message.postIsBigorno = message.message.search(new RegExp("(moules|" + userNickname + ")&lt;", "i")) >= 0 ? " jb3-post-is-bigorno" : "";
             message.postStyle = this.controlsRoom.val() === message.room ? "" : " style=display:none";
             var messageDiv = Mustache.render(this.messageTemplate, message);
