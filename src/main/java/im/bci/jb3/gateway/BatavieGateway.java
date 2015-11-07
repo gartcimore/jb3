@@ -1,6 +1,5 @@
 package im.bci.jb3.gateway;
 
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,8 +24,4 @@ public class BatavieGateway extends AbstractBouchotGateway {
         super(createConf());
     }
 
-    @Scheduled(cron = "0/30 * * * * *")
-    public void scheduledPostsImport() {
-        importPosts();
-    }
 }
