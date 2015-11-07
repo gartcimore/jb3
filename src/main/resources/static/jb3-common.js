@@ -28,3 +28,7 @@ jb3_common = {
         }, ".jb3-totoz");
     }
 };
+
+RegExp.escape = function(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+};

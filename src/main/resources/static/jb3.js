@@ -182,7 +182,7 @@ jb3 = {
             message.message = jb3_common.formatMessage(message.message);
             message.norloge = moment(message.time).format(this.norlogeFormat);
             message.postIsMine = message.nickname === userNickname || message.nickname === this.rooms[message.room].login ? " jb3-post-is-mine" : "";
-            message.postIsBigorno = message.message.search(new RegExp("(moules|" + userNickname + ")&lt;", "i")) >= 0 ? " jb3-post-is-bigorno" : "";
+            message.postIsBigorno = message.message.search(new RegExp("(moules|" + RegExp.escape(userNickname) + ")&lt;", "i")) >= 0 ? " jb3-post-is-bigorno" : "";
             message.postStyle = this.controlsRoom.val() === message.room ? "" : " style=display:none";
             var messageDiv = Mustache.render(this.messageTemplate, message);
             this.insertMessageDiv(messageDiv, message);
