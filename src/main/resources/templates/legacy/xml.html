@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<board site="{{board.site}}" {{#if board.timezone}}timezone="{{board.timezone}}"{{/if}}>
+{{#each board.posts}}
+    <post id="{{this.id}}" time="{{this.time}}">
+        <info>{{{this.info}}}</info>
+        <message>{{{this.message}}}</message>
+        <login/>
+    </post>
+{{/each}}
+</board>

@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.2.2.RELEASE</version>
+        <version>1.2.7.RELEASE</version>
     </parent>
     <artifactId>jb3</artifactId>
     <groupId>im.bci</groupId>
@@ -30,8 +30,9 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-freemarker</artifactId>
+            <groupId>pl.allegro.tech.boot</groupId>
+            <artifactId>handlebars-spring-boot-starter</artifactId>
+            <version>0.2.8</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -111,7 +112,7 @@
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
                 <includes>
-                    <include>**/*.ftl</include>
+                    <include>**/*.html</include>
                     <include>**/*.properties</include>
                     <include>**/*.xml</include>
                     <include>**/*.js</include>

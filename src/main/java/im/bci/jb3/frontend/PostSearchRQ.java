@@ -77,5 +77,13 @@ public class PostSearchRQ {
     public void setPage(int page) {
         this.page = page;
     }
+    
+    public int getPreviousPage() {
+        return page - 1;
+    }
+    
+    public int getNextPage() {
+        return page + 1;
+    }
 
 }

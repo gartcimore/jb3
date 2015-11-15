@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>jb3 fortunes</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="robots" content="noindex,nofollow">
+        <link rel="stylesheet" type="text/css" href="/jb3-common.css">
+        <link rel="stylesheet" type="text/css" href="/jb3-fortune.css">
+        <link rel="icon" type="image/png" href="/favicon.png">
+    </head>
+    <body>
+    <form id="fortune-search-form">
+        <label for="fortune-search-from">De</label>
+        <input id="fortune-search-from" type="text">
+        <label for="fortune-search-to">à</label>
+        <input id="fortune-search-to" type="text">
+        <label for="fortune-search-nicknameFilter">par</label>
+        <input id="fortune-search-nicknameFilter" name="nicknameFilter" type="text" value="{{rq.nicknameFilter}}">
+        <label for="fortune-search-messageFilter">disant</label>
+        <input id="fortune-search-messageFilter" name="messageFilter" type="text" value="{{rq.messageFilter}}">
+        <input id="fortune-search-from-hidden" name="from" type="hidden" value="{{rq.from}}">
+        <input id="fortune-search-to-hidden" name="to" type="hidden" value="{{rq.to}}">
+        <input type="submit">
+    </form>
+    {{#if fortunes }}
+    <div class="jb3-fortunes">
+        {{#each fortunes}}
+            {{> fortune/fortune}}
+        {{/each}}
+    </div>
+    {{/if}}
+    <div class="jb3-fortune-pager">
+        {{#if rq.page }}
+        <form>
+            <input name="from" type="hidden" value="{{rq.from}}">
+            <input name="to" type="hidden" value="{{rq.to}}">
+            <input name="nicknameFilter" type="hidden" value="{{rq.nicknameFilter}}">
+            <input name="messageFilter" type="hidden" value="{{rq.messageFilter}}">
+            <input name="page" type="hidden" value="{{rq.previousPage}}">
+            <input type="submit" value="Précédents">
+        </form>
+        {{/if}}
+        {{#if posts}}
+        <form>
+            <input name="from" type="hidden" value="{{rq.from}}">
+            <input name="to" type="hidden" value="{{rq.to}}">
+            <input name="nicknameFilter" type="hidden" value="{{rq.nicknameFilter}}">
+            <input name="messageFilter" type="hidden" value="{{rq.messageFilter}}">
+            <input name="page" type="hidden" value="{{rq.nextPage}}">
+            <input type="submit" value="Suivants">
+        </form>
+        {{/if}}
+    </div>
+    <script src="/webjars/jquery/2.1.1/jquery.js" defer></script>
+    <script src="/webjars/momentjs/2.8.3/moment.js" defer></script>
+    <script src="/jb3-common.js" defer></script>
+    <script src="/jb3-fortune.js" defer></script>
+    </body>
+</html>
