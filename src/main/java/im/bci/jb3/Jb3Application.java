@@ -1,6 +1,6 @@
 package im.bci.jb3;
 
-import org.springframework.beans.factory.annotation.Value;
+import java.util.concurrent.Executor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -27,9 +27,16 @@ public class Jb3Application implements CommandLineRunner {
     }
 
     @Bean(name = "botExecutor")
-    public ThreadPoolTaskExecutor botExecutor() {
+    public Executor botExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setMaxPoolSize(1);
+        return executor;
+    }
+
+    @Bean(name = "taskExecutor")
+    public Executor getAsyncExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setMaxPoolSize(4);
         return executor;
     }
 
