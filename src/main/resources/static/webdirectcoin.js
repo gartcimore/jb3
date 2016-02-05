@@ -10,6 +10,8 @@ Webdirectcoin.prototype.initWebsocket = function (url) {
     }
 };
 
+Webdirectcoin.prototype.presenceMessage = JSON.stringify({status:"plop"});
+
 Webdirectcoin.prototype.connectWebsocket = function (url) {
     var self = this;
     var stompClient = Stomp.client(url);
@@ -22,7 +24,7 @@ Webdirectcoin.prototype.connectWebsocket = function (url) {
         });
         self.stompClient = stompClient;
         setInterval(function () {
-            self.stompClient.send("/webdirectcoin/presence", {}, "plop");
+            self.stompClient.send("/webdirectcoin/presence", {}, self.presenceMessage);
         }, 20000);
         postMessage({type: "connected"});
     }, function (error) {

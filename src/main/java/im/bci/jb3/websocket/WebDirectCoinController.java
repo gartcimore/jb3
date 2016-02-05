@@ -44,7 +44,7 @@ public class WebDirectCoinController {
 
     @MessageMapping("/presence")
     @SendTo("/topic/debug")
-    public String presence(String presence) {
+    public String presence(PresenceRQ presence) {
         return "nan dsl";
     }
 
