@@ -71,7 +71,7 @@ public class LegacyController {
         return xml(room, last, webRequest, model, response);
     }
 
-    @RequestMapping(value = "/xml")
+    @RequestMapping(path = "/xml", method = RequestMethod.GET)
     public String xml(@RequestParam(value = "room", required = false) String room, @RequestParam(value = "last", required = false) Long lastId, WebRequest webRequest, Model model, HttpServletResponse response) {
         if (get(lastId, room, webRequest, model, xmlEscaper)) {
             response.setContentType("text/xml");
@@ -81,7 +81,7 @@ public class LegacyController {
         }
     }
 
-    @RequestMapping(value = "/tsv")
+    @RequestMapping(path = "/tsv", method = RequestMethod.GET)
     public String tsv(@RequestParam(value = "room", required = false) String room, @RequestParam(value = "last", required = false) Long lastId, WebRequest webRequest, Model model, HttpServletResponse response) {
         if (get(lastId, room, webRequest, model, csvEscaper)) {
             response.setContentType("text/tab-separated-values");

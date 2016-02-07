@@ -13,6 +13,7 @@ import org.joda.time.format.ISOPeriodFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +33,7 @@ public class RestocoinController {
 
     private Period postsGetPeriod;
     
-    @RequestMapping("/post")
+    @RequestMapping(path = "/post", method = RequestMethod.POST)
     public List<Post> post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room, @RequestParam(value = "auth", required = false) String auth) {
         tribune.post(nickname, message, room, auth);
         return get(room);
@@ -43,7 +44,7 @@ public class RestocoinController {
         postsGetPeriod = ISOPeriodFormat.standard().parsePeriod(p);
     }
 
-    @RequestMapping("/get")
+    @RequestMapping(path = "/get", method = RequestMethod.GET)
     public List<Post> get(@RequestParam(value = "room", required = false) String room) {
         DateTime end = DateTime.now(DateTimeZone.UTC).plusHours(1);
         DateTime start = end.minus(postsGetPeriod);
