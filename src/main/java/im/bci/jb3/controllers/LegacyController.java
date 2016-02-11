@@ -24,6 +24,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  *
@@ -39,9 +41,6 @@ import org.springframework.web.context.request.WebRequest;
 @Controller
 @RequestMapping("/legacy")
 public class LegacyController {
-
-    @Value("${jb3.host}")
-    private String site;
 
     @Autowired
     private TribuneService tribune;
@@ -60,11 +59,11 @@ public class LegacyController {
     }
 
     @RequestMapping(value = "/post", method = RequestMethod.POST)
-    public String post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room, @RequestParam(value = "last", required = false) Long last, @RequestHeader(value = "User-Agent", required = false) String userAgent, WebRequest webRequest, @RequestParam(value = "auth", required = false) String auth, Model model, HttpServletResponse response) {
+    public String post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room, @RequestParam(value = "last", required = false) Long last, @RequestHeader(value = "User-Agent", required = false) String userAgent, WebRequest webRequest, @RequestParam(value = "auth", required = false) String auth, Model model, HttpServletResponse response, ServerHttpRequest httpRequest) {
         if (StringUtils.isBlank(nickname)) {
             nickname = userAgent;
         }
-        Post post = tribune.post(nickname, legacyUtils.convertFromLegacyNorloges(room, message), room, auth);
+        Post post = tribune.post(nickname, legacyUtils.convertFromLegacyNorloges(room, message), room, auth, ServletUriComponentsBuilder.fromCurrentRequest());
         if (null != post) {
             response.addHeader("X-Post-Id", Long.toString(post.getTime().getMillis()));
         }
@@ -99,8 +98,8 @@ public class LegacyController {
         if (posts.isEmpty() || webRequest.checkNotModified(posts.get(0).getTime().getMillis())) {
             return false;
         } else {
-            LegacyBoard board = new LegacyBoard();
-            board.setSite(site);
+            LegacyBoard board = new LegacyBoard();            
+            board.setSite(ServletUriComponentsBuilder.fromCurrentRequest().replacePath("").build().toString());
             board.setTimezone(LegacyUtils.legacyTimezoneId);
             List<LegacyPost> legacyPosts = new ArrayList<LegacyPost>(posts.size());
             for (Post post : posts) {

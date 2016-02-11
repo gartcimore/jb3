@@ -22,7 +22,7 @@ public class ApiController {
         dataFactory.randomize(DateTime.now().getMillisOfDay());
     }
 
-    @RequestMapping(path="/random-nickname", method = RequestMethod.GET)
+    @RequestMapping(path="/random-nickname", method = RequestMethod.POST)
     public RandomNicknameMV randomNickname() {
         RandomNicknameMV mv = new RandomNicknameMV();
         mv.setNickname(dataFactory.getName());

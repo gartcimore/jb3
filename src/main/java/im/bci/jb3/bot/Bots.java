@@ -4,6 +4,7 @@ import im.bci.jb3.data.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
 public class Bots {
@@ -12,9 +13,9 @@ public class Bots {
     private Bot[] bots;
 
     @Async("botExecutor")
-    public void handle(Post post) {
+    public void handle(Post post, UriComponentsBuilder uriBuilder) {
         for (Bot bot : bots) {
-            bot.handle(post);
+            bot.handle(post, (UriComponentsBuilder)uriBuilder.clone());
         }
     }
 }

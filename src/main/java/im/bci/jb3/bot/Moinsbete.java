@@ -10,6 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
 public class Moinsbete implements Bot {
@@ -20,7 +21,7 @@ public class Moinsbete implements Bot {
     private static final String NAME = "moinsbete";
 
     @Override
-    public void handle(Post post) {
+    public void handle(Post post, UriComponentsBuilder uriBuilder) {
         try {
             if (tribune.isBotCall(post, NAME)) {
                 Document doc = Jsoup.connect("http://secouchermoinsbete.fr/random").get();

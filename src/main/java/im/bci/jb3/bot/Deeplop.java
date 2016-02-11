@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
 public class Deeplop implements Bot {
@@ -22,7 +23,7 @@ public class Deeplop implements Bot {
     private static final String NAME = "deeplop";
 
     @Override
-    public void handle(Post post) {
+    public void handle(Post post, UriComponentsBuilder uriBuilder) {
         try {
             if (tribune.isBotCall(post, NAME) || tribune.isReplyToBot(post, NAME)) {
                 URL obj = new URL("http://deeplop.ssz.fr");

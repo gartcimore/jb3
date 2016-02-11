@@ -82,10 +82,6 @@ There is several options to deploy and host jb3. Here is one that requires:
 
 ### Application configuration
 
-Edit the application.properties file and change the jb3.host property:
-
-    jb3.host=http://mydomain.me
-
 ### Security
 
 In production environnement, please add

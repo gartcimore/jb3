@@ -5,6 +5,7 @@ import im.bci.jb3.data.Post;
 import im.bci.jb3.gateway.Gateways;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  *
@@ -22,11 +23,11 @@ public class TribuneService {
     @Autowired
     private Tribune tribune;
 
-    public Post post(String nickname, String message, String room, String auth) {
+    public Post post(String nickname, String message, String room, String auth, UriComponentsBuilder uriBuilder) {
         if (!gateways.handlePost(nickname, message, room, auth)) {
             Post post = tribune.post(nickname, message, room);
             if (null != post) {
-                bots.handle(post);
+                bots.handle(post, uriBuilder);
             }
             return post;
         } else {

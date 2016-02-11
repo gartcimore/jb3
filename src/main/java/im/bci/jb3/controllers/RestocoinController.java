@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * 
@@ -35,7 +36,7 @@ public class RestocoinController {
     
     @RequestMapping(path = "/post", method = RequestMethod.POST)
     public List<Post> post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room, @RequestParam(value = "auth", required = false) String auth) {
-        tribune.post(nickname, message, room, auth);
+        tribune.post(nickname, message, room, auth, ServletUriComponentsBuilder.fromCurrentRequest());
         return get(room);
     }
 

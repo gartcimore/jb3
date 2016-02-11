@@ -10,6 +10,7 @@ import im.bci.jb3.logic.Tribune;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.util.UriComponentsBuilder;
 
 public abstract class AbstractChatterBot implements Bot {
 
@@ -28,7 +29,7 @@ public abstract class AbstractChatterBot implements Bot {
     }
 
     @Override
-    public void handle(Post post) {
+    public void handle(Post post, UriComponentsBuilder uriBuilder) {
         try {
             if (tribune.isBotCall(post, name) || tribune.isReplyToBot(post, name)) {
                 if (null == session) {

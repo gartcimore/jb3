@@ -7,8 +7,8 @@ import im.bci.jb3.logic.Tribune;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
 public class FortuneBot implements Bot {
@@ -16,18 +16,15 @@ public class FortuneBot implements Bot {
     @Autowired
     private Tribune tribune;
 
-    @Value("${jb3.host}")
-    private String host;
-
     private static final String NAME = "fortune";
 
     @Override
-    public void handle(Post post) {
+    public void handle(Post post, UriComponentsBuilder uriBuilder) {
         try {
             if (tribune.isBotCall(post, NAME)) {
                 Fortune fortune = tribune.fortune(Norloge.parseNorloges(post.getMessage()));
                 if (null != fortune) {
-                    tribune.post(NAME, Norloge.format(post) + " La voilà " + host + "/fortune/" + fortune.getId(), post.getRoom());
+                    tribune.post(NAME, Norloge.format(post) + " La voilà " + uriBuilder.path("/fortune/" + fortune.getId()).build().toString(), post.getRoom());
                 }
             }
         } catch (Exception ex) {

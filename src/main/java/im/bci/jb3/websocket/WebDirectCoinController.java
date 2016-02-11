@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  *
@@ -38,8 +40,9 @@ public class WebDirectCoinController {
     }
 
     @MessageMapping("/post")
-    public void post(PostRQ rq) {
-        tribune.post(rq.getNickname(), rq.getMessage(), rq.getRoom(), rq.getAuth());
+    public void post(PostRQ rq, SimpMessageHeaderAccessor headers) {
+        UriComponentsBuilder uriBuilder = (UriComponentsBuilder) headers.getSessionAttributes().get(WebDirectCoinSessionAttributes.URI_BUILDER);
+        tribune.post(rq.getNickname(), rq.getMessage(), rq.getRoom(), rq.getAuth(), uriBuilder);
     }
 
     @MessageMapping("/presence")
