@@ -29,6 +29,10 @@
     width: 100%;
 }
 
+#jb3-hidden-posts {
+	display: none;
+}
+
 #jb3-roster {
     resize: horizontal;
     overflow: auto;

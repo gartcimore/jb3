@@ -11,6 +11,10 @@ body {
     display : table-row;
 }
 
+.jb3-post:nth-of-type(odd) {
+    background-color: #AAAAAA;
+}
+
 .jb3-post-time {
     display : table-cell;
     padding-right: 5px;

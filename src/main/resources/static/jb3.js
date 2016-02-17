@@ -3,6 +3,7 @@ jb3 = {
         var self = this;
         self.newMessages = [];
         self.messagesContainer = document.getElementById('jb3-posts');
+        self.hiddenMessagesContainer = document.getElementById('jb3-hidden-posts');
         var controlsMessage = $('#jb3-controls-message');
         self.controlsRoom = $('#jb3-controls-room');
         var controlsNickname = $('#jb3-controls-nickname');
@@ -22,8 +23,10 @@ jb3 = {
         self.controlsRoom.val(URI(window.location).search(true).room || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
         self.controlsRoom.change(function () {
             var selectedRoom = localStorage.selectedRoom = self.previouslySelectedRoom = self.controlsRoom.val();
-            $('.jb3-post[data-room!="' + selectedRoom + '"]').hide();
-            $('.jb3-post[data-room="' + selectedRoom + '"]').show();
+            var selectedRoomPosts = $('.jb3-post[data-room="' + selectedRoom + '"]').detach();
+            var unselectedRoomPosts = $('.jb3-post[data-room!="' + selectedRoom + '"]').detach();
+            unselectedRoomPosts.appendTo(self.hiddenMessagesContainer);
+            selectedRoomPosts.appendTo(self.messagesContainer);
             self.scrollPostsContainerToBottom();
         });
         controlsMessage.bind('keypress', function (event) {
@@ -176,7 +179,7 @@ jb3 = {
 	        }
     	}
     }
-    , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}{{postIsBigorno}}" data-room="{{{room}}}" data-time="{{time}}"{{postStyle}}><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
+    , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}{{postIsBigorno}}" data-room="{{{room}}}" data-time="{{time}}"><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
     , onMessage: function (userNickname, message) {
         if (!document.getElementById(message.id)) {
             message.message = jb3_common.formatMessage(message.message);
@@ -184,14 +187,14 @@ jb3 = {
             var room = this.rooms[message.room];
             message.postIsMine = message.nickname === userNickname || (room && message.nickname === room.login) ? " jb3-post-is-mine" : "";
             message.postIsBigorno = message.message.search(new RegExp("(moules|" + RegExp.escape(userNickname) + ")&lt;", "i")) >= 0 ? " jb3-post-is-bigorno" : "";
-            message.postStyle = this.controlsRoom.val() === message.room ? "" : " style=display:none";
+            var container = this.controlsRoom.val() === message.room ? this.messagesContainer : this.hiddenMessagesContainer;
             var messageDiv = Mustache.render(this.messageTemplate, message);
-            this.insertMessageDiv(messageDiv, message);
+            this.insertMessageDiv(container, messageDiv, message);
         }
     },
-    insertMessageDiv: function (messageDiv, message) {
+    insertMessageDiv: function (container, messageDiv, message) {
         var t = message.time;
-        var posts = this.messagesContainer.getElementsByClassName('jb3-post');
+        var posts = container.getElementsByClassName('jb3-post');
         for (var p = 0; p < posts.length; ++p) {
             var post = posts[p];
             if (t < post.dataset.time) {
@@ -199,7 +202,7 @@ jb3 = {
                 return;
             }
         }
-        this.messagesContainer.insertAdjacentHTML('beforeend', messageDiv);
+        container.insertAdjacentHTML('beforeend', messageDiv);
     },
     updateNorloges: function () {
         $('.jb3-cite-raw').each(function () {
