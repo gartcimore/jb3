@@ -4,10 +4,13 @@ import im.bci.jb3.data.Fortune;
 import im.bci.jb3.data.FortuneRepository;
 import im.bci.jb3.data.Post;
 import im.bci.jb3.data.PostRepository;
+import im.bci.jb3.data.PostRevisor;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -41,7 +44,7 @@ public class Tribune {
             post.setRoom(room);
             post.setTime(DateTime.now(DateTimeZone.UTC));
             postPepository.save(post);
-            simpMessagingTemplate.convertAndSend("/topic/posts",  Arrays.asList(post));
+            simpMessagingTemplate.convertAndSend("/topic/posts", Arrays.asList(post));
             return post;
         }
         return null;
@@ -91,11 +94,12 @@ public class Tribune {
         return Jsoup.clean("/" + botName, Whitelist.none());
     }
 
-    private List<Post> getForNorloges(List<Norloge> norloges) {
-        List<Post> result = new ArrayList<Post>();
+    public List<Post> getForNorloges(List<Norloge> norloges) {
+        HashSet<Post> posts = new HashSet<Post>();
         for (Norloge norloge : norloges) {
-            result.addAll(getForNorloge(norloge));
+            posts.addAll(getForNorloge(norloge));
         }
+        ArrayList<Post>result = new ArrayList<Post>(posts);
         Collections.sort(result, new Comparator<Post>() {
 
             @Override
@@ -106,7 +110,7 @@ public class Tribune {
         return result;
     }
 
-    private List<Post> getForNorloge(Norloge norloge) {
+    public List<Post> getForNorloge(Norloge norloge) {
         if (null == norloge.getBouchot()) {
             if (null != norloge.getId()) {
                 final Post post = postPepository.findOne(norloge.getId());
@@ -120,6 +124,14 @@ public class Tribune {
             }
         }
         return Collections.emptyList();
+    }
+
+    public void revise(PostRevisor revisor, Post post, String newMessage) {
+        if(revisor.canRevise(post) && StringUtils.isNotBlank(newMessage)) {
+            post.revise(newMessage);
+            postPepository.save(post);
+            simpMessagingTemplate.convertAndSend("/topic/posts", Arrays.asList(post));
+        }
     }
 
 }

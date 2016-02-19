@@ -1,6 +1,10 @@
 package im.bci.jb3.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.springframework.data.annotation.Id;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -14,6 +18,7 @@ public class Post {
     private DateTime time;
     private String nickname;
     private String message;
+    private List<PostRevision> revisions;
     private String room;
     private GatewayPostId gatewayPostId;
 
@@ -63,6 +68,50 @@ public class Post {
 
     public GatewayPostId getGatewayPostId() {
         return gatewayPostId;
+    }
+
+    public List<PostRevision> getRevisions() {
+        return revisions;
+    }
+
+    public void setRevisions(List<PostRevision> revisions) {
+        this.revisions = revisions;
+    }
+
+    public void revise(String newMessage) {
+        PostRevision revision = new PostRevision();
+        revision.setMessage(message);
+        revision.setTime(DateTime.now(DateTimeZone.UTC));
+        if (null == revisions) {
+            revisions = new ArrayList<PostRevision>();
+        }
+        revisions.add(revision);
+        this.message = newMessage;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Post other = (Post) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
     }
 
 }

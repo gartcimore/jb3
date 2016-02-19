@@ -181,28 +181,32 @@ jb3 = {
     }
     , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}{{postIsBigorno}}" data-room="{{{room}}}" data-time="{{time}}"><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
     , onMessage: function (userNickname, message) {
-        if (!document.getElementById(message.id)) {
-            message.message = jb3_common.formatMessage(message.message);
-            message.norloge = moment(message.time).format(this.norlogeFormat);
-            var room = this.rooms[message.room];
-            message.postIsMine = message.nickname === userNickname || (room && message.nickname === room.login) ? " jb3-post-is-mine" : "";
-            message.postIsBigorno = message.message.search(new RegExp("(moules|" + RegExp.escape(userNickname) + ")&lt;", "i")) >= 0 ? " jb3-post-is-bigorno" : "";
-            var container = this.controlsRoom.val() === message.room ? this.messagesContainer : this.hiddenMessagesContainer;
-            var messageDiv = Mustache.render(this.messageTemplate, message);
-            this.insertMessageDiv(container, messageDiv, message);
-        }
+        message.message = jb3_common.formatMessage(message.message);
+        message.norloge = moment(message.time).format(this.norlogeFormat);
+        var room = this.rooms[message.room];
+        message.postIsMine = message.nickname === userNickname || (room && message.nickname === room.login) ? " jb3-post-is-mine" : "";
+        message.postIsBigorno = message.message.search(new RegExp("(moules|" + RegExp.escape(userNickname) + ")&lt;", "i")) >= 0 ? " jb3-post-is-bigorno" : "";
+        var container = this.controlsRoom.val() === message.room ? this.messagesContainer : this.hiddenMessagesContainer;
+        var messageDiv = Mustache.render(this.messageTemplate, message);
+        this.insertMessageDiv(container, messageDiv, message);
     },
     insertMessageDiv: function (container, messageDiv, message) {
-        var t = message.time;
-        var posts = container.getElementsByClassName('jb3-post');
-        for (var p = 0; p < posts.length; ++p) {
-            var post = posts[p];
-            if (t < post.dataset.time) {
-                post.insertAdjacentHTML('beforebegin', messageDiv);
-                return;
+    	var existingDiv = document.getElementById(message.id);
+    	if(!existingDiv) {
+    		var t = message.time;
+            var posts = container.getElementsByClassName('jb3-post');
+            for (var p = 0; p < posts.length; ++p) {
+                var post = posts[p];
+                if (t < post.dataset.time) {
+                    post.insertAdjacentHTML('beforebegin', messageDiv);
+                    return;
+                }
             }
-        }
-        container.insertAdjacentHTML('beforeend', messageDiv);
+            container.insertAdjacentHTML('beforeend', messageDiv);
+    	} else {
+    		existingDiv.outerHTML = messageDiv;
+    	}
+        
     },
     updateNorloges: function () {
         $('.jb3-cite-raw').each(function () {

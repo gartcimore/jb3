@@ -12,7 +12,7 @@ public class NorlogeTest {
     @Test
     public void testParseNorloges() {
         System.out.println("parseNorloges");
-        String message = " moules< 16:25:11 les norloges du style 12/31#18:28:15 ou 2012/01/02#18:12:12 c'est conforme à la rfc et #tamaman #1234 #n3 #lol@dlfp  #troll@euro.net? et 12:30?";
+        String message = " moules< 16:25:11 les posts du style 12/31#18:28:15 ou 2012/01/02#18:12:12 c'est conforme à la rfc et #tamaman #1234 #n3 #lol@dlfp  #troll@euro.net? et 12:30?";
         List<Norloge> expResult = new ArrayList<Norloge>();
         expResult.add(new Norloge().withTime(new DateTime().withZone(DateTimeZone.UTC).withHourOfDay(16).withMinuteOfHour(25).withSecondOfMinute(11).withMillisOfSecond(0)));
         expResult.add(new Norloge().withTime(new DateTime().withZone(DateTimeZone.UTC).withMonthOfYear(12).withDayOfMonth(31).withHourOfDay(18).withMinuteOfHour(28).withSecondOfMinute(15).withMillisOfSecond(0)));

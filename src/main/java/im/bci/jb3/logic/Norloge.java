@@ -3,7 +3,6 @@ package im.bci.jb3.logic;
 import im.bci.jb3.data.Post;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
@@ -156,17 +155,37 @@ public class Norloge {
     private static final DateTimeFormatter norlogeParseShortFormatter = DateTimeFormat.forPattern("HH:mm").withZoneUTC();
     private static final Pattern norlogesPattern = Pattern.compile("((#(?<id>\\w+))|(?<time>(?<date>((?<year>\\d\\d\\d\\d)/)?(?:1[0-2]|0[1-9])/(?:3[0-1]|[1-2][0-9]|0[1-9])#)?((?:2[0-3]|[0-1][0-9])):([0-5][0-9])(:(?<seconds>[0-5][0-9]))?)(?<exp>[¹²³]|[:\\^][1-9]|[:\\^][1-9][0-9])?)(@(?<bouchot>[\\w.]+))?");
 
-    public static List<Norloge> parseNorloges(String message) {
-        final List<Norloge> result = new ArrayList<Norloge>();
+    public static class ParsedNorloges extends ArrayList<Norloge> {
+
+        private static final long serialVersionUID = 1L;
+        
+        private String remainingMessageContent;
+
+        public String getRemainingMessageContent() {
+            return remainingMessageContent;
+        }
+
+        public void setRemainingMessageContent(String remainingMessageContent) {
+            this.remainingMessageContent = remainingMessageContent;
+        }
+    }
+    
+    public static ParsedNorloges parseNorloges(String message) {
+        final ParsedNorloges result = new ParsedNorloges();
+        final StringBuffer sb = new StringBuffer();
+
         forEachNorloge(message, new NorlogeProcessor() {
 
             @Override
             public void process(Norloge norloge, Matcher matcher) {
                 result.add(norloge);
+                matcher.appendReplacement(sb, "");
             }
 
             @Override
             public void end(Matcher matcher) {
+                matcher.appendTail(sb);
+                result.setRemainingMessageContent(org.springframework.util.StringUtils.trimLeadingWhitespace(sb.toString()));
             }
         });
         return result;
