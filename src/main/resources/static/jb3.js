@@ -1,6 +1,7 @@
 jb3 = {
     init: function () {
         var self = this;
+        self.messageTemplate = Handlebars.compile( $("#message-template").html() );
         self.newMessages = [];
         self.messagesContainer = document.getElementById('jb3-posts');
         self.hiddenMessagesContainer = document.getElementById('jb3-hidden-posts');
@@ -179,7 +180,6 @@ jb3 = {
 	        }
     	}
     }
-    , messageTemplate: '<div id="{{id}}" class="jb3-post{{postIsMine}}{{postIsBigorno}}" data-room="{{{room}}}" data-time="{{time}}"><span class="jb3-post-icon"></span><span class="jb3-post-time">{{norloge}}</span><span class="jb3-post-nickname">{{nickname}}</span><span class="jb3-post-message">{{{message}}}</span></div>'
     , onMessage: function (userNickname, message) {
         message.message = jb3_common.formatMessage(message.message);
         message.norloge = moment(message.time).format(this.norlogeFormat);
@@ -187,7 +187,7 @@ jb3 = {
         message.postIsMine = message.nickname === userNickname || (room && message.nickname === room.login) ? " jb3-post-is-mine" : "";
         message.postIsBigorno = message.message.search(new RegExp("(moules|" + RegExp.escape(userNickname) + ")&lt;", "i")) >= 0 ? " jb3-post-is-bigorno" : "";
         var container = this.controlsRoom.val() === message.room ? this.messagesContainer : this.hiddenMessagesContainer;
-        var messageDiv = Mustache.render(this.messageTemplate, message);
+        var messageDiv = this.messageTemplate(message);
         this.insertMessageDiv(container, messageDiv, message);
     },
     insertMessageDiv: function (container, messageDiv, message) {
