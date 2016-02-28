@@ -79,12 +79,18 @@ public class Post {
     }
 
     public void revise(String newMessage) {
-        PostRevision revision = new PostRevision();
-        revision.setMessage(message);
-        revision.setTime(DateTime.now(DateTimeZone.UTC));
         if (null == revisions) {
             revisions = new ArrayList<PostRevision>();
         }
+        if (revisions.isEmpty()) {
+            PostRevision revision = new PostRevision();
+            revision.setMessage(message);
+            revision.setTime(time);
+            revisions.add(revision);
+        }
+        PostRevision revision = new PostRevision();
+        revision.setMessage(newMessage);
+        revision.setTime(DateTime.now(DateTimeZone.UTC));
         revisions.add(revision);
         this.message = newMessage;
     }
@@ -99,18 +105,23 @@ public class Post {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         Post other = (Post) obj;
         if (id == null) {
-            if (other.id != null)
+            if (other.id != null) {
                 return false;
-        } else if (!id.equals(other.id))
+            }
+        } else if (!id.equals(other.id)) {
             return false;
+        }
         return true;
     }
 

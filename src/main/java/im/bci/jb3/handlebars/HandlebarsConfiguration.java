@@ -17,6 +17,6 @@ public class HandlebarsConfiguration {
     
     @PostConstruct
     public void configure() {
-        handlebarsViewResolver.registerHelper("raw", RawHelper.INSTANCE);
+        handlebarsViewResolver.registerHelper("raw-include", RawIncludeHelper.INSTANCE);
     }
 }

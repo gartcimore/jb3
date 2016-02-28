@@ -11,6 +11,14 @@ body {
     display : table-row;
 }
 
+.jb3-revisions {
+    display: none;
+}
+
+.jb3-revisions-button {
+    margin-left: 4px;
+}
+
 .jb3-post:nth-of-type(odd) {
     background-color: #FBFBFB;
 }

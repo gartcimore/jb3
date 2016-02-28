@@ -1,7 +1,10 @@
 jb3 = {
     init: function () {
         var self = this;
-        self.messageTemplate = Handlebars.compile( $("#message-template").html() );
+        Handlebars.registerHelper('time2norloge', function (time) {
+            return moment(time).format(self.norlogeFormat);
+        });
+        self.messageTemplate = Handlebars.compile($("#message-template").html());
         self.newMessages = [];
         self.messagesContainer = document.getElementById('jb3-posts');
         self.hiddenMessagesContainer = document.getElementById('jb3-hidden-posts');
@@ -72,6 +75,22 @@ jb3 = {
                 self.unhighlightPostAndReplies($(event.target).parent().attr('id'));
             }
         }, ".jb3-post-time");
+        $('#jb3-posts').on({
+            click: function (event) {
+                var button = $(event.target);
+                var post = button.parents('.jb3-post');
+                var revisions = $('#' + post.attr('id') + '-revisions');
+                var modal = new jBox('Modal', {
+                    content: revisions,
+                    title: 'Revisions',
+                    draggable: 'title',
+                    blockScroll: false,
+                    overlay: false,
+                    closeOnClick: 'body',
+                    closeButton: 'box'});
+                modal.open();
+            }
+        }, ".jb3-revisions-button");
         jb3_common.initTotozLazyLoading();
         self.initNickname();
         self.coin = new Worker("/webdirectcoin.js");
@@ -83,10 +102,10 @@ jb3 = {
         self.coin.postMessage({type: "connect", url: url.toString()});
         self.updateMessages();
     },
-    updateMessages: function() {
-    	var self = this;
-    	self.onNewMessages(self.newMessages.splice(0, 500));
-        setTimeout(function() {
+    updateMessages: function () {
+        var self = this;
+        self.onNewMessages(self.newMessages.splice(0, 500));
+        setTimeout(function () {
             self.updateMessages();
         }, 1000);
     },
@@ -94,7 +113,7 @@ jb3 = {
         var self = this;
         switch (event.data.type) {
             case "posts":
-            	self.newMessages = self.newMessages.concat(event.data.posts);
+                self.newMessages = self.newMessages.concat(event.data.posts);
                 break;
             case "connected":
                 self.refreshMessages();
@@ -167,22 +186,21 @@ jb3 = {
         postContainer.scrollTop(postContainer.prop("scrollHeight"));
     },
     onNewMessages: function (data) {
-    	if(data && data.length > 0) {
-	        var self = this;
-	        var userNickname = $('#jb3-controls-nickname').val();
-	        var wasAtbottom = self.isPostsContainerAtBottom();
-	        for (var d in data) {
-	            self.onMessage(userNickname, data[d]);
-	        }
-	        self.updateNorloges();
-	        if (wasAtbottom) {
-	            self.scrollPostsContainerToBottom();
-	        }
-    	}
+        if (data && data.length > 0) {
+            var self = this;
+            var userNickname = $('#jb3-controls-nickname').val();
+            var wasAtbottom = self.isPostsContainerAtBottom();
+            for (var d in data) {
+                self.onMessage(userNickname, data[d]);
+            }
+            self.updateNorloges();
+            if (wasAtbottom) {
+                self.scrollPostsContainerToBottom();
+            }
+        }
     }
     , onMessage: function (userNickname, message) {
         message.message = jb3_common.formatMessage(message.message);
-        message.norloge = moment(message.time).format(this.norlogeFormat);
         var room = this.rooms[message.room];
         message.postIsMine = message.nickname === userNickname || (room && message.nickname === room.login) ? " jb3-post-is-mine" : "";
         message.postIsBigorno = message.message.search(new RegExp("(moules|" + RegExp.escape(userNickname) + ")&lt;", "i")) >= 0 ? " jb3-post-is-bigorno" : "";
@@ -191,9 +209,9 @@ jb3 = {
         this.insertMessageDiv(container, messageDiv, message);
     },
     insertMessageDiv: function (container, messageDiv, message) {
-    	var existingDiv = document.getElementById(message.id);
-    	if(!existingDiv) {
-    		var t = message.time;
+        var existingDiv = document.getElementById(message.id);
+        if (!existingDiv) {
+            var t = message.time;
             var posts = container.getElementsByClassName('jb3-post');
             for (var p = 0; p < posts.length; ++p) {
                 var post = posts[p];
@@ -203,10 +221,10 @@ jb3 = {
                 }
             }
             container.insertAdjacentHTML('beforeend', messageDiv);
-    	} else {
-    		existingDiv.outerHTML = messageDiv;
-    	}
-        
+        } else {
+            existingDiv.outerHTML = messageDiv;
+        }
+
     },
     updateNorloges: function () {
         $('.jb3-cite-raw').each(function () {

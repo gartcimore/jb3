@@ -1,10 +1,18 @@
-{{{{raw}}}}
 <script id="message-template" type="text/x-handlebars-template">
     <div id="{{id}}" class="jb3-post{{postIsMine}}{{postIsBigorno}}" data-room="{{{room}}}" data-time="{{time}}">
         <span class="jb3-post-icon"></span>
-        <span class="jb3-post-time">{{norloge}}</span>
+        <span class="jb3-post-time">{{time2norloge time}}</span>
         <span class="jb3-post-nickname">{{nickname}}</span>
-        <span class="jb3-post-message">{{{message}}}</span>
+        <span class="jb3-post-message">{{{message}}}{{#if revisions}}<span class="jb3-revisions-button">&#119585;</a>{{/if}}</span>
+        {{#if revisions}}
+                <div id="{{id}}-revisions" class="jb3-revisions">
+                    {{#each revisions}}
+                    <div class="jb3-revision">
+                        <span class="jb3-revision-time">{{time2norloge time}}</span>
+                        <span class="jb3-revision-message">{{message}}</span>
+                    </div>
+                    {{/each}}
+                </div>
+        {{/if}}
     </div>
 </script>
-{{{{/raw}}}}
