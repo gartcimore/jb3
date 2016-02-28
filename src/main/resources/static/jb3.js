@@ -91,6 +91,13 @@ jb3 = {
                 modal.open();
             }
         }, ".jb3-revisions-button");
+        $('#jb3-posts').on({
+            click: function (event) {
+                var button = $(event.target);
+                var post = button.parents('.jb3-post');
+                self.insertTextInMessageControl('/revise #' + post.attr('id') + ' ');
+            }
+        }, ".jb3-revise-button");
         jb3_common.initTotozLazyLoading();
         self.initNickname();
         self.coin = new Worker("/webdirectcoin.js");

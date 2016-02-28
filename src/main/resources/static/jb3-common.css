@@ -17,6 +17,20 @@ body {
 
 .jb3-revisions-button {
     margin-left: 4px;
+    cursor: pointer;
+}
+
+.jb3-revise-button {
+    margin-left: 4px;
+    cursor: pointer;
+}
+
+.jb3-post .jb3-revise-button {
+    display: none;
+}
+
+.jb3-post:hover .jb3-revise-button {
+    display: inline;
 }
 
 .jb3-post:nth-of-type(odd) {
