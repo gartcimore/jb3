@@ -26,11 +26,11 @@ body {
 }
 
 .jb3-post .jb3-revise-button {
-    display: none;
+    color: rgba(0, 0, 0, 0.0);
 }
 
 .jb3-post:hover .jb3-revise-button {
-    display: inline;
+    color: initial;
 }
 
 .jb3-post:nth-of-type(odd) {
