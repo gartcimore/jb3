@@ -29,7 +29,7 @@ body {
     color: rgba(0, 0, 0, 0.0);
 }
 
-.jb3-post:hover .jb3-revise-button {
+.jb3-post-is-mine:hover .jb3-revise-button {
     color: initial;
 }
 
