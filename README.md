@@ -46,7 +46,10 @@ Gateway are used to receive and post on external tribunes or other chat systems.
 
 Implemented gateways:
 
+- batavie
+- dlfp
 - euromussels
+- moules
 - sveetch
 
 # How to use
