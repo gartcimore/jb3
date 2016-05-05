@@ -83,6 +83,7 @@ public class Tribune {
     public String messageWithoutBotCall(Post post, String botName) {
         String message = post.getMessage();
         message = StringUtils.removeStart(message, bigornoCall(botName));
+        message = StringUtils.removeStart(message, ircCall(botName));
         return message;
     }
 
