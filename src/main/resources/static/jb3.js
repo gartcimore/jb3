@@ -24,7 +24,11 @@ jb3 = {
                 })
                 );
         self.controlsRoom.attr("size", rooms.length + 1);
-        self.controlsRoom.val(URI(window.location).search(true).room || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
+        var roomInURI = URI(window.location).search(true).room;
+        self.controlsRoom.val(roomInURI || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
+        if(roomInURI === self.controlsRoom.val()) {
+            $('#jb3-roster').hide();
+        }
         self.controlsRoom.change(function () {
             var selectedRoom = localStorage.selectedRoom = self.previouslySelectedRoom = self.controlsRoom.val();
             var selectedRoomPosts = $('.jb3-post[data-room="' + selectedRoom + '"]').detach();
