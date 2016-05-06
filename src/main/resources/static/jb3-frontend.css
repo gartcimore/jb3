@@ -12,6 +12,7 @@
     justify-content: flex-end;
     overflow: hidden;
     width: 100%;
+    height: 100%;
 }
 
 #jb3-layout-horizontal {
@@ -27,10 +28,11 @@
     overflow-x: visible;
     overflow-y: scroll;
     width: 100%;
+    height: 100%;
 }
 
 #jb3-hidden-posts {
-	display: none;
+    display: none;
 }
 
 #jb3-roster {
