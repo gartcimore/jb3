@@ -84,15 +84,7 @@ jb3 = {
                 var button = $(event.target);
                 var post = button.parents('.jb3-post');
                 var revisions = $('#' + post.attr('id') + '-revisions');
-                var modal = new jBox('Modal', {
-                    content: revisions,
-                    title: 'Revisions',
-                    draggable: 'title',
-                    blockScroll: false,
-                    overlay: false,
-                    closeOnClick: 'body',
-                    closeButton: 'box'});
-                modal.open();
+                $.colorbox({html:revisions.html(), title:'Revisions'});
             }
         }, ".jb3-revisions-button");
         $('#jb3-posts').on({
