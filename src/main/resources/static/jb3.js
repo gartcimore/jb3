@@ -26,7 +26,7 @@ jb3 = {
         self.controlsRoom.attr("size", rooms.length + 1);
         var roomInURI = URI(window.location).search(true).room;
         self.controlsRoom.val(roomInURI || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
-        if(roomInURI === self.controlsRoom.val()) {
+        if (roomInURI === self.controlsRoom.val()) {
             $('#jb3-roster').hide();
         }
         self.controlsRoom.change(function () {
@@ -84,9 +84,22 @@ jb3 = {
                 var button = $(event.target);
                 var post = button.parents('.jb3-post');
                 var revisions = $('#' + post.attr('id') + '-revisions');
-                $.colorbox({html:revisions.html(), title:'Revisions'});
+                $.colorbox({html: revisions.html(), title: 'Revisions'});
             }
         }, ".jb3-revisions-button");
+        $('#jb3-posts').on({
+            click: function (event) {
+                var link = $(event.target);
+                var href = link.attr('href');
+                if (href) {
+                    if (/\.(png|jpe?g)$/i.test(href)) {
+                        $.colorbox({href: href, maxWidth: "90%", maxHeight: "90%" });
+                        event.stopPropagation();
+                        event.preventDefault();
+                    }
+                }
+            }
+        }, "a");
         $('#jb3-posts').on({
             click: function (event) {
                 var button = $(event.target);
