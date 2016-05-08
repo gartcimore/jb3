@@ -164,7 +164,7 @@ public class LegacyController {
         Matcher matcher = urlPattern.matcher(message);
         final StringBuffer sb = new StringBuffer();
         while (matcher.find()) {
-            matcher.appendReplacement(sb, "<a href=\"$0\" rel=\"nofollow\" target=\"_blank\">[url]</a>");
+            matcher.appendReplacement(sb, "<a href=\"$0\" target=\"_blank\">[url]</a>");
         }
         matcher.appendTail(sb);
         return sb.toString();
