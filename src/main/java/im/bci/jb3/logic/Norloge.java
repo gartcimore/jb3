@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -249,6 +250,7 @@ public class Norloge {
     private static DateTime parseNorlogeTimeWithFormat(String item, DateTimeFormatter format) {
         try {
             MutableDateTime norlogeTime = new MutableDateTime();
+            norlogeTime.setZone(DateTimeZone.UTC);
             norlogeTime.setRounding(norlogeTime.getChronology().secondOfMinute());
             norlogeTime.setSecondOfMinute(0);
             if (format.parseInto(norlogeTime, item, 0) >= 0) {
