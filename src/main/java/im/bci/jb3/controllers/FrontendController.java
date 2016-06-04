@@ -12,10 +12,14 @@ public class FrontendController {
 
     @Value("${jb3.room.default}")
     private String defaultRoom;
+    
+    @Value("${jb3.wro}")
+    private boolean useWro;
 
     @RequestMapping(path="", method = RequestMethod.GET)
     public String index(Model model) {
         model.addAttribute("jb3DefaultRoom", defaultRoom);
+        model.addAttribute("jb3UseWro", useWro);
         return "index";
     }
 

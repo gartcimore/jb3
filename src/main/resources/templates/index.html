@@ -39,6 +39,9 @@
         <div id="jb3-hidden-posts"></div>
         {{!-- {{> partials/message-template}} --}}
         {{raw-include "partials/message-template"}}
+        {{#if jb3UseWro}}
+        <script src="/wro/jb3.js" defer></script>
+        {{else}}
         <script src="/webjars/jquery/2.1.1/jquery.js" defer></script>
         <script src="/webjars/jquery-colorbox/1.6.3/jquery.colorbox.js" defer></script>
         <script src="/webjars/handlebars/4.0.2/handlebars.js" defer></script>
@@ -46,5 +49,6 @@
         <script src="/webjars/momentjs/2.8.3/moment.js" defer></script>
         <script src="/jb3-common.js" defer></script>
         <script src="/jb3.js" defer></script>
+        {{/if}}
     </body>
 </html>
