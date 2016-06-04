@@ -11,7 +11,7 @@ jb3_common = {
         try {
             return JSON.parse(localStorage.rooms);
         } catch (e) {
-            return [{recid: 1, rname: "batavie"}, {recid: 2, rname: "dlfp"}, {recid: 3, rname: "euromussels"}, {recid: 4, rname: "moules"}, {recid: 5, rname: "sveetch"}, {recid: 6, rname: "nimage"}];
+            return [{recid: 1, rname: "batavie"}, {recid: 2, rname: "dlfp"}, {recid: 3, rname: "euromussels"}, { recid: 4, rname: "faab_euromussels"}, {recid: 5, rname: "moules"}, {recid: 6, rname: "sveetch"}, {recid: 7, rname: "nimage"}];
         }
     },
     initTotozLazyLoading: function () {
