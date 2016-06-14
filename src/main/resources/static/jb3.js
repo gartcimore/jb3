@@ -312,7 +312,6 @@ jb3 = {
         control.value = control.value.substring(0, control.selectionStart) + text + control.value.substr(control.selectionEnd);
         control.focus();
         control.setSelectionRange(selectionEnd, selectionEnd);
-    },
-    hello: "pouetworld"
+    }
 };
 jb3.init();
