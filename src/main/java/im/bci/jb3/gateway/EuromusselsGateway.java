@@ -12,9 +12,9 @@ public class EuromusselsGateway extends AbstractBouchotGateway {
     private static BouchotConfig createConf() {
         BouchotConfig conf = new BouchotConfig();
         conf.setRoom("euromussels");
-        conf.setGetUrl("https://euromussels.eu/?q=tribune.xml");
-        conf.setPostUrl("https://euromussels.eu/?q=tribune/post");
-        conf.setLastIdParameterName("last_id");
+        conf.setGetUrl("https://faab.euromussels.eu/data/backend.xml");
+        conf.setPostUrl("https://faab.euromussels.eu/add.php");
+        conf.setTagsEncoded(false);
         conf.setMessageContentParameterName("message");
         conf.setUsingCrapCertificate(true);
         return conf;
