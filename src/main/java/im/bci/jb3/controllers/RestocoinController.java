@@ -12,6 +12,7 @@ import org.joda.time.Period;
 import org.joda.time.format.ISOPeriodFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,5 +51,10 @@ public class RestocoinController {
         DateTime end = DateTime.now(DateTimeZone.UTC).plusHours(1);
         DateTime start = end.minus(postsGetPeriod);
         return postRepository.findPosts(start, end, room);
+    }
+    
+    @RequestMapping(path = "/get/{id}", method = RequestMethod.GET)
+    public Post getOne(@PathVariable("id") String id) {
+        return postRepository.findOne(id);
     }
 }

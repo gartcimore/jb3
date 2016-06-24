@@ -93,7 +93,7 @@ jb3 = {
                 var href = link.attr('href');
                 if (href) {
                     if (/\.(png|jpe?g)$/i.test(href)) {
-                        $.colorbox({href: href, maxWidth: "90%", maxHeight: "90%" });
+                        $.colorbox({href: href, maxWidth: "90%", maxHeight: "90%"});
                         event.stopPropagation();
                         event.preventDefault();
                     }
@@ -146,6 +146,7 @@ jb3 = {
         }
     },
     norlogeFormat: "HH:mm:ss",
+    norlogeFullFormat: "YYYY/MM/DD#HH:mm:ss",
     initNickname: function () {
         var controlsNickname = $('#jb3-controls-nickname');
         if (localStorage.nickname) {
@@ -243,13 +244,33 @@ jb3 = {
 
     },
     updateNorloges: function () {
+    	var self = this;
         $('.jb3-cite-raw').each(function () {
             var cite = $(this);
-            var cited = $('#' + cite.data('ref'));
+            var postId = cite.data('ref');
+            var cited = $('#' + postId);
             var citedNorloge = cited.find('.jb3-post-time');
             if (citedNorloge.length > 0) {
                 cite.text(citedNorloge.text());
                 cite.removeClass('jb3-cite-raw');
+            } else {
+                var request = new XMLHttpRequest();
+                request.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                    	try {
+	                        var message = JSON.parse(this.responseText);
+	                        cite.text(moment(message.time).format(self.norlogeFullFormat));
+                    	} catch(e){
+                    		cite.removeClass('jb3-cite');
+                    	}
+                    	finally {
+	                        cite.removeClass('jb3-cite-raw');
+                    	}
+                    }
+                };
+                request.open('GET', "/restocoin/get/" + postId, true);
+                request.overrideMimeType('application/json');
+                request.send();
             }
             if (cited.hasClass('jb3-post-is-mine')) {
                 cited.addClass('jb3-cited-by-me');
