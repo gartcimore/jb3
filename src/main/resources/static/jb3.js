@@ -217,7 +217,7 @@ jb3 = {
         }
     }
     , onMessage: function (userNickname, message) {
-        message.message = jb3_common.formatMessage(message.message);
+        message.message = jb3_post_to_html.parse(message.message);
         var room = this.rooms[message.room];
         message.postIsMine = message.nickname === userNickname || (room && message.nickname === room.login) ? " jb3-post-is-mine" : "";
         message.postIsBigorno = message.message.search(new RegExp("(moules|" + RegExp.escape(userNickname) + ")&lt;", "i")) >= 0 ? " jb3-post-is-bigorno" : "";

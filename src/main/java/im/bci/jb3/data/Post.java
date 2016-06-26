@@ -9,6 +9,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import im.bci.jb3.logic.CleanUtils;
+
 public class Post {
 
     @Id
@@ -16,9 +21,12 @@ public class Post {
 
     @DateTimeFormat(iso = ISO.DATE_TIME)
     private DateTime time;
+    @JsonIgnore
     private String nickname;
+    @JsonIgnore
     private String message;
     private List<PostRevision> revisions;
+    @JsonIgnore
     private String room;
     private GatewayPostId gatewayPostId;
 
@@ -37,6 +45,11 @@ public class Post {
     public void setTime(DateTime time) {
         this.time = time;
     }
+    
+    @JsonGetter("nickname")
+    public String cleanedNickname() {
+    	return CleanUtils.cleanMessage(nickname);
+    }
 
     public String getNickname() {
         return nickname;
@@ -45,6 +58,11 @@ public class Post {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
+    
+    @JsonGetter("message")
+    public String getCleanedMessage() {
+    	return CleanUtils.cleanMessage(message);
+    }
 
     public String getMessage() {
         return message;
@@ -52,6 +70,11 @@ public class Post {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+    
+    @JsonGetter("room")
+    public String cleanedRoom() {
+    	return CleanUtils.cleanMessage(room);
     }
 
     public String getRoom() {

@@ -34,9 +34,9 @@ public class Tribune {
     private SimpMessagingTemplate simpMessagingTemplate;
 
     public Post post(String nickname, String message, String room) {
-        nickname = CleanUtils.cleanNickname(nickname);
-        room = CleanUtils.cleanRoom(room);
-        message = CleanUtils.cleanMessage(message);
+        nickname = CleanUtils.truncateNickname(nickname);
+        room = CleanUtils.truncateRoom(room);
+        message = CleanUtils.truncateMessage(message);
         if (StringUtils.isNotBlank(message)) {
             Post post = new Post();
             post.setNickname(StringUtils.isNotBlank(nickname) ? nickname : "AnonymousCoward");
@@ -65,7 +65,7 @@ public class Tribune {
         if (botName.equals(post.getNickname())) {
             return false;
         }
-        String message = post.getMessage();
+        String message = post.getCleanedMessage();
         return message.contains(bigornoCall(botName)) || message.contains(ircCall(botName));
     }
 
@@ -81,7 +81,7 @@ public class Tribune {
     }
 
     public String messageWithoutBotCall(Post post, String botName) {
-        String message = post.getMessage();
+        String message = post.getCleanedMessage();
         message = StringUtils.removeStart(message, bigornoCall(botName));
         message = StringUtils.removeStart(message, ircCall(botName));
         return message;
@@ -129,7 +129,7 @@ public class Tribune {
 
     public void revise(PostRevisor revisor, Post post, String newMessage) {
         if(revisor.canRevise(post) && StringUtils.isNotBlank(newMessage)) {
-            post.revise(newMessage);
+            post.revise(CleanUtils.truncateMessage(newMessage));
             postPepository.save(post);
             simpMessagingTemplate.convertAndSend("/topic/posts", Arrays.asList(post));
         }

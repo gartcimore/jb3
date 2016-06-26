@@ -3,7 +3,7 @@
 {{#each board.posts}}
     <post id="{{this.id}}" time="{{this.time}}">
         <info>{{{this.info}}}</info>
-        <message>{{{this.message}}}</message>
+        <message>{{{this.cleanedMessage}}}</message>
         <login/>
     </post>
 {{/each}}

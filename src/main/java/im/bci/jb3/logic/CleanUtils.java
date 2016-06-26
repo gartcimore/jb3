@@ -14,38 +14,49 @@ import org.jsoup.safety.Whitelist;
  */
 public class CleanUtils {
 
-    private static final int MAX_POST_LENGTH = 512;
-    private static final int MAX_NICKNAME_LENGTH = 32;
-    private static final int MAX_ROOM_LENGTH = 32;
-    private static final Whitelist messageWhitelist = Whitelist.none().addTags("a", "b", "i", "s", "u", "tt").addAttributes("a", "href", "target");
+	private static final int MAX_POST_LENGTH = 512;
+	private static final int MAX_NICKNAME_LENGTH = 32;
+	private static final int MAX_ROOM_LENGTH = 32;
+	private static final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s", "u", "tt");
 
-    public static String cleanMessage(String message) {
-        message = StringUtils.abbreviate(message, MAX_POST_LENGTH);
-        Document doc = Jsoup.parseBodyFragment(message);
-        for (Element element : doc.body().children().select(":not(a,b,i,s,u,tt)")) {
-            element.replaceWith(TextNode.createFromEncoded(element.toString(), null));
-        }
-        for (Element element : doc.body().children().select("a")) {
-            element.attr("target", "_blank");
-        }
-        Cleaner cleaner = new Cleaner(messageWhitelist);
-        doc = cleaner.clean(doc);
-        message = doc.body().html();
-        return message;
-    }
+	public static String truncateMessage(String message) {
+		return StringUtils.abbreviate(message, MAX_POST_LENGTH);
+	}
 
-    public static String cleanRoom(String room) {
-        if (null != room) {
-            room = StringUtils.abbreviate(Jsoup.clean(room, Whitelist.none()), MAX_ROOM_LENGTH);
-        }
-        return room;
-    }
+	public static String truncateRoom(String room) {
+		return StringUtils.abbreviate(room, MAX_ROOM_LENGTH);
+	}
 
-    public static String cleanNickname(String nickname) {
-        if (null != nickname) {
-            nickname = StringUtils.abbreviate(Jsoup.clean(nickname, Whitelist.none()), MAX_NICKNAME_LENGTH);
-        }
-        return nickname;
-    }
+	public static String truncateNickname(String nickname) {
+		return StringUtils.abbreviate(nickname, MAX_NICKNAME_LENGTH);
+	}
+
+	public static String cleanMessage(String message) {
+		Document doc = Jsoup.parseBodyFragment(message);
+		for (Element element : doc.body().children().select(":not(a,b,i,s,u,tt)")) {
+			element.replaceWith(TextNode.createFromEncoded(element.toString(), null));
+		}
+		for (Element element : doc.body().children().select("a")) {
+			element.replaceWith(TextNode.createFromEncoded(element.attr("href"), null));
+		}
+		Cleaner cleaner = new Cleaner(messageWhitelist);
+		doc = cleaner.clean(doc);
+		message = doc.body().html();
+		return message;
+	}
+
+	public static String cleanRoom(String room) {
+		if (null != room) {
+			room = Jsoup.clean(room, Whitelist.none());
+		}
+		return room;
+	}
+
+	public static String cleanNickname(String nickname) {
+		if (null != nickname) {
+			nickname = Jsoup.clean(nickname, Whitelist.none());
+		}
+		return nickname;
+	}
 
 }

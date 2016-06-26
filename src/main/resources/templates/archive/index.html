@@ -30,9 +30,9 @@
         {{#each posts}}
         <div id="{{this.id}}" class="jb3-post">
             <span class="jb3-post-time">{{this.time.millis}}</span>
-            <span class="jb3-post-room">{{this.room}}</span>
-            <span class="jb3-post-nickname">{{this.nickname}}</span>
-            <span class="jb3-post-message">{{this.message}}</span>
+            <span class="jb3-post-room">{{this.cleanedRoom}}</span>
+            <span class="jb3-post-nickname">{{this.cleanedNickname}}</span>
+            <span class="jb3-post-message">{{this.cleanedMessage}}</span>
         </div>
         {{/each}}
     </div>
