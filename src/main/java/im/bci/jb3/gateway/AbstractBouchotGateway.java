@@ -5,6 +5,8 @@ import im.bci.jb3.data.Post;
 import im.bci.jb3.data.PostRepository;
 import im.bci.jb3.legacy.LegacyUtils;
 import im.bci.jb3.logic.CleanUtils;
+import im.bci.jb3.websocket.WebDirectCoinConnectedMoules;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,7 +25,6 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.TriggerContext;
 
 /**
@@ -33,11 +34,11 @@ import org.springframework.scheduling.TriggerContext;
 public abstract class AbstractBouchotGateway implements Gateway, SchedulableGateway {
 
     @Autowired
+    private WebDirectCoinConnectedMoules connectedMoules;
+    @Autowired
     private PostRepository postPepository;
     @Autowired
     private LegacyUtils legacyUtils;
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
     private long lastPostId = -1;
 
     @Value("${jb3.secure}")
@@ -103,7 +104,7 @@ public abstract class AbstractBouchotGateway implements Gateway, SchedulableGate
         }
         adaptativeRefreshComputer.analyseBouchotPostsResponse(newPosts);
         if (!newPosts.isEmpty()) {
-            simpMessagingTemplate.convertAndSend("/topic/posts", newPosts);
+            connectedMoules.send(newPosts);
         }
     }
 

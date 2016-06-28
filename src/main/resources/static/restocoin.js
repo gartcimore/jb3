@@ -1,5 +1,3 @@
-importScripts("/webjars/stomp-websocket/2.3.1-1/stomp.js");
-
 function Restocoin() {
     this.roomsRefreshInterval = {};
 }

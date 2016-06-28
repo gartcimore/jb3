@@ -12,9 +12,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.unix4j.Unix4j;
 
-import im.bci.jb3.logic.Norloge.ParsedNorloges;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
