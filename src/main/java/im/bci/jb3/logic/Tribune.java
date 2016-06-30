@@ -5,7 +5,6 @@ import im.bci.jb3.data.FortuneRepository;
 import im.bci.jb3.data.Post;
 import im.bci.jb3.data.PostRepository;
 import im.bci.jb3.data.PostRevisor;
-import im.bci.jb3.websocket.WebDirectCoinConnectedMoules;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +19,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import im.bci.jb3.websocket.WebDirectCoinConnectedMoules;
 
 @Component
 public class Tribune {

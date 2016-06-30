@@ -5,7 +5,6 @@ import im.bci.jb3.data.Post;
 import im.bci.jb3.data.PostRepository;
 import im.bci.jb3.legacy.LegacyUtils;
 import im.bci.jb3.logic.CleanUtils;
-import im.bci.jb3.websocket.WebDirectCoinConnectedMoules;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.TriggerContext;
+import im.bci.jb3.websocket.WebDirectCoinConnectedMoules;
 
 /**
  *
