@@ -1,6 +1,8 @@
 package im.bci.jb3.logic;
 
 import im.bci.jb3.data.Post;
+import im.bci.jb3.legacy.LegacyUtils;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -149,11 +151,11 @@ public class Norloge {
         return !((this.bouchot == null) ? (other.bouchot != null) : !this.bouchot.equals(other.bouchot));
     }
 
-    private static final DateTimeFormatter norlogePrintFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZoneUTC();
-    private static final DateTimeFormatter norlogeParseFullFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZoneUTC();
-    private static final DateTimeFormatter norlogeParseLongFormatter = DateTimeFormat.forPattern("MM/dd#HH:mm:ss").withZoneUTC();
-    private static final DateTimeFormatter norlogeParseNormalFormatter = DateTimeFormat.forPattern("HH:mm:ss").withZoneUTC();
-    private static final DateTimeFormatter norlogeParseShortFormatter = DateTimeFormat.forPattern("HH:mm").withZoneUTC();
+    private static final DateTimeFormatter norlogePrintFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
+    private static final DateTimeFormatter norlogeParseFullFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
+    private static final DateTimeFormatter norlogeParseLongFormatter = DateTimeFormat.forPattern("MM/dd#HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
+    private static final DateTimeFormatter norlogeParseNormalFormatter = DateTimeFormat.forPattern("HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
+    private static final DateTimeFormatter norlogeParseShortFormatter = DateTimeFormat.forPattern("HH:mm").withZone(LegacyUtils.legacyTimeZone);
     private static final Pattern norlogesPattern = Pattern.compile("((#(?<id>\\w+))|(?<time>(?<date>((?<year>\\d\\d\\d\\d)/)?(?:1[0-2]|0[1-9])/(?:3[0-1]|[1-2][0-9]|0[1-9])#)?((?:2[0-3]|[0-1][0-9])):([0-5][0-9])(:(?<seconds>[0-5][0-9]))?)(?<exp>[¹²³]|[:\\^][1-9]|[:\\^][1-9][0-9])?)(@(?<bouchot>[\\w.]+))?");
 
     public static class ParsedNorloges extends ArrayList<Norloge> {
