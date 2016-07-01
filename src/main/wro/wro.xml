@@ -9,5 +9,8 @@
         <js>/jb3-post-to-html.js</js>
         <js>/jb3-common.js</js>
         <js>/jb3.js</js>
+        <css>/jb3-common.css</css>
+        <css>/jb3-frontend.css</css>
+        <css>/colorbox/colorbox.css</css>
     </group>
 </groups>
