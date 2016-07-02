@@ -8,6 +8,8 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Whitelist;
 
+import net.sf.junidecode.Junidecode;
+
 /**
  *
  * @author devnewton <devnewton@bci.im>
@@ -47,16 +49,29 @@ public class CleanUtils {
 
 	public static String cleanRoom(String room) {
 		if (null != room) {
-			room = Jsoup.clean(room, Whitelist.none());
+			room = bigornozify(room);
 		}
 		return room;
 	}
 
 	public static String cleanNickname(String nickname) {
 		if (null != nickname) {
-			nickname = Jsoup.clean(nickname, Whitelist.none());
+			nickname = bigornozify(nickname);
 		}
+                if(StringUtils.isBlank(nickname)) {
+                    nickname = "AnonymousMussel";
+                }
 		return nickname;
+	}
+	
+	private static String bigornozify(String rawText) {
+		String cleanedRaw = Jsoup.clean(rawText, Whitelist.none());
+		String ascii = Junidecode.unidecode(cleanedRaw);
+		String trimmedAscii = ascii.trim();
+		String underscored = trimmedAscii.replaceAll("\\s+", "_");
+		String dashed = underscored.replaceAll("[^a-zA-Z0-9-_]+", "-");
+		String noDashAtBeginEnd = dashed.replaceAll("^-|-$", "");
+		return noDashAtBeginEnd;
 	}
 
 }
