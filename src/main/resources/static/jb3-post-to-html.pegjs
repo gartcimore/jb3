@@ -26,7 +26,7 @@ norloge
  { return '<span class="jb3-cite jb3-cite-raw" data-ref="' + norloge + '">#' + norloge + '</span>' }
 
 bigorno
- = spaces:$whitespaces bigorno:$[a-zA-Z0-9-_]+ "&lt;" &(whitespaces / [<[])
+ = spaces:$(inputStart / whitespaces) s2:whitespaces? bigorno:$[a-zA-Z0-9-_]+ "&lt;" &(whitespaces / [<[] / !.)
  { return spaces + '<span class="jb3-bigorno">' + bigorno + '&lt;</span>';}
 
 totoz
@@ -34,7 +34,7 @@ totoz
   { return '<a class="jb3-totoz">' + totoz + '</a>' }
   
 whitespaces
- = inputStart / [ \t\r\n] / ! .
+ = [ \t\r\n]
 
 inputStart
  = & { return location().start.offset == 0; }
