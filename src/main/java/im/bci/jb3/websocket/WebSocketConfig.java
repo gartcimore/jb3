@@ -3,6 +3,7 @@ package im.bci.jb3.websocket;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -11,6 +12,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.server.HandshakeInterceptor;
+import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
@@ -23,6 +25,16 @@ public class WebSocketConfig  implements WebSocketConfigurer {
     
     @Autowired
     private WebDirectCoinHandler webSocketHandler;
+    
+    @Bean
+    public ServletServerContainerFactoryBean createWebSocketContainer() {
+        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
+        container.setMaxTextMessageBufferSize(8192);
+        container.setMaxBinaryMessageBufferSize(8192);
+        container.setMaxSessionIdleTimeout(60 * 1000);
+        container.setAsyncSendTimeout(60 * 1000);
+        return container;
+    }
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {

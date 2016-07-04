@@ -18,6 +18,8 @@ import org.springframework.web.socket.WebSocketSession;
 @Component
 public class WebDirectCoinConnectedMoules {
 
+    private static final TextMessage ACK_PRESENCE_MESSAGE = new TextMessage("[]");
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -48,5 +50,9 @@ public class WebDirectCoinConnectedMoules {
             throws JsonProcessingException, IOException {
         String payload = objectMapper.writeValueAsString(posts);
         moule.sendMessage(new TextMessage(payload));
+    }
+
+    public void ackMoulePresence(WebSocketSession moule) throws IOException {
+        moule.sendMessage(ACK_PRESENCE_MESSAGE);
     }
 }
