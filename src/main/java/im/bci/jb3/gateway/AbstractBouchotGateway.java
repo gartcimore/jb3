@@ -84,10 +84,10 @@ public abstract class AbstractBouchotGateway implements Gateway, SchedulableGate
                 Post post = new Post();
                 post.setGatewayPostId(gatewayPostId);
                 post.setMessage(legacyUtils.convertFromLegacyNorloges(config.getRoom(),
-                        CleanUtils.cleanMessage(decodeTags(postToImport.select("message").first()))));
+                        CleanUtils.cleanMessage(CleanUtils.truncateMessage(decodeTags(postToImport.select("message").first())))));
                 String nickname = decodeTags(postToImport.select("login").first());
                 if (StringUtils.isBlank(nickname)) {
-                    nickname = decodeTags(postToImport.select("info").first());
+                    nickname = CleanUtils.truncateNickname(decodeTags(postToImport.select("info").first()));
                 }
                 post.setNickname(CleanUtils.cleanNickname(nickname));
                 post.setRoom(config.getRoom());
