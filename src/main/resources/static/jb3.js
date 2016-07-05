@@ -8,9 +8,9 @@ jb3 = {
         self.newMessages = [];
         self.messagesContainer = document.getElementById('jb3-posts');
         self.hiddenMessagesContainer = document.getElementById('jb3-hidden-posts');
-        var controlsMessage = $('#jb3-controls-message');
+        self.controlsMessage = $('#jb3-controls-message');
         self.controlsRoom = $('#jb3-controls-room');
-        var controlsNickname = $('#jb3-controls-nickname');
+        self.controlsNickname = $('#jb3-controls-nickname');
         var rooms = jb3_common.getRooms();
         self.rooms = {};
         self.rooms[self.controlsRoom.val()] = {};
@@ -37,23 +37,24 @@ jb3 = {
             selectedRoomPosts.appendTo(self.messagesContainer);
             self.scrollPostsContainerToBottom();
         });
-        controlsMessage.bind('keypress', function (event) {
+        self.controlsMessage.bind('keypress', function (event) {
             if (event.altKey) {
                 if (self.handleAltShortcut(event.key)) {
                     event.stopPropagation();
                     event.preventDefault();
                 }
             } else if (event.keyCode === 13) {
-                var selectedRoom = self.controlsRoom.val();
-                self.postMessage(controlsNickname.val(), controlsMessage.val(), selectedRoom, self.rooms[selectedRoom].auth);
-                controlsMessage.val('');
+            	self.postCurrentMessage();
             }
+        });
+        $("#jb3-controls-message-container button").click(function() {
+        	self.postCurrentMessage();
         });
         $('#jb3-posts').on('click', '.jb3-post-time', function (e) {
             var postId = $(e.target).parent().attr('id');
             if (postId) {
-                controlsMessage.val(controlsMessage.val() + '#' + postId + ' ');
-                controlsMessage.focus();
+                self.controlsMessage.val(self.controlsMessage.val() + '#' + postId + ' ');
+                self.controlsMessage.focus();
             }
         });
         $('#jb3-posts').on({
@@ -118,6 +119,11 @@ jb3 = {
         self.coin.postMessage({type: "connect", url: url.toString()});
         self.updateMessages();
     },
+    postCurrentMessage: function() {
+        var selectedRoom = this.controlsRoom.val();
+        this.postMessage(this.controlsNickname.val(), this.controlsMessage.val(), selectedRoom, this.rooms[selectedRoom].auth);
+        this.controlsMessage.val('');
+    },
     updateMessages: function () {
         var self = this;
         self.onNewMessages(self.newMessages.splice(0, 500));
@@ -148,21 +154,21 @@ jb3 = {
     norlogeFormat: "HH:mm:ss",
     norlogeFullFormat: "YYYY/MM/DD#HH:mm:ss",
     initNickname: function () {
-        var controlsNickname = $('#jb3-controls-nickname');
+    	var self = this;
         if (localStorage.nickname) {
-            controlsNickname.val(localStorage.nickname);
+            self.controlsNickname.val(localStorage.nickname);
         } else {
             $.ajax({
                 type: "POST",
                 url: "/api/random-nickname",
                 success: function (data) {
                     localStorage.nickname = data.nickname;
-                    controlsNickname.val(localStorage.nickname);
+                    self.controlsNickname.val(localStorage.nickname);
                 }
             });
         }
-        controlsNickname.change(function () {
-            localStorage.nickname = controlsNickname.val();
+        self.controlsNickname.change(function () {
+            localStorage.nickname = self.controlsNickname.val();
         });
     },
     highlightPostAndReplies: function (postId, showPopup) {

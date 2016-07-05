@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <groups xmlns="http://www.isdc.ro/wro">
-    <group name="jb3">
-        <js>classpath:META-INF/resources/webjars/jquery/2.1.1/jquery.js</js>
-        <js>classpath:META-INF/resources/webjars/jquery-colorbox/1.6.3/jquery.colorbox.js</js>
-        <js>classpath:META-INF/resources/webjars/handlebars/4.0.2/handlebars.js</js>
-        <js>classpath:META-INF/resources/webjars/URI.js/1.14.1/URI.js</js>
-        <js>classpath:META-INF/resources/webjars/momentjs/2.8.3/moment.js</js>
-        <js>/jb3-post-to-html.js</js>
-        <js>/jb3-common.js</js>
-        <js>/jb3.js</js>
-        <css>/jb3-common.css</css>
-        <css>/jb3-frontend.css</css>
-        <css>/colorbox/colorbox.css</css>
-    </group>
+	<group name="jb3">
+		<js>classpath:META-INF/resources/webjars/jquery/2.1.1/jquery.js</js>
+		<js>classpath:META-INF/resources/webjars/jquery-colorbox/1.6.3/jquery.colorbox.js
+		</js>
+		<js>classpath:META-INF/resources/webjars/handlebars/4.0.2/handlebars.js
+		</js>
+		<js>classpath:META-INF/resources/webjars/URI.js/1.14.1/URI.js</js>
+		<js>classpath:META-INF/resources/webjars/momentjs/2.8.3/moment.js</js>
+		<js>/jb3-post-to-html.js</js>
+		<js>/jb3-common.js</js>
+		<js>/jb3.js</js>
+		<css>classpath:META-INF/resources/webjars/blaze/2.6.0/dist/blaze.min.css
+		</css>
+		<css>/jb3-common.css</css>
+		<css>/jb3-frontend.css</css>
+		<css>/colorbox/colorbox.css</css>
+	</group>
 </groups>
