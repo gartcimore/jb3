@@ -44,6 +44,11 @@
     padding: 2px;
 }
 
+#jb3-roster .c-menu {
+	max-height: 100%;
+	
+}
+
 #jb3-controls {
     display: flex;
     flex-flow: row wrap;
@@ -58,18 +63,23 @@
 
 #jb3-controls-message-container {
     flex: 1 1 auto;
+    margin-right:2px;
 }
 
 #jb3-post-popup {
-    display: flex;
-    justify-content: center;
-    width: 100%;
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
     margin: 0;
     height: 1.5em;
+    display: flex;
+    justify-content: center;
     flex: 1 1 auto;
 }
 
 #jb3-post-popup-content {
-    background-color: #CCCCCC;
+    background-color: #f3f3f3;
+    border-radius: 4px;
 }
 
