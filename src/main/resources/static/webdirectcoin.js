@@ -15,11 +15,11 @@ Webdirectcoin.prototype.initWebsocket = function(url) {
 	}
 };
 
-Webdirectcoin.prototype.presenceMessage = JSON.stringify({
+Webdirectcoin.prototype.presenceMessage = {
 	presence : {
 		status : "plop"
 	}
-});
+};
 
 Webdirectcoin.prototype.connectWebsocket = function() {
 	var self = this;
@@ -31,7 +31,7 @@ Webdirectcoin.prototype.connectWebsocket = function() {
 			type : "connected"
 		});
 		self.presenceInterval = setInterval(function() {
-			self.client.send(self.presenceMessage);
+			self.client.send(JSON.stringify(self.presenceMessage));
 		}, self.presenceDelay);
 	}
 	this.client.onerror = function(event) {
@@ -41,11 +41,20 @@ Webdirectcoin.prototype.connectWebsocket = function() {
 		self.reconnect();
 	}
 	this.client.onmessage = function(event) {
-		postMessage({
-			type : "posts",
-			posts : JSON.parse(event.data)
-		});
-	}
+                var message = JSON.parse(event.data);
+                if(Array.isArray(message)) {
+                    postMessage({
+                            type : "posts",
+                            posts : message
+                    });
+                } else if(message.presence){
+                    postMessage({
+                            type : "presence",
+                            mouleId : message.mouleId,
+                            presence: message.presence
+                    });
+                }
+            };
 };
 
 Webdirectcoin.prototype.reconnect = function() {
@@ -65,6 +74,9 @@ Webdirectcoin.prototype.onmessage = function(event) {
 			this.client.send(JSON.stringify(message));
 		}
 		break;
+        case "nickname":
+            this.presenceMessage.presence.nickname = event.data.nickname;
+            break;        
 	case "connect":
 		this.initWebsocket(event.data.url);
 		break;

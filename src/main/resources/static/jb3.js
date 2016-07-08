@@ -139,7 +139,11 @@ jb3 = {
                 break;
             case "connected":
                 self.refreshMessages();
+                self.coin.postMessage({type: "nickname", nickname: localStorage.nickname});
                 break;
+            case "presence":
+            	self.updateMoulePresence(event.data);
+            	break;
             case "webdirectcoin_not_available":
                 console.log("webdirectcoin is not available, use restocoin instead");
                 self.coin.terminate();
@@ -169,6 +173,7 @@ jb3 = {
         }
         self.controlsNickname.change(function () {
             localStorage.nickname = self.controlsNickname.val();
+            self.coin.postMessage({type: "nickname", nickname: localStorage.nickname});
         });
     },
     highlightPostAndReplies: function (postId, showPopup) {
@@ -208,6 +213,12 @@ jb3 = {
         var postContainer = $('#jb3-posts-container');
         postContainer.scrollTop(postContainer.prop("scrollHeight"));
     },
+    updateMoulePresence: function(presenceMsg) {
+    	$('#moule-' + presenceMsg.mouleId).remove();
+    	if(presenceMsg.presence.nickname) {
+    		$('#moules').append('<li id="moule-'+ presenceMsg.mouleId + '" class="c-list__item">'+presenceMsg.presence.nickname+'<li>');
+    	}
+	},
     onNewMessages: function (data) {
         if (data && data.length > 0) {
             var self = this;

@@ -4,7 +4,7 @@ public class WebDirectCoinRQ {
 	
 	private GetRQ get;
 	private PostRQ post;
-	private PresenceRQ presence;
+	private Presence presence;
 
 	public GetRQ getGet() {
 		return get;
@@ -22,11 +22,11 @@ public class WebDirectCoinRQ {
 		this.post = post;
 	}
 
-	public PresenceRQ getPresence() {
+	public Presence getPresence() {
 		return presence;
 	}
 
-	public void setPresence(PresenceRQ presence) {
+	public void setPresence(Presence presence) {
 		this.presence = presence;
 	}
 

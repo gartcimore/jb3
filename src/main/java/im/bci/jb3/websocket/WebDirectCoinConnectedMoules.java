@@ -6,6 +6,7 @@ import im.bci.jb3.bot.AbstractChatterBot;
 import java.util.List;
 
 import im.bci.jb3.data.Post;
+import im.bci.jb3.websocket.messages.PresenceMsg;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,8 +43,10 @@ public class WebDirectCoinConnectedMoules {
         moules.put(session, session.getId());
     }
 
-    void remove(WebSocketSession session) {
-        moules.remove(session);
+    void remove(WebSocketSession moule) throws JsonProcessingException {
+        Presence presence = new Presence();
+        notifyPresence(moule, presence);
+        moules.remove(moule);
     }
 
     void sendPostsToMoule(WebSocketSession moule, List<Post> posts)
@@ -52,7 +55,25 @@ public class WebDirectCoinConnectedMoules {
         moule.sendMessage(new TextMessage(payload));
     }
 
-    public void ackMoulePresence(WebSocketSession moule) throws IOException {
+    public void ackMoulePresence(WebSocketSession moule, Presence presence) throws IOException {
+        moule.getAttributes().put("moule-presence", presence);
+        notifyPresence(moule, presence);
         moule.sendMessage(ACK_PRESENCE_MESSAGE);
+    }
+
+    private void notifyPresence(WebSocketSession moule, Presence presence) throws JsonProcessingException {
+        PresenceMsg msg = new PresenceMsg();
+        msg.setMouleId(moule.getId());
+        msg.setPresence(presence);
+        TextMessage message = new TextMessage(objectMapper.writeValueAsString(msg));
+        for (WebSocketSession m : moules.keySet()) {
+            try {
+                if (null != m && !m.getId().equals(moule.getId())) {
+                    m.sendMessage(message);
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(AbstractChatterBot.class.getName()).log(Level.WARNING, null, ex);
+            }
+        }
     }
 }

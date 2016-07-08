@@ -63,8 +63,8 @@ public class WebDirectCoinHandler extends TextWebSocketHandler {
         }
     }
 
-    private void presence(WebSocketSession moule, PresenceRQ readValue) throws IOException {
-        moules.ackMoulePresence(moule);
+    private void presence(WebSocketSession moule, Presence presence) throws IOException {
+        moules.ackMoulePresence(moule, presence);
     }
 
     private void get(WebSocketSession moule, GetRQ rq) throws IOException {
