@@ -2,7 +2,6 @@ package im.bci.jb3.websocket;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import im.bci.jb3.bot.AbstractChatterBot;
 import java.util.List;
 
 import im.bci.jb3.data.Post;
@@ -33,7 +32,7 @@ public class WebDirectCoinConnectedMoules {
                     sendPostsToMoule(moule, posts);
                 }
             } catch (Exception ex) {
-                Logger.getLogger(AbstractChatterBot.class.getName()).log(Level.WARNING, null, ex);
+                Logger.getLogger(getClass().getName()).log(Level.WARNING, null, ex);
             }
         }
 
@@ -72,7 +71,7 @@ public class WebDirectCoinConnectedMoules {
                     m.sendMessage(message);
                 }
             } catch (Exception ex) {
-                Logger.getLogger(AbstractChatterBot.class.getName()).log(Level.WARNING, null, ex);
+                Logger.getLogger(getClass().getName()).log(Level.WARNING, null, ex);
             }
         }
     }
