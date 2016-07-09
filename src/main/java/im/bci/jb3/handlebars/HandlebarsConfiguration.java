@@ -16,12 +16,15 @@ public class HandlebarsConfiguration {
     @Autowired
     private HandlebarsViewResolver handlebarsViewResolver;
     
+    @Autowired
+    private RawIncludeHelper rawIncludeHelper;
+    
     @Value("${jb3.wro}")
     private boolean useWro;
     
     @PostConstruct
     public void configure() {
     	handlebarsViewResolver.getAttributesMap().put("jb3UseWro", useWro);
-        handlebarsViewResolver.registerHelper("raw-include", RawIncludeHelper.INSTANCE);
+        handlebarsViewResolver.registerHelper("raw-include", rawIncludeHelper);
     }
 }

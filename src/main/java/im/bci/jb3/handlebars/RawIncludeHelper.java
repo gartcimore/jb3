@@ -5,13 +5,14 @@ import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
 import java.io.IOException;
 
+import org.springframework.stereotype.Component;
+
 /**
  *
  * @author devnewton
  */
+@Component
 public class RawIncludeHelper implements Helper<String> {
-
-    public static final RawIncludeHelper INSTANCE = new RawIncludeHelper();
 
     @Override
     public CharSequence apply(String file, Options options) throws IOException {
