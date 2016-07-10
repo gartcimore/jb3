@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <groups xmlns="http://www.isdc.ro/wro">
-	<group name="jb3">
+	<group name="index">
 		<js>classpath:META-INF/resources/webjars/jquery/2.1.1/jquery.js</js>
 		<js>classpath:META-INF/resources/webjars/jquery-colorbox/1.6.3/jquery.colorbox.js
 		</js>

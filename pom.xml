@@ -159,8 +159,8 @@
 							<cssDestinationFolder>${project.build.directory}/classes/static/wro</cssDestinationFolder>
 							<jsDestinationFolder>${project.build.directory}/classes/static/wro</jsDestinationFolder>
 							<contextFolder>${basedir}/src/main/resources/static</contextFolder>
-							<wroFile>${basedir}/src/main/wro/wro.xml</wroFile>
-							<extraConfigFile>${basedir}/src/main/wro/wro.properties</extraConfigFile>
+							<wroFile>${basedir}/src/main/resources/wro/wro.xml</wroFile>
+							<extraConfigFile>${basedir}/src/main/resources/wro/wro.properties</extraConfigFile>
 							<ignoreMissingResources>false</ignoreMissingResources>
 						</configuration>
 						<goals>
