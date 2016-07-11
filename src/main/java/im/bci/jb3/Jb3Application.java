@@ -13,15 +13,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
 @Configuration
 @EnableAutoConfiguration
 @EnableAsync
 @ComponentScan
 @EnableSpringDataWebSupport
 @EnableScheduling
-@EnableSwagger2
 public class Jb3Application implements CommandLineRunner {
 
     @Override
