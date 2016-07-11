@@ -133,26 +133,19 @@ jb3 = {
     },
     onCoinMessage: function (event) {
         var self = this;
-        switch (event.data.type) {
-            case "posts":
-                self.newMessages = self.newMessages.concat(event.data.posts);
-                break;
-            case "connected":
-                self.refreshMessages();
-                self.coin.postMessage({type: "nickname", nickname: localStorage.nickname});
-                break;
-            case "presence":
-            	self.updateMoulePresence(event.data);
-            	break;
-            case "webdirectcoin_not_available":
-                console.log("webdirectcoin is not available, use restocoin instead");
-                self.coin.terminate();
-                self.coin = new Worker("/restocoin.js");
-                self.coin.onmessage = function (event) {
-                    self.onCoinMessage(event);
-                };
-                self.coin.postMessage({type: "connect"});
-                break;
+        var message = event.data;
+        if(message.posts) {
+        	self.newMessages = self.newMessages.concat(message.posts);
+        }
+        if(message.connected) {
+            self.refreshMessages();
+            self.coin.postMessage({type: "nickname", nickname: localStorage.nickname});        	
+        }
+        if(message.presence) {
+        	self.updateMoulePresence(message.presence);
+        }
+        if(message.webdirectcoin_not_available) {
+        	console.log("webdirectcoin is not available");
         }
     },
     norlogeFormat: "HH:mm:ss",

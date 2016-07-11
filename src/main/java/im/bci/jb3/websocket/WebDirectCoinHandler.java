@@ -21,6 +21,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import im.bci.jb3.data.Post;
 import im.bci.jb3.data.PostRepository;
 import im.bci.jb3.logic.TribuneService;
+import im.bci.jb3.websocket.messages.MessageC2S;
+import im.bci.jb3.websocket.messages.c2s.GetC2S;
+import im.bci.jb3.websocket.messages.c2s.PostC2S;
+import im.bci.jb3.websocket.messages.data.Presence;
 
 @Component
 public class WebDirectCoinHandler extends TextWebSocketHandler {
@@ -51,7 +55,7 @@ public class WebDirectCoinHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        WebDirectCoinRQ webDirectCoinMessage = objectMapper.readValue(message.getPayload(), WebDirectCoinRQ.class);
+        MessageC2S webDirectCoinMessage = objectMapper.readValue(message.getPayload(), MessageC2S.class);
         if (null != webDirectCoinMessage.getGet()) {
             get(session, webDirectCoinMessage.getGet());
         }
@@ -67,7 +71,7 @@ public class WebDirectCoinHandler extends TextWebSocketHandler {
         moules.ackMoulePresence(moule, presence);
     }
 
-    private void get(WebSocketSession moule, GetRQ rq) throws IOException {
+    private void get(WebSocketSession moule, GetC2S rq) throws IOException {
         DateTime end = DateTime.now(DateTimeZone.UTC).plusHours(1);
         DateTime start = end.minus(postsGetPeriod);
         List<Post> posts = postRepository.findPosts(start, end, rq.getRoom());
@@ -75,7 +79,7 @@ public class WebDirectCoinHandler extends TextWebSocketHandler {
         return;
     }
 
-    private void post(WebSocketSession session, PostRQ rq) {
+    private void post(WebSocketSession session, PostC2S rq) {
         UriComponentsBuilder uriBuilder = (UriComponentsBuilder) session.getAttributes()
                 .get(WebDirectCoinSessionAttributes.URI_BUILDER);
         tribune.post(rq.getNickname(), rq.getMessage(), rq.getRoom(), rq.getAuth(), uriBuilder);

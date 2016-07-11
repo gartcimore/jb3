@@ -1,12 +1,12 @@
-package im.bci.jb3.websocket.messages;
+package im.bci.jb3.websocket.messages.s2c;
 
-import im.bci.jb3.websocket.Presence;
+import im.bci.jb3.websocket.messages.data.Presence;
 
 /**
  *
  * @author devnewton
  */
-public class PresenceMsg {
+public class PresenceS2C {
 
     private String mouleId;
     private Presence presence;

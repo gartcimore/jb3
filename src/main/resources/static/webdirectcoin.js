@@ -10,7 +10,7 @@ Webdirectcoin.prototype.initWebsocket = function(url) {
 		this.connectWebsocket();
 	} else {
 		postMessage({
-			type : "webdirectcoin_not_available"
+			webdirectcoin_not_available: true
 		});
 	}
 };
@@ -28,7 +28,7 @@ Webdirectcoin.prototype.connectWebsocket = function() {
 	this.client.onopen = function(event) {
 		console.log("webdirectcoin connected");
 		postMessage({
-			type : "connected"
+			connected: true
 		});
 		self.presenceInterval = setInterval(function() {
 			self.client.send(JSON.stringify(self.presenceMessage));
@@ -42,18 +42,7 @@ Webdirectcoin.prototype.connectWebsocket = function() {
 	}
 	this.client.onmessage = function(event) {
                 var message = JSON.parse(event.data);
-                if(Array.isArray(message)) {
-                    postMessage({
-                            type : "posts",
-                            posts : message
-                    });
-                } else if(message.presence){
-                    postMessage({
-                            type : "presence",
-                            mouleId : message.mouleId,
-                            presence: message.presence
-                    });
-                }
+                postMessage(message);
             };
 };
 

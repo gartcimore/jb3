@@ -5,10 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 
 import im.bci.jb3.data.Post;
-import im.bci.jb3.websocket.messages.PresenceMsg;
+import im.bci.jb3.websocket.messages.MessageS2C;
+import im.bci.jb3.websocket.messages.data.Presence;
+import im.bci.jb3.websocket.messages.s2c.PresenceS2C;
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ConcurrentReferenceHashMap;
@@ -18,24 +24,38 @@ import org.springframework.web.socket.WebSocketSession;
 @Component
 public class WebDirectCoinConnectedMoules {
 
-    private static final TextMessage ACK_PRESENCE_MESSAGE = new TextMessage("[]");
-
     @Autowired
     private ObjectMapper objectMapper;
+
+    private TextMessage ackMessage;
+
+    @PostConstruct
+    public void setup() throws JsonProcessingException {
+        MessageS2C message = new MessageS2C();
+        message.setAck("k");
+        ackMessage = new TextMessage(objectMapper.writeValueAsString(message));
+    }
 
     private ConcurrentReferenceHashMap<WebSocketSession, String> moules = new ConcurrentReferenceHashMap<WebSocketSession, String>();
 
     public void send(List<Post> posts) {
-        for (WebSocketSession moule : moules.keySet()) {
-            try {
-                if (null != moule) {
-                    sendPostsToMoule(moule, posts);
+        try {
+            MessageS2C messageS2C = new MessageS2C();
+            messageS2C.setPosts(posts);
+            String payload = objectMapper.writeValueAsString(messageS2C);
+            TextMessage message = new TextMessage(payload);
+            for (WebSocketSession moule : moules.keySet()) {
+                try {
+                    if (null != moule) {
+                        moule.sendMessage(message);
+                    }
+                } catch (Exception ex) {
+                    Logger.getLogger(getClass().getName()).log(Level.WARNING, null, ex);
                 }
-            } catch (Exception ex) {
-                Logger.getLogger(getClass().getName()).log(Level.WARNING, null, ex);
             }
+        } catch (Exception ex) {
+            Logger.getLogger(getClass().getName()).log(Level.WARNING, null, ex);
         }
-
     }
 
     void add(WebSocketSession session) {
@@ -48,23 +68,26 @@ public class WebDirectCoinConnectedMoules {
         moules.remove(moule);
     }
 
-    void sendPostsToMoule(WebSocketSession moule, List<Post> posts)
-            throws JsonProcessingException, IOException {
-        String payload = objectMapper.writeValueAsString(posts);
+    void sendPostsToMoule(WebSocketSession moule, List<Post> posts) throws JsonProcessingException, IOException {
+        MessageS2C message = new MessageS2C();
+        message.setPosts(posts);
+        String payload = objectMapper.writeValueAsString(message);
         moule.sendMessage(new TextMessage(payload));
     }
 
     public void ackMoulePresence(WebSocketSession moule, Presence presence) throws IOException {
         moule.getAttributes().put("moule-presence", presence);
         notifyPresence(moule, presence);
-        moule.sendMessage(ACK_PRESENCE_MESSAGE);
+        moule.sendMessage(ackMessage);
     }
 
     private void notifyPresence(WebSocketSession moule, Presence presence) throws JsonProcessingException {
-        PresenceMsg msg = new PresenceMsg();
-        msg.setMouleId(moule.getId());
-        msg.setPresence(presence);
-        TextMessage message = new TextMessage(objectMapper.writeValueAsString(msg));
+        PresenceS2C presenceS2C = new PresenceS2C();
+        presenceS2C.setMouleId(moule.getId());
+        presenceS2C.setPresence(presence);
+        MessageS2C messageS2C = new MessageS2C();
+        messageS2C.setPresence(presenceS2C);
+        TextMessage message = new TextMessage(objectMapper.writeValueAsString(messageS2C));
         for (WebSocketSession m : moules.keySet()) {
             try {
                 if (null != m && !m.getId().equals(moule.getId())) {

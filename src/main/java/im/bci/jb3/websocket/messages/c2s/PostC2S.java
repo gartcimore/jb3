@@ -1,10 +1,10 @@
-package im.bci.jb3.websocket;
+package im.bci.jb3.websocket.messages.c2s;
 
 /**
  *
  * @author devnewton <devnewton@bci.im>
  */
-public class PostRQ {
+public class PostC2S {
 
     private String nickname;
     private String message;

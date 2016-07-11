@@ -1,4 +1,4 @@
-package im.bci.jb3.websocket;
+package im.bci.jb3.websocket.messages.data;
 
 public class Presence {
 

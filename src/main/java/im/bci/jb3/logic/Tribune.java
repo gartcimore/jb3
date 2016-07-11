@@ -19,6 +19,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import im.bci.jb3.websocket.WebDirectCoinConnectedMoules;
 
 @Component
@@ -127,7 +130,7 @@ public class Tribune {
 		return Collections.emptyList();
 	}
 
-	public void revise(PostRevisor revisor, Post post, String newMessage) {
+	public void revise(PostRevisor revisor, Post post, String newMessage) throws JsonProcessingException {
 		if (revisor.canRevise(post) && StringUtils.isNotBlank(newMessage)) {
 			post.revise(CleanUtils.truncateMessage(newMessage));
 			postPepository.save(post);

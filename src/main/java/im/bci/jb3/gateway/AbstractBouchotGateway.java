@@ -25,6 +25,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.TriggerContext;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import im.bci.jb3.websocket.WebDirectCoinConnectedMoules;
 
 /**
@@ -69,7 +72,7 @@ public abstract class AbstractBouchotGateway implements Gateway, SchedulableGate
         }
     }
 
-    private synchronized void parsePosts(Document doc) {
+    private synchronized void parsePosts(Document doc) throws JsonProcessingException {
         System.out.println(DateTime.now() + " " + getClass().getName() + " refresh");
         Elements postsToImport = doc.select("post");
         ArrayList<Post> newPosts = new ArrayList<Post>();

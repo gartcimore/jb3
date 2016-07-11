@@ -1,10 +1,10 @@
-package im.bci.jb3.websocket;
+package im.bci.jb3.websocket.messages.c2s;
 
 /**
  *
  * @author devnewton <devnewton@bci.im>
  */
-public class GetRQ {
+public class GetC2S {
 
     private String room;
 
