@@ -23,6 +23,7 @@ import im.bci.jb3.data.PostRepository;
 import im.bci.jb3.logic.TribuneService;
 import im.bci.jb3.websocket.messages.MessageC2S;
 import im.bci.jb3.websocket.messages.c2s.GetC2S;
+import im.bci.jb3.websocket.messages.c2s.GetNorlogeC2S;
 import im.bci.jb3.websocket.messages.c2s.PostC2S;
 import im.bci.jb3.websocket.messages.data.Presence;
 
@@ -64,6 +65,16 @@ public class WebDirectCoinHandler extends TextWebSocketHandler {
         }
         if (null != webDirectCoinMessage.getPresence()) {
             presence(session, webDirectCoinMessage.getPresence());
+        }
+        if(null != webDirectCoinMessage.getGetNorloge()) {
+            getNorloge(session, webDirectCoinMessage.getGetNorloge());
+        }
+    }
+
+    private void getNorloge(WebSocketSession moule, GetNorlogeC2S getNorloge) throws IOException {
+        Post post = postRepository.findOne(getNorloge.getMessageId());
+        if(null != post) {
+            moules.sendNorloge(moule, post);
         }
     }
 

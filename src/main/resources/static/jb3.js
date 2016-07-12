@@ -147,6 +147,9 @@ jb3 = {
         if(message.webdirectcoin_not_available) {
         	console.log("webdirectcoin is not available");
         }
+        if(message.norloge) {
+        	self.updateCite(message.norloge);
+        }
     },
     norlogeFormat: "HH:mm:ss",
     norlogeFullFormat: "YYYY/MM/DD#HH:mm:ss",
@@ -264,23 +267,7 @@ jb3 = {
                 cite.text(citedNorloge.text());
                 cite.removeClass('jb3-cite-raw');
             } else {
-                var request = new XMLHttpRequest();
-                request.onreadystatechange = function () {
-                    if (this.readyState === 4 && this.status === 200) {
-                    	try {
-	                        var message = JSON.parse(this.responseText);
-	                        cite.text(moment(message.time).format(self.norlogeFullFormat));
-                    	} catch(e){
-                    		cite.removeClass('jb3-cite');
-                    	}
-                    	finally {
-	                        cite.removeClass('jb3-cite-raw');
-                    	}
-                    }
-                };
-                request.open('GET', "/restocoin/get/" + postId, true);
-                request.overrideMimeType('application/json');
-                request.send();
+                self.coin.postMessage({type: "send", destination: "getNorloge", body: { messageId: postId } });
             }
             if (cited.hasClass('jb3-post-is-mine')) {
                 cited.addClass('jb3-cited-by-me');
@@ -343,6 +330,14 @@ jb3 = {
         control.value = control.value.substring(0, control.selectionStart) + text + control.value.substr(control.selectionEnd);
         control.focus();
         control.setSelectionRange(selectionEnd, selectionEnd);
+    },
+    updateCite: function(norloge) {
+    	var self = this;
+    	$(".jb3-cite-raw[data-ref='" + norloge.messageId + "']").each(function(){
+    		var cite = $(this);
+            cite.text(moment(norloge.time).format(self.norlogeFullFormat));
+            cite.removeClass('jb3-cite-raw');
+    	} );
     }
 };
 jb3.init();

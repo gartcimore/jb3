@@ -3,6 +3,7 @@ package im.bci.jb3.websocket.messages;
 import java.util.List;
 
 import im.bci.jb3.data.Post;
+import im.bci.jb3.websocket.messages.s2c.NorlogeS2C;
 import im.bci.jb3.websocket.messages.s2c.PresenceS2C;
 
 public class MessageS2C {
@@ -10,6 +11,7 @@ public class MessageS2C {
     private List<Post> posts;
     private PresenceS2C presence;
     private String ack;
+    private NorlogeS2C norloge;
 
     public List<Post> getPosts() {
         return posts;
@@ -33,6 +35,14 @@ public class MessageS2C {
 
     public void setAck(String ack) {
         this.ack = ack;
+    }
+
+    public NorlogeS2C getNorloge() {
+        return norloge;
+    }
+
+    public void setNorloge(NorlogeS2C norloge) {
+        this.norloge = norloge;
     }
 
 }

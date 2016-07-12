@@ -7,6 +7,7 @@ import java.util.List;
 import im.bci.jb3.data.Post;
 import im.bci.jb3.websocket.messages.MessageS2C;
 import im.bci.jb3.websocket.messages.data.Presence;
+import im.bci.jb3.websocket.messages.s2c.NorlogeS2C;
 import im.bci.jb3.websocket.messages.s2c.PresenceS2C;
 
 import java.io.IOException;
@@ -97,5 +98,15 @@ public class WebDirectCoinConnectedMoules {
                 Logger.getLogger(getClass().getName()).log(Level.WARNING, null, ex);
             }
         }
+    }
+
+    public void sendNorloge(WebSocketSession moule, Post post) throws IOException {
+        MessageS2C message = new MessageS2C();
+        NorlogeS2C norloge = new NorlogeS2C();
+        norloge.setMessageId(post.getId());
+        norloge.setTime(post.getTime());
+        message.setNorloge(norloge);
+        String payload = objectMapper.writeValueAsString(message);
+        moule.sendMessage(new TextMessage(payload));
     }
 }
