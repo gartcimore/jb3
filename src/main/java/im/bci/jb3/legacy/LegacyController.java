@@ -2,7 +2,7 @@ package im.bci.jb3.legacy;
 
 import im.bci.jb3.data.Post;
 import im.bci.jb3.data.PostRepository;
-import im.bci.jb3.logic.TribuneService;
+import im.bci.jb3.logic.UserPostHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class LegacyController {
 
     @Autowired
-    private TribuneService tribune;
+    private UserPostHandler tribune;
 
     @Autowired
     private PostRepository postPepository;

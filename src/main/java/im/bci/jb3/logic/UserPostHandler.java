@@ -12,7 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * @author devnewton <devnewton@bci.im>
  */
 @Component
-public class TribuneService {
+public class UserPostHandler {
 
     @Autowired
     private Bots bots;
