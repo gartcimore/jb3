@@ -1,36 +1,39 @@
-jb3_rooms = {
-    init: function () {
-        var records = jb3_common.getRooms();
-        $('#jb3-rooms-grid').w2grid({
-            name: 'Rooms',
-            header: 'List of rooms',
-            fixedBody: false,
-            show: {
-                toolbar: true,
-                toolbarAdd: true,
-                toolbarEdit: true,
-                toolbarDelete: true,
-                toolbarSave: true,
-                footer: true
-            },
-            columns: [
-                {field: 'rname', caption: 'Name', size: '20%', editable: {type: 'text'}},
-                {field: 'rlogin', caption: 'Login', size: '20%', editable: {type: 'text'}},
-                {field: 'rauth', caption: 'Auth', size: '80%', editable: {type: 'text'}}
-            ],
-            records: records,
-            onAdd: function () {
-                var recid = 1;
-                if (this.records.length > 0) {
-                    recid = (Math.max.apply(Math, this.find({}))) + 1;
-                }
-                this.add({recid: recid, rname: "room_" + recid});
-            }
-        }).on({type: 'submit', execute: 'after'}, function () {
-            localStorage.rooms = JSON.stringify(this.records);
-        });
+function Jb3Rooms() {
+	var self = this;
+	self.rooms = jb3_common.getRooms();
+	riot.observable(self);
+	var roomList = riot.mount('jb3-rooms-list', {store: self})[0];
+	var roomEditor = riot.mount('jb3-room-editor')[0];
 
+	roomList.on('select-room', function(room) {
+		roomEditor.trigger('edit-room', room);
+	});
 
-    }
-};
-jb3_rooms.init();
+	roomEditor.on('save-room', function(savedRoom) {
+		self.rooms = jb3_common.getRooms();
+		var existingIndex = self.rooms.findIndex(function(r) {
+			return r.rname == savedRoom.rname;
+		});
+		if(existingIndex >= 0) {
+			self.rooms[existingIndex] = savedRoom;
+		} else {
+			self.rooms.push(savedRoom);
+		}
+		self.rooms.sort(function(a, b) {
+			return a.rname.localeCompare(b.rname);
+		});
+		localStorage.rooms = JSON.stringify(self.rooms);
+		roomList.update();
+		roomEditor.update();
+	});
+	
+	roomEditor.on('delete-room', function(roomToDelete) {
+		self.rooms = jb3_common.getRooms().filter(function(r) {
+			return r.rname != roomToDelete.rname;
+		});
+		localStorage.rooms = JSON.stringify(self.rooms);
+		roomList.update();
+		roomEditor.update();
+	});
+}
+new Jb3Rooms();

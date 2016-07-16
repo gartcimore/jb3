@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <groups xmlns="http://www.isdc.ro/wro">
 	<group name="index">
-		<js>classpath:META-INF/resources/webjars/jquery/2.1.1/jquery.js</js>
+		<js>classpath:META-INF/resources/webjars/jquery/3.0.0/jquery.js</js>
 		<js>classpath:META-INF/resources/webjars/jquery-colorbox/1.6.3/jquery.colorbox.js
 		</js>
 		<js>classpath:META-INF/resources/webjars/handlebars/4.0.2/handlebars.js
@@ -16,5 +16,16 @@
 		<css>/jb3-common.css</css>
 		<css>/jb3-frontend.css</css>
 		<css>/colorbox/colorbox.css</css>
+	</group>
+	<group name="rooms">
+		<js>classpath:META-INF/resources/webjars/jquery/3.0.0/jquery.js</js>
+		<js>classpath:META-INF/resources/webjars/riot/2.4.1/riot.js</js>
+		<js>/jb3-common.js</js>
+		<js>/tags/jb3-rooms-list--tag.js</js>
+		<js>/tags/jb3-room-editor--tag.js</js>
+		<js>/jb3-rooms.js</js>
+		<css>/jb3-reset.css</css>
+		<css>classpath:META-INF/resources/webjars/blaze/2.6.0/dist/blaze.min.css
+		</css>
 	</group>
 </groups>

@@ -1,21 +1,28 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>jb3 frontend: rooms</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="robots" content="noindex,nofollow">
-        <link rel="stylesheet" type="text/css" href="jb3-common.css">
-        <link rel="stylesheet" type="text/css" href="/webjars/w2ui/1.4.2/w2ui.css">
-        <link rel="icon" type="image/png" href="/favicon.png" >
-    </head>
-    <body>
-        <div id="jb3-rooms-grid"></div>
-        <a href="/">Return to chat</a>
-        <script src="/webjars/jquery/2.1.1/jquery.js" defer></script>
-        <script src="/webjars/w2ui/1.4.2/w2ui.js" defer></script>
-        <script src="/webjars/momentjs/2.8.3/moment.js" defer></script>
-        <script src="/jb3-common.js" defer></script>
-        <script src="/jb3-rooms.js" defer></script>
-    </body>
+<head>
+<title>jb3 frontend: rooms</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+{{> partials/css}}
+<link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body class="c-text">
+	<header>
+		<nav class="c-nav c-nav--inline c-nav--high a-nav">
+			<a class="c-nav__item" href="/">Chat</a>
+		</nav>
+	</header>
+	<main class="o-container o-container--large">
+	<section class="u-letter-box--super">
+		<div
+			class="o-grid o-grid--xsmall-full o-grid--small-full o-grid--medium-full">
+			<jb3-rooms-list class="o-grid__cell o-grid__cell--width-40"></jb3-rooms-list>
+			<jb3-room-editor class="o-grid__cell o-grid__cell--width-60"></jb3-room-editor>
+		</div>
+	</section>
+	</main>
+	{{> partials/js}}
+</body>
 </html>
