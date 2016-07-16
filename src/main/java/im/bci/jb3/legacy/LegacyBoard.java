@@ -4,7 +4,7 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2014.08.29 at 09:18:23 AM CEST 
 //
-package im.bci.jb3.backend.legacy;
+package im.bci.jb3.legacy;
 
 import java.util.List;
 

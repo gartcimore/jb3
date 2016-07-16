@@ -1,10 +1,7 @@
-package im.bci.jb3.controllers;
+package im.bci.jb3.legacy;
 
-import im.bci.jb3.backend.legacy.LegacyBoard;
-import im.bci.jb3.backend.legacy.LegacyPost;
 import im.bci.jb3.data.Post;
 import im.bci.jb3.data.PostRepository;
-import im.bci.jb3.legacy.LegacyUtils;
 import im.bci.jb3.logic.TribuneService;
 
 import java.util.ArrayList;

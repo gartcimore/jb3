@@ -1,6 +1,4 @@
-package im.bci.jb3.controllers;
-
-import im.bci.jb3.frontend.RandomNicknameMV;
+package im.bci.jb3.frontend;
 
 import org.fluttercode.datafactory.impl.DataFactory;
 import org.joda.time.DateTime;
@@ -14,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api")
-public class ApiController {
+public class FrontendApiController {
 
     private final DataFactory dataFactory = new DataFactory();
 
-    public ApiController() {
+    public FrontendApiController() {
         dataFactory.randomize(DateTime.now().getMillisOfDay());
     }
 

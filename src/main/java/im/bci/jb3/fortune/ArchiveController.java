@@ -1,4 +1,4 @@
-package im.bci.jb3.controllers;
+package im.bci.jb3.fortune;
 
 import im.bci.jb3.data.PostRepository;
 import im.bci.jb3.frontend.PostSearchRQ;

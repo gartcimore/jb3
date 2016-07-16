@@ -1,4 +1,4 @@
-package im.bci.jb3.controllers;
+package im.bci.jb3.frontend;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;

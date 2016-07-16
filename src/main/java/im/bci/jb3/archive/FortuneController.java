@@ -1,4 +1,4 @@
-package im.bci.jb3.controllers;
+package im.bci.jb3.archive;
 
 import im.bci.jb3.data.Fortune;
 import im.bci.jb3.data.FortuneRepository;

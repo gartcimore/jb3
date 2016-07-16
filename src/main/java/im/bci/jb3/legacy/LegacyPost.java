@@ -1,4 +1,4 @@
-package im.bci.jb3.backend.legacy;
+package im.bci.jb3.legacy;
 
 public class LegacyPost {
 
