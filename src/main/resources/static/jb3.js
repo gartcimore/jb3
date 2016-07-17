@@ -210,9 +210,15 @@ jb3 = {
         postContainer.scrollTop(postContainer.prop("scrollHeight"));
     },
     updateMoulePresence: function(presenceMsg) {
-    	$('#moule-' + presenceMsg.mouleId).remove();
+    	var moule = $('#moule-' + presenceMsg.mouleId);
     	if(presenceMsg.presence.nickname) {
-    		$('#moules').append('<li id="moule-'+ presenceMsg.mouleId + '" class="c-list__item">'+presenceMsg.presence.nickname+'<li>');
+    		if(moule.length == 0) {
+    			$('#moules').append('<li id="moule-'+ presenceMsg.mouleId + '" class="c-list__item"></li>');
+    			moule = $('#moule-' + presenceMsg.mouleId);
+    		}
+    		moule.text(presenceMsg.presence.nickname);
+		} else{
+    		moule.remove();
     	}
 	},
     onNewMessages: function (data) {
