@@ -203,7 +203,7 @@ jb3 = {
     },
     isPostsContainerAtBottom: function () {
         var postContainer = $('#jb3-posts-container');
-        return postContainer.scrollTop() + postContainer.innerHeight() >= postContainer[0].scrollHeight;
+        return Math.ceil(postContainer.scrollTop() + postContainer.innerHeight()) >=  postContainer[0].scrollHeight;
     },
     scrollPostsContainerToBottom: function () {
         var postContainer = $('#jb3-posts-container');
