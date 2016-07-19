@@ -1,0 +1,140 @@
+.jb3-posts {
+    display : table;
+    border-spacing: 2px 1px;
+}
+
+.jb3-post {
+    display : table-row;
+}
+
+.jb3-revisions {
+    display: none;
+}
+
+.jb3-revisions-button {
+    margin-left: 4px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.jb3-revise-button {
+    margin-left: 4px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.jb3-post .jb3-revise-button {
+    color: rgba(0, 0, 0, 0.0);
+}
+
+.jb3-post-is-mine:hover .jb3-revise-button {
+    color: initial;
+}
+
+.jb3-post:nth-of-type(odd) {
+    background-color: #FBFBFB;
+}
+
+.jb3-post-time {
+    display : table-cell;
+    padding-right: 5px;
+    padding-left: 5px;
+    text-align: center;
+    color: black;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.jb3-post-room {
+    display : table-cell;
+    padding-right: 5px;
+    padding-left: 5px;
+    color: #25662D;
+}
+
+.jb3-post-nickname {
+    display : table-cell;
+    padding-right: 5px;
+    padding-left: 5px;
+    color: #833;
+}
+
+.jb3-post-message {
+    display : table-cell;
+    padding-right: 5px;
+    padding-left: 5px;
+    color: black;
+    word-break: break-all;
+}
+
+.jb3-post-message a {
+    font-weight: bold;
+}
+
+.jb3-cite {
+    color: #5F7FBF;
+}
+
+.jb3-cite-mine {
+    font-weight: bold;
+    color: #C00;
+}
+
+.jb3-cited-by-me .jb3-post-time {
+    font-weight: bold;
+    color: #C00;
+}
+
+.jb3-cited .jb3-post-time {
+    font-weight: bold;
+    color: #5F7FBF;
+}
+
+.jb3-highlight {
+    background-color: #FFD202 !important;
+}
+
+.jb3-totoz {
+    position: relative;
+    font-weight: bold;
+    color: #0A1;
+}
+
+.jb3-totoz img {
+    display: none;
+}
+
+.jb3-totoz:hover img {
+    display: inline;
+    position: absolute;
+    bottom: 100%;
+}
+
+.jb3-bigorno {
+    border: 1px solid #F00;
+}
+
+.jb3-post-icon {
+    width: 16px;
+    height: 16px;
+    display: table-cell;
+    background-repeat: no-repeat;
+}
+
+.jb3-post-is-reply-to-mine .jb3-post-icon {
+    background-image: url("/common/icons/post/reply-to-mine.png");
+}
+
+.jb3-post-is-bigorno .jb3-post-icon {
+    background-image: url("/common/icons/post/bigorno.png");
+}
+
+.jb3-post-is-mine .jb3-post-icon {
+    background-image: url("/common/icons/post/mine.png");
+}

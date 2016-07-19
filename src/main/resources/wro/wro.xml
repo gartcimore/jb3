@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <groups xmlns="http://www.isdc.ro/wro">
-	<group name="index">
+	<group name="coincoin">
 		<js>classpath:META-INF/resources/webjars/jquery/3.0.0/jquery.js</js>
 		<js>classpath:META-INF/resources/webjars/jquery-colorbox/1.6.3/jquery.colorbox.js
 		</js>
@@ -8,23 +8,23 @@
 		</js>
 		<js>classpath:META-INF/resources/webjars/URI.js/1.14.1/URI.js</js>
 		<js>classpath:META-INF/resources/webjars/momentjs/2.8.3/moment.js</js>
-		<js>/jb3-post-to-html.js</js>
-		<js>/jb3-common.js</js>
-		<js>/jb3.js</js>
+		<js>/assets/common/post-to-html.js</js>
+		<js>/assets/common/common.js</js>
+		<js>/assets/coincoin/coincoin.js</js>
 		<css>classpath:META-INF/resources/webjars/blaze/2.6.0/dist/blaze.min.css
 		</css>
-		<css>/jb3-common.css</css>
-		<css>/jb3-frontend.css</css>
-		<css>/colorbox/colorbox.css</css>
+		<css>/assets/common/posts.css</css>
+		<css>/assets/coincoin/coincoin.css</css>
+		<css>/assets/colorbox/colorbox.css</css>
 	</group>
 	<group name="rooms">
 		<js>classpath:META-INF/resources/webjars/jquery/3.0.0/jquery.js</js>
 		<js>classpath:META-INF/resources/webjars/riot/2.4.1/riot.js</js>
-		<js>/jb3-common.js</js>
-		<js>/tags/jb3-rooms-list--tag.js</js>
-		<js>/tags/jb3-room-editor--tag.js</js>
-		<js>/jb3-rooms.js</js>
-		<css>/jb3-reset.css</css>
+		<js>/assets/common/common.js</js>
+		<js>/assets/tags/jb3-rooms-list--tag.js</js>
+		<js>/assets/tags/jb3-room-editor--tag.js</js>
+		<js>/assets/rooms/rooms.js</js>
+		<css>/assets/common/reset.css</css>
 		<css>classpath:META-INF/resources/webjars/blaze/2.6.0/dist/blaze.min.css
 		</css>
 	</group>

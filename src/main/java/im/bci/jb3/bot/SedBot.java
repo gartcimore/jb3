@@ -1,9 +1,10 @@
 package im.bci.jb3.bot;
 
-import im.bci.jb3.data.Post;
-import im.bci.jb3.data.PostRevisor;
-import im.bci.jb3.logic.Norloge;
-import im.bci.jb3.logic.Tribune;
+import im.bci.jb3.bouchot.data.Post;
+import im.bci.jb3.bouchot.data.PostRevisor;
+import im.bci.jb3.bouchot.logic.Norloge;
+import im.bci.jb3.bouchot.logic.Tribune;
+import im.bci.jb3.bouchot.logic.Norloge.ParsedNorloges;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -13,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.unix4j.Unix4j;
-
-import im.bci.jb3.logic.Norloge.ParsedNorloges;
 
 @Component
 public class SedBot implements Bot {

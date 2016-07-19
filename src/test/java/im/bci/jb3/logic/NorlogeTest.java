@@ -5,7 +5,8 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import im.bci.jb3.legacy.LegacyUtils;
+import im.bci.jb3.bouchot.legacy.LegacyUtils;
+import im.bci.jb3.bouchot.logic.Norloge;
 
 import static org.junit.Assert.*;
 

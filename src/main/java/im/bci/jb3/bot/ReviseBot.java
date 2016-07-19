@@ -1,9 +1,9 @@
 package im.bci.jb3.bot;
 
-import im.bci.jb3.data.Post;
-import im.bci.jb3.data.PostRevisor;
-import im.bci.jb3.logic.Norloge;
-import im.bci.jb3.logic.Tribune;
+import im.bci.jb3.bouchot.data.Post;
+import im.bci.jb3.bouchot.data.PostRevisor;
+import im.bci.jb3.bouchot.logic.Norloge;
+import im.bci.jb3.bouchot.logic.Tribune;
 
 import java.util.List;
 import java.util.logging.Level;

@@ -26,7 +26,10 @@ public class WroInterceptor extends HandlerInterceptorAdapter {
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 		if (null != modelAndView) {
-			modelAndView.addObject("wro", getWroForGroup(modelAndView.getViewName()));
+			Object groupName = modelAndView.getModel().get("wro-group");
+			if(null != groupName) {
+				modelAndView.addObject("wro", getWroForGroup(groupName.toString()));
+			}
 		}
 	}
 

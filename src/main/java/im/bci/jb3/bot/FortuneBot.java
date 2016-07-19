@@ -1,9 +1,10 @@
 package im.bci.jb3.bot;
 
-import im.bci.jb3.data.Fortune;
-import im.bci.jb3.data.Post;
-import im.bci.jb3.logic.Norloge;
-import im.bci.jb3.logic.Tribune;
+import im.bci.jb3.bouchot.data.Fortune;
+import im.bci.jb3.bouchot.data.Post;
+import im.bci.jb3.bouchot.logic.Norloge;
+import im.bci.jb3.bouchot.logic.Tribune;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

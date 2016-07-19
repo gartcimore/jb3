@@ -1,10 +1,11 @@
 package im.bci.jb3.bot;
 
-import im.bci.jb3.data.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import im.bci.jb3.bouchot.data.Post;
 
 @Component
 public class Bots {
