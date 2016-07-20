@@ -160,7 +160,7 @@ jb3 = {
         } else {
             $.ajax({
                 type: "POST",
-                url: "/api/random-nickname",
+                url: "/api/coincoin/random-nickname",
                 success: function (data) {
                     localStorage.nickname = data.nickname;
                     self.controlsNickname.val(localStorage.nickname);

@@ -2,9 +2,14 @@ body {
     background-color: #FEFEFE;
 }
 
+header {
+	position: relative;
+	z-index: 3;
+}
+
 #jb3-layout {
     position: fixed;
-    top: 0px;
+    top: 57px;
     bottom: 0px;
     left: 0px;
     right: 0px;

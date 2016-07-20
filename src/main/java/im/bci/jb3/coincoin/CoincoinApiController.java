@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author devnewton
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/coincoin")
 public class CoincoinApiController {
 
     private final DataFactory dataFactory = new DataFactory();

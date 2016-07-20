@@ -47,7 +47,7 @@ public class Post {
     }
     
     @JsonGetter("nickname")
-    public String cleanedNickname() {
+    public String getCleanedNickname() {
     	return CleanUtils.cleanNickname(nickname);
     }
 
@@ -73,7 +73,7 @@ public class Post {
     }
     
     @JsonGetter("room")
-    public String cleanedRoom() {
+    public String getCleanedRoom() {
     	return CleanUtils.cleanRoom(room);
     }
 
