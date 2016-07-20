@@ -1,6 +1,5 @@
 package im.bci.jb3.bouchot.data;
 
-import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ public class FortuneRepositoryImpl implements FortuneRepository {
 
     @Override
     public List<Fortune> search(PostSearchRQ rq) {
-        Query query = new Query().addCriteria(Criteria.where("time").gte(new Date(rq.getFrom())).lt(new Date(rq.getTo())));
+        Query query = new Query().addCriteria(Criteria.where("time").gte(rq.getFrom()).lt(rq.getTo()));
         if (StringUtils.isNotBlank(rq.getMessageFilter())) {
             query = query.addCriteria(Criteria.where("posts").elemMatch(Criteria.where("message").regex(rq.getMessageFilter())));
         }

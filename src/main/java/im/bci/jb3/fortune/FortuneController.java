@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping("/fortune")
+@RequestMapping("/fortunes")
 public class FortuneController {
 
     @Autowired
@@ -20,15 +20,16 @@ public class FortuneController {
 
     @RequestMapping(path="", method = RequestMethod.GET)
     public String index(PostSearchRQ rq, Model model) {
+        model.addAttribute("wro-group", "fortunes");
         model.addAttribute("rq", rq);
         model.addAttribute("fortunes", fortuneRepository.search(rq));
-        return "fortune/index";
+        return "fortunes/fortunes";
     }
 
     @RequestMapping(path="/{fortuneId}", method = RequestMethod.GET)
     public String view(@PathVariable("fortuneId") String fortuneId, Model model) {
         Fortune fortune = fortuneRepository.findOne(fortuneId);
         model.addAttribute("fortune", fortune);
-        return "fortune/view";
+        return "fortunes/view";
     }
 }

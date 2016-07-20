@@ -1,6 +1,5 @@
 package im.bci.jb3.bouchot.data;
 
-import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -63,7 +62,7 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public List<Post> search(PostSearchRQ rq) {
-        Query query = new Query().addCriteria(Criteria.where("time").gte(new Date(rq.getFrom())).lt(new Date(rq.getTo())));
+        Query query = new Query().addCriteria(Criteria.where("time").gte(rq.getFrom()).lt(rq.getTo()));
         if (StringUtils.isNotBlank(rq.getMessageFilter())) {
             query = query.addCriteria(Criteria.where("message").regex(rq.getMessageFilter()));
         }

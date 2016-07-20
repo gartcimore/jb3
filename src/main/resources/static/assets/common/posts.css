@@ -75,6 +75,11 @@
 
 .jb3-post-message a {
     font-weight: bold;
+    color: #1690f3;
+}
+
+.jb3-post-message a:hover {
+    text-decoration: underline;
 }
 
 .jb3-cite {

@@ -1,6 +1,9 @@
 package im.bci.jb3.coincoin;
 
+import java.util.Date;
+
 import org.joda.time.DateTime;
+import org.springframework.util.StringUtils;
 
 /**
  *
@@ -8,34 +11,32 @@ import org.joda.time.DateTime;
  */
 public class PostSearchRQ {
 
-    private long from;
-    private long to;
+    private String date;
     private String nicknameFilter;
     private String messageFilter;
     private String roomFilter;
     private int page = 0;
     private int pageSize = 50;
+    private Date to;
+    private Date from;
 
-    public PostSearchRQ() {
-        DateTime now = DateTime.now();
-        to = now.plusDays(1).getMillis();
-        from = now.minusWeeks(1).getMillis();
+    public String getDate() {
+        return date;
     }
 
-    public long getFrom() {
+    public void setDate(String date) {
+        DateTime day = StringUtils.isEmpty(date) ? DateTime.now() : new DateTime(date);
+        day = day.withTimeAtStartOfDay();
+        from = day.toDate();
+        to = day.plusDays(1).toDate();
+    }
+
+    public Date getFrom() {
         return from;
     }
 
-    public void setFrom(long from) {
-        this.from = from;
-    }
-
-    public long getTo() {
+    public Date getTo() {
         return to;
-    }
-
-    public void setTo(long to) {
-        this.to = to;
     }
 
     public int getPageSize() {
@@ -77,11 +78,11 @@ public class PostSearchRQ {
     public void setPage(int page) {
         this.page = page;
     }
-    
+
     public int getPreviousPage() {
         return page - 1;
     }
-    
+
     public int getNextPage() {
         return page + 1;
     }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>jb3 archives</title>
+<title>jb3 fortunes</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
@@ -25,16 +25,11 @@
 			</label><div class="c-form-element"><input type="submit" class="c-button c-button--secondary"
 				value="Search"></div>
 		</form>
-		{{#if posts }}
-		<div class="jb3-posts">
-			{{#each posts}}
-			<div id="{{this.id}}" class="jb3-post">
-				<span class="jb3-post-time">{{this.time}}</span> <span
-					class="jb3-post-room">{{this.cleanedRoom}}</span> <span
-					class="jb3-post-nickname">{{this.cleanedNickname}}</span> <span
-					class="jb3-post-message">{{this.cleanedMessage}}</span>
-			</div>
-			{{/each}}
+		{{#if fortunes }}
+		<div class="jb3-fortunes">
+		{{#each fortunes}}
+			{{> fortunes/fortune}}
+		{{/each}}
 		</div>
 		{{/if}}
 	</section>

@@ -78,7 +78,7 @@ jb3_post_to_html = (function() {
         peg$c39 = { type: "class", value: "[^\\]]", description: "[^\\]]" },
         peg$c40 = "]",
         peg$c41 = { type: "literal", value: "]", description: "\"]\"" },
-        peg$c42 = function(first, totoz, third) { return '<a class="jb3-totoz">' + totoz + '</a>' },
+        peg$c42 = function(first, totoz, third) { return '<span class="jb3-totoz">' + totoz + '</span>' },
         peg$c43 = /^[ \t\r\n]/,
         peg$c44 = { type: "class", value: "[ \\t\\r\\n]", description: "[ \\t\\r\\n]" },
         peg$c45 = function() { return location().start.offset == 0; },

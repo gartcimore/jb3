@@ -31,7 +31,7 @@ bigorno
 
 totoz
   = first:"[:" totoz:$[^\]]+ third:"]"
-  { return '<a class="jb3-totoz">' + totoz + '</a>' }
+  { return '<span class="jb3-totoz">' + totoz + '</span>' }
   
 whitespaces
  = [ \t\r\n]
