@@ -82,6 +82,10 @@
     text-decoration: underline;
 }
 
+.jb3-post-message a:visited {
+	color: #0b78d0;
+}
+
 .jb3-cite {
     color: #5F7FBF;
 }
