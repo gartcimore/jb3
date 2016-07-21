@@ -4,8 +4,8 @@
     {{#each posts}}
         <div id="{{../id}}-{{this.id}}" data-postid="{{this.id}}" class="jb3-post">
             <span class="jb3-post-time">{{this.time}}</span>
-            <span class="jb3-post-nickname">{{this.cleanedNickname}}</span>
-            <span class="jb3-post-message">{{this.cleanedMessage}}</span>
+            <span class="jb3-post-nickname">{{{this.cleanedNickname}}}</span>
+            <span class="jb3-post-message">{{{this.cleanedMessage}}}</span>
         </div>
     {{/each}}
     </div>
