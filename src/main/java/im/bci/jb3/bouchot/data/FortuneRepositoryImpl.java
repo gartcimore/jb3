@@ -2,6 +2,7 @@ package im.bci.jb3.bouchot.data;
 
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -37,7 +38,8 @@ public class FortuneRepositoryImpl implements FortuneRepository {
 
     @Override
     public List<Fortune> search(PostSearchRQ rq) {
-        Query query = new Query().addCriteria(Criteria.where("time").gte(rq.getFrom()).lt(rq.getTo()));
+        Interval interval = rq.getDateInterval();
+        Query query = new Query().addCriteria(Criteria.where("time").gte(interval.getStart().toDate()).lt(interval.getEnd().toDate()));
         if (StringUtils.isNotBlank(rq.getMessageFilter())) {
             query = query.addCriteria(Criteria.where("posts").elemMatch(Criteria.where("message").regex(rq.getMessageFilter())));
         }

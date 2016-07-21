@@ -1,9 +1,8 @@
 package im.bci.jb3.coincoin;
 
-import java.util.Date;
-
 import org.joda.time.DateTime;
-import org.springframework.util.StringUtils;
+import org.joda.time.Interval;
+import org.joda.time.format.ISODateTimeFormat;
 
 /**
  *
@@ -11,32 +10,23 @@ import org.springframework.util.StringUtils;
  */
 public class PostSearchRQ {
 
-    private String date;
+    private String date = ISODateTimeFormat.date().print(DateTime.now());
     private String nicknameFilter;
     private String messageFilter;
     private String roomFilter;
     private int page = 0;
     private int pageSize = 50;
-    private Date to;
-    private Date from;
 
     public String getDate() {
         return date;
     }
 
     public void setDate(String date) {
-        DateTime day = StringUtils.isEmpty(date) ? DateTime.now() : new DateTime(date);
-        day = day.withTimeAtStartOfDay();
-        from = day.toDate();
-        to = day.plusDays(1).toDate();
+        this.date = date;
     }
-
-    public Date getFrom() {
-        return from;
-    }
-
-    public Date getTo() {
-        return to;
+    
+    public Interval getDateInterval() {
+        return ISODateTimeFormat.date().parseDateTime(date).toLocalDate().toInterval();
     }
 
     public int getPageSize() {

@@ -3,6 +3,7 @@ package im.bci.jb3.bouchot.data;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.Period;
 import org.joda.time.format.ISOPeriodFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,8 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public List<Post> search(PostSearchRQ rq) {
-        Query query = new Query().addCriteria(Criteria.where("time").gte(rq.getFrom()).lt(rq.getTo()));
+        Interval interval = rq.getDateInterval();
+        Query query = new Query().addCriteria(Criteria.where("time").gte(interval.getStart().toDate()).lt(interval.getEnd().toDate()));
         if (StringUtils.isNotBlank(rq.getMessageFilter())) {
             query = query.addCriteria(Criteria.where("message").regex(rq.getMessageFilter()));
         }
