@@ -29,7 +29,7 @@
 		<div class="jb3-posts">
 			{{#each posts}}
 			<div id="{{this.id}}" class="jb3-post">
-				<span class="jb3-post-time">{{this.time}}</span> <span
+				<span class="jb3-post-time">{{format-datetime this.time}}</span> <span
 					class="jb3-post-room">{{{this.cleanedRoom}}}</span> <span
 					class="jb3-post-nickname">{{{this.cleanedNickname}}}</span> <span
 					class="jb3-post-message">{{{this.cleanedMessage}}}</span>

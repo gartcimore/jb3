@@ -13,14 +13,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class HandlebarsConfiguration {
 
-	@Autowired
-	private HandlebarsViewResolver handlebarsViewResolver;
+    @Autowired
+    private HandlebarsViewResolver handlebarsViewResolver;
 
-	@Autowired
-	private RawIncludeHelper rawIncludeHelper;
+    @Autowired
+    private RawIncludeHelper rawIncludeHelper;
 
-	@PostConstruct
-	public void configure() {
-		handlebarsViewResolver.registerHelper("raw-include", rawIncludeHelper);
-	}
+    @Autowired
+    private FormatDateTimeHelper formatDateTimeHelper;
+
+    @PostConstruct
+    public void configure() {
+        handlebarsViewResolver.registerHelper("raw-include", rawIncludeHelper);
+        handlebarsViewResolver.registerHelper("format-datetime", formatDateTimeHelper);
+    }
 }
