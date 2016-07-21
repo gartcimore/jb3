@@ -10,6 +10,7 @@
 </head>
 <body class="c-text">
 	{{> partials/header}}
+	{{taiste}}
 	<main class="o-container o-container--large">
 	<section class="u-letter-box--super">
 		<form class="c-fieldset">
@@ -32,7 +33,7 @@
 				<span class="jb3-post-time">{{format-datetime this.time}}</span> <span
 					class="jb3-post-room">{{{this.cleanedRoom}}}</span> <span
 					class="jb3-post-nickname">{{{this.cleanedNickname}}}</span> <span
-					class="jb3-post-message">{{{this.cleanedMessage}}}</span>
+					class="jb3-post-message">{{format-message this.cleanedMessage}}</span>
 			</div>
 			{{/each}}
 		</div>
