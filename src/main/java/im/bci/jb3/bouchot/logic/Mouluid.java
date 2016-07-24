@@ -2,7 +2,6 @@ package im.bci.jb3.bouchot.logic;
 
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -55,7 +54,7 @@ public class Mouluid {
          DateTimeZone.setDefault(DateTimeZone.forID(legacyTimezoneId));
      }
 
-    public static void main(String[] args) {
+ /*   public static void main(String[] args) {
         
         System.out.println(DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").print(DateTime.now()));
         
@@ -70,5 +69,5 @@ public class Mouluid {
         for (Mouluid id : ids) {
             System.out.println(id.getFormattedTime() + " " + id.getRand());
         }
-    }
+    }*/
 }
