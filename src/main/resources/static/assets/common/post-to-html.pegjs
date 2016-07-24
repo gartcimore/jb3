@@ -23,7 +23,19 @@ teteCanard
 
 norloge
  = "#" norloge:$[a-zA-Z0-9_]+
- { return '<span class="jb3-cite jb3-cite-raw" data-ref="' + norloge + '">#' + norloge + '</span>' }
+ {
+ 	var formattedNorloge = null;
+ 	if( options.postStore && options.norlogeFormatter ) {
+ 		var cited = options.postStore.findOne(norloge);
+ 		if(cited) {
+			formattedNorloge = options.norlogeFormatter.format(cited);
+ 		}
+ 	}
+    if(!formattedNorloge) {
+    	formattedNorloge = '#' + norloge;
+    }
+ 	return '<span class="jb3-cite jb3-cite-raw" data-ref="' + norloge + '">' + formattedNorloge + '</span>'
+  }
 
 bigorno
  = spaces:$(inputStart / whitespaces) s2:whitespaces? bigorno:$[a-zA-Z0-9-_]+ "&lt;" &(whitespaces / [<[] / !.)

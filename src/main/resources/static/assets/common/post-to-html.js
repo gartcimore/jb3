@@ -66,7 +66,19 @@ jb3_post_to_html = (function() {
         peg$c27 = { type: "literal", value: "#", description: "\"#\"" },
         peg$c28 = /^[a-zA-Z0-9_]/,
         peg$c29 = { type: "class", value: "[a-zA-Z0-9_]", description: "[a-zA-Z0-9_]" },
-        peg$c30 = function(norloge) { return '<span class="jb3-cite jb3-cite-raw" data-ref="' + norloge + '">#' + norloge + '</span>' },
+        peg$c30 = function(norloge) {
+         	var formattedNorloge = null;
+         	if( options.postStore && options.norlogeFormatter ) {
+         		var cited = options.postStore.findOne(norloge);
+         		if(cited) {
+        			formattedNorloge = options.norlogeFormatter.format(cited);
+         		}
+         	}
+            if(!formattedNorloge) {
+            	formattedNorloge = '#' + norloge;
+            }
+         	return '<span class="jb3-cite jb3-cite-raw" data-ref="' + norloge + '">' + formattedNorloge + '</span>'
+          },
         peg$c31 = /^[a-zA-Z0-9\-_]/,
         peg$c32 = { type: "class", value: "[a-zA-Z0-9-_]", description: "[a-zA-Z0-9-_]" },
         peg$c33 = /^[<[]/,
