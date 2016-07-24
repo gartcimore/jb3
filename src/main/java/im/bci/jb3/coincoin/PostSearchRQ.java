@@ -15,7 +15,7 @@ public class PostSearchRQ {
     private String messageFilter;
     private String roomFilter;
     private int page = 0;
-    private int pageSize = 50;
+    private int pageSize = 1000;
 
     public String getDate() {
         return date;
@@ -26,7 +26,11 @@ public class PostSearchRQ {
     }
     
     public Interval getDateInterval() {
-        return ISODateTimeFormat.date().parseDateTime(date).toLocalDate().toInterval();
+    	try {
+    		return ISODateTimeFormat.date().parseDateTime(date).toLocalDate().toInterval();
+    	} catch(Exception e) {
+    		return null;
+    	}
     }
 
     public int getPageSize() {

@@ -63,8 +63,11 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public List<Post> search(PostSearchRQ rq) {
+        Query query = new Query();
         Interval interval = rq.getDateInterval();
-        Query query = new Query().addCriteria(Criteria.where("time").gte(interval.getStart().toDate()).lt(interval.getEnd().toDate()));
+        if(null != interval) {
+        	query = query.addCriteria(Criteria.where("time").gte(interval.getStart().toDate()).lt(interval.getEnd().toDate()));
+        }
         if (StringUtils.isNotBlank(rq.getMessageFilter())) {
             query = query.addCriteria(Criteria.where("message").regex(rq.getMessageFilter()));
         }

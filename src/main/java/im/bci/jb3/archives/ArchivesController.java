@@ -29,7 +29,6 @@ public class ArchivesController {
 
     private List<Post> searchPosts(PostSearchRQ rq) {
         if(null != rq) {
-            rq.setPageSize(10000);
             return postRepository.search(rq);
         }
         return Collections.emptyList();

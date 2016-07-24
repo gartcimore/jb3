@@ -38,8 +38,11 @@ public class FortuneRepositoryImpl implements FortuneRepository {
 
     @Override
     public List<Fortune> search(PostSearchRQ rq) {
+        Query query = new Query();
         Interval interval = rq.getDateInterval();
-        Query query = new Query().addCriteria(Criteria.where("time").gte(interval.getStart().toDate()).lt(interval.getEnd().toDate()));
+        if(null != interval) {
+        	query = query.addCriteria(Criteria.where("time").gte(interval.getStart().toDate()).lt(interval.getEnd().toDate()));
+        }
         if (StringUtils.isNotBlank(rq.getMessageFilter())) {
             query = query.addCriteria(Criteria.where("posts").elemMatch(Criteria.where("message").regex(rq.getMessageFilter())));
         }
