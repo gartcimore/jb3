@@ -25,52 +25,75 @@ import im.bci.jb3.bouchot.logic.Norloge;
 
 @Component
 public class FormatMessageHelper implements Helper<Post> {
-	
-	@Autowired
-	private PostRepository postRepository;
-	
-	public static class Console {
-        public void log(String text){
-           Logger.getLogger(getClass().getName()).log(Level.INFO, text);
+
+    @Autowired
+    private PostRepository postRepository;
+
+    public static class Console {
+        public void log(String text) {
+            Logger.getLogger(getClass().getName()).log(Level.INFO, text);
         }
     }
-	
-	public static class NorlogeFormatter {
-		public String format(Post post) {
-			return Norloge.norlogeParseFullFormatter.print(post.getTime());
-		}
-	}
-	private HashMap<String, Object> parseOptions = new HashMap<String, Object>();
-	private Invocable invocable;
-	private Object postToHtml;
 
-	@PostConstruct
-	public void setup() {
-		parseOptions.put("postStore", postRepository);
-		parseOptions.put("norlogeFormatter",new NorlogeFormatter());
+    public static class NorlogeFormatter {
+        public String format(Post post) {
+            return Norloge.norlogeParseFullFormatter.print(post.getTime());
+        }
+    }
 
-		ScriptEngineManager factory = new ScriptEngineManager();
-		ScriptEngine engine = factory.getEngineByName("JavaScript");
-		engine.put("console", new Console());
-		InputStreamReader postToHtmlSource = new InputStreamReader(getClass().getResourceAsStream("/static/assets/common/post-to-html.js"));
-		try {
-			engine.eval(postToHtmlSource);
-			postToHtml = engine.eval("jb3_post_to_html");
-			invocable = (Invocable) engine;
-		} catch (ScriptException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    public static class ParseOptions {
+        private PostRepository postStore;
+        private NorlogeFormatter norlogeFormatter;
 
-	@Override
-	public CharSequence apply(Post post, Options options) throws IOException {
-		String formattedMessage = post.getCleanedMessage();
-		try {
-			formattedMessage = invocable.invokeMethod(postToHtml, "parse", formattedMessage, parseOptions).toString();
-		} catch (Exception e) {
+        public PostRepository getPostStore() {
+            return postStore;
+        }
+
+        public void setPostStore(PostRepository postStore) {
+            this.postStore = postStore;
+        }
+
+        public NorlogeFormatter getNorlogeFormatter() {
+            return norlogeFormatter;
+        }
+
+        public void setNorlogeFormatter(NorlogeFormatter norlogeFormatter) {
+            this.norlogeFormatter = norlogeFormatter;
+        }
+    }
+
+    private ParseOptions parseOptions;
+    private Invocable invocable;
+    private Object postToHtml;
+
+    @PostConstruct
+    public void setup() {
+        parseOptions = new ParseOptions();
+        parseOptions.setPostStore(postRepository);
+        parseOptions.setNorlogeFormatter(new NorlogeFormatter());
+
+        ScriptEngineManager factory = new ScriptEngineManager();
+        ScriptEngine engine = factory.getEngineByName("JavaScript");
+        engine.put("console", new Console());
+        InputStreamReader postToHtmlSource = new InputStreamReader(getClass().getResourceAsStream("/static/assets/common/post-to-html.js"));
+        try {
+            engine.eval(postToHtmlSource);
+            postToHtml = engine.eval("jb3_post_to_html");
+            invocable = (Invocable) engine;
+        } catch (ScriptException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public CharSequence apply(Post post, Options options) throws IOException {
+        String formattedMessage = post.getCleanedMessage();
+        try {
+            formattedMessage = invocable.invokeMethod(postToHtml, "parse", formattedMessage, parseOptions).toString();
+        } catch (Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
-		}
-		return new Handlebars.SafeString(formattedMessage);
-	}
+        }
+        return new Handlebars.SafeString(formattedMessage);
+    }
 
 }
