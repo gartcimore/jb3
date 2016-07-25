@@ -15,7 +15,7 @@ public class PostSearchRQ {
     private String messageFilter;
     private String roomFilter;
     private int page = 0;
-    private int pageSize = 1000;
+    private int pageSize = 200;
 
     public String getDate() {
         return date;
@@ -72,13 +72,4 @@ public class PostSearchRQ {
     public void setPage(int page) {
         this.page = page;
     }
-
-    public int getPreviousPage() {
-        return page - 1;
-    }
-
-    public int getNextPage() {
-        return page + 1;
-    }
-
 }

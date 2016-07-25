@@ -12,7 +12,9 @@
 	{{> partials/header}}
 	<main class="o-container o-container--large">
 	<section class="u-letter-box--super">
-		<form class="c-fieldset">
+		<form id="search-form" class="c-fieldset">
+			<input type="hidden" name="page" value="{{rq.page}}">
+			<input type="hidden" name="pageSize" value="{{rq.pageSize}}">
 			<label class="c-label"> Date: <input class="c-label__field"
 				type="date" name="date" value="{{rq.date}}">
 			</label> <label class="c-label"> Room: <input class="c-label__field"
@@ -25,9 +27,9 @@
 			</label><div class="c-form-element"><input type="submit" class="c-button c-button--secondary"
 				value="Search"></div>
 		</form>
-		{{#if posts }}
+		{{#if postsMV.posts }}
 		<div class="jb3-posts">
-			{{#each posts}}
+			{{#each postsMV.posts}}
 			<div id="{{this.id}}" class="jb3-post">
 				<span class="jb3-post-time">{{format-datetime this.time}}</span> <span
 					class="jb3-post-room">{{{this.cleanedRoom}}}</span> <span
@@ -35,6 +37,18 @@
 					class="jb3-post-message">{{format-post-message this}}</span>
 			</div>
 			{{/each}}
+		</div>
+		<div class="c-pagination">
+		  {{#if postsMV.hasPrevious}}
+		  <div class="c-pagination__controls c-pagination__controls--backward">
+		    <button id="button-previous-page" class="c-pagination__control">‹</button>
+		  </div>
+		  {{/if}}
+		  {{#if postsMV.hasNext}}
+		  <div class="c-pagination__controls c-pagination__controls--forward">
+		    <button id="button-next-page" class="c-pagination__control">›</button>
+		  </div>
+		  {{/if}}
 		</div>
 		{{/if}}
 	</section>
