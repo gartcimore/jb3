@@ -114,7 +114,7 @@ public abstract class AbstractBouchotGateway implements Gateway, SchedulableGate
                     .data(config.getMessageContentParameterName(),
                             legacyUtils.convertToLegacyNorloges(message,
                                     DateTime.now().withZone(LegacyUtils.legacyTimeZone).secondOfMinute()
-                                    .roundFloorCopy()))
+                                    .roundFloorCopy(), getRoom()))
                     .userAgent(nickname)
                     .validateTLSCertificates(validateCrapCertificate || !config.isUsingCrapCertificate());
             if (null != config.getCookieName()) {

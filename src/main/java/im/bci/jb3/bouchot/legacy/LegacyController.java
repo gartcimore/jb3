@@ -104,7 +104,7 @@ public class LegacyController {
                 legacyPost.setId(post.getTime().getMillis());
                 legacyPost.setTime(LegacyUtils.legacyPostTimeFormatter.print(post.getTime()));
                 String info = Jsoup.clean(post.getNickname(), Whitelist.none());
-                String message = Jsoup.clean(legacyUtils.convertToLegacyNorloges(convertUrls(post.getCleanedMessage()), post.getTime()), messageWhitelist);
+                String message = Jsoup.clean(legacyUtils.convertToLegacyNorloges(convertUrls(post.getCleanedMessage()), post.getTime(), room), messageWhitelist);
                 legacyPost.setInfo(escaper.escape(info));
                 legacyPost.setMessage(escaper.escape(message));
                 legacyPosts.add(legacyPost);

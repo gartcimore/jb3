@@ -35,24 +35,20 @@ public class LegacyUtils {
 
             @Override
             public void process(Norloge norloge, Matcher matcher) {
-                if (StringUtils.isBlank(norloge.getBouchot())) {
-                    DateTime time = norloge.getTime();
-                    if (null != time) {
-                        time = time.withZoneRetainFields(LegacyUtils.legacyTimeZone);
-                        int maxDayBefore = norloge.getHasDay() ? 0 : 100;
-                        for (int day = 0; day <= maxDayBefore; ++day) {
-                            DateTime tryTime = time.minusDays(day);
-                            Post post = postPepository.findOne(room, tryTime, tryTime.plusSeconds(norloge.getPrecisionInSeconds()));
-                            if (null != post) {
-                                matcher.appendReplacement(sb, Norloge.format(post));
-                                return;
-                            }
+                DateTime time = norloge.getTime();
+                if (null != time) {
+                    time = time.withZoneRetainFields(LegacyUtils.legacyTimeZone);
+                    int maxDayBefore = norloge.getHasDay() ? 0 : 100;
+                    for (int day = 0; day <= maxDayBefore; ++day) {
+                        DateTime tryTime = time.minusDays(day);
+                        Post post = postPepository.findOne(null != norloge.getBouchot() ? norloge.getBouchot() : room, tryTime, tryTime.plusSeconds(norloge.getPrecisionInSeconds()));
+                        if (null != post) {
+                            matcher.appendReplacement(sb, Norloge.format(post));
+                            return;
                         }
                     }
-                    matcher.appendReplacement(sb, norloge.toString());
-                } else {
-                    matcher.appendReplacement(sb, "$0");
                 }
+                matcher.appendReplacement(sb, norloge.toString());
             }
 
             @Override
@@ -68,7 +64,7 @@ public class LegacyUtils {
     private static final DateTimeFormatter toLegacyNormalNorlogeFormatter = DateTimeFormat.forPattern("HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
     private static final DateTimeFormatter toLegacyShortNorlogeFormatter = DateTimeFormat.forPattern("HH:mm").withZone(LegacyUtils.legacyTimeZone);
 
-    public String convertToLegacyNorloges(String message, final DateTime postTime) {
+    public String convertToLegacyNorloges(String message, final DateTime postTime, final String room) {
         final StringBuffer sb = new StringBuffer();
         Norloge.forEachNorloge(message, new Norloge.NorlogeProcessor() {
 
@@ -79,7 +75,11 @@ public class LegacyUtils {
                     if (null != post) {
                         final DateTime referencedPostTime = new DateTime(post.getTime());
                         DateTimeFormatter formatter = findLegacyNorlogeFormatter(postTime, referencedPostTime);
-                        matcher.appendReplacement(sb, formatter.print(referencedPostTime));
+                        String legacyNorloge = formatter.print(referencedPostTime);
+                        if(!StringUtils.equals(post.getRoom(), room)) {
+                            legacyNorloge += "@" + post.getRoom();
+                        }
+                        matcher.appendReplacement(sb, legacyNorloge);
                         return;
                     }
                 }
