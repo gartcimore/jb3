@@ -2,7 +2,7 @@ package im.bci.jb3.bouchot.data;
 
 import java.util.List;
 
-import im.bci.jb3.coincoin.PostSearchRQ;
+import im.bci.jb3.coincoin.FortuneSearchRQ;
 
 public interface FortuneRepository {
 
@@ -10,6 +10,6 @@ public interface FortuneRepository {
 
     Fortune findOne(String fortuneId);
     
-    List<Fortune> search(PostSearchRQ fo);
+    List<Fortune> search(FortuneSearchRQ fo);
     
 }

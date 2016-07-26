@@ -2,7 +2,7 @@ package im.bci.jb3.fortune;
 
 import im.bci.jb3.bouchot.data.Fortune;
 import im.bci.jb3.bouchot.data.FortuneRepository;
-import im.bci.jb3.coincoin.PostSearchRQ;
+import im.bci.jb3.coincoin.FortuneSearchRQ;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +19,7 @@ public class FortuneController {
     private FortuneRepository fortuneRepository;
 
     @RequestMapping(path="", method = RequestMethod.GET)
-    public String index(PostSearchRQ rq, Model model) {
+    public String index(FortuneSearchRQ rq, Model model) {
         model.addAttribute("wro-group", "fortunes");
         model.addAttribute("rq", rq);
         model.addAttribute("fortunes", fortuneRepository.search(rq));

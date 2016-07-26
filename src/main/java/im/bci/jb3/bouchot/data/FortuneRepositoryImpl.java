@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
-import im.bci.jb3.coincoin.PostSearchRQ;
+import im.bci.jb3.coincoin.FortuneSearchRQ;
 
 /**
  *
@@ -37,7 +37,7 @@ public class FortuneRepositoryImpl implements FortuneRepository {
     }
 
     @Override
-    public List<Fortune> search(PostSearchRQ rq) {
+    public List<Fortune> search(FortuneSearchRQ rq) {
         Query query = new Query();
         Interval interval = rq.getDateInterval();
         if(null != interval) {
