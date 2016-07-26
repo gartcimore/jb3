@@ -5,6 +5,8 @@ import org.joda.time.DateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import im.bci.jb3.bouchot.logic.CleanUtils;
+
 public class Fortune {
 
     @Id
@@ -12,6 +14,9 @@ public class Fortune {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private DateTime time = new DateTime();
+    
+    private String fortuner;
+    private String title;
 
     private List<Post> posts;
 
@@ -37,6 +42,26 @@ public class Fortune {
 
     public void setTime(DateTime time) {
         this.time = time;
+    }
+    
+    public String getCleanedTitle() {
+        return CleanUtils.cleanFortuneTitle(title);
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getFortuner() {
+        return fortuner;
+    }
+
+    public void setFortuner(String fortuner) {
+        this.fortuner = fortuner;
     }
 
 }

@@ -19,6 +19,7 @@ public class CleanUtils {
 	private static final int MAX_POST_LENGTH = 512;
 	private static final int MAX_NICKNAME_LENGTH = 32;
 	private static final int MAX_ROOM_LENGTH = 32;
+	private static final int MAX_FORTUNE_TITLE_LENGTH = 256;
 	private static final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s", "u", "tt");
 
 	public static String truncateMessage(String message) {
@@ -32,6 +33,10 @@ public class CleanUtils {
 	public static String truncateNickname(String nickname) {
 		return StringUtils.abbreviate(nickname, MAX_NICKNAME_LENGTH);
 	}
+	
+	   public static String truncateFortuneTitle(String title) {
+	        return StringUtils.abbreviate(title, MAX_FORTUNE_TITLE_LENGTH);
+	    }
 
 	public static String cleanMessage(String message) {
 		Document doc = Jsoup.parseBodyFragment(message);
@@ -73,5 +78,12 @@ public class CleanUtils {
 		String noDashAtBeginEnd = dashed.replaceAll("^-|-$", "");
 		return noDashAtBeginEnd;
 	}
+
+    public static String cleanFortuneTitle(String title) {
+       if(null != title) {
+           title = Jsoup.clean(title, Whitelist.none());
+       }
+       return title;
+    }
 
 }

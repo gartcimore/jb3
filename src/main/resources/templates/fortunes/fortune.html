@@ -1,5 +1,5 @@
 <div class="jb3-fortune">
-    <span class="jb3-fortune-title"><span class="jb3-fortune-time">{{format-datetime time}}</span> <a class="c-link" href="/fortunes/{{id}}">#{{id}}</a></span>
+    <span class="jb3-fortune-title"><span class="jb3-fortune-time">{{format-datetime time}}</span> par <span class="jb3-fortuner">{{fortuner}}</span> <a class="c-link" href="/fortunes/{{id}}">{{cleanedTitle}}</a></span>
     <div class="jb3-posts">
     {{#each posts}}
         <div id="{{../id}}-{{this.id}}" data-postid="{{this.id}}" class="jb3-post">

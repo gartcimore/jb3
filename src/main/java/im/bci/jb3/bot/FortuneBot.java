@@ -23,7 +23,7 @@ public class FortuneBot implements Bot {
     public void handle(Post post, UriComponentsBuilder uriBuilder) {
         try {
             if (tribune.isBotCall(post, NAME)) {
-                Fortune fortune = tribune.fortune(Norloge.parseNorloges(post.getMessage()));
+                Fortune fortune = tribune.fortune(post);
                 if (null != fortune) {
                     tribune.post(NAME, Norloge.format(post) + " La voilà " + uriBuilder.path("/fortunes/" + fortune.getId()).build().toString(), post.getRoom());
                 }
