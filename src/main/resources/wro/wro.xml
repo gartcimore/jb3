@@ -2,6 +2,7 @@
 <groups xmlns="http://www.isdc.ro/wro">
 	<group name="archives">
 		<js>classpath:META-INF/resources/webjars/jquery/3.0.0/jquery.js</js>
+		<js>/assets/common/common.js</js>
 		<js>/assets/common/post-to-html.js</js>
 		<js>/assets/archives/archives.js</js>
 		<css>classpath:META-INF/resources/webjars/blaze/2.6.0/dist/blaze.min.css

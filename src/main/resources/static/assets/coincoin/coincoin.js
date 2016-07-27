@@ -58,29 +58,6 @@ jb3 = {
             }
         });
         $('#jb3-posts').on({
-            mouseenter: function (event) {
-                self.highlightPostAndReplies($(event.target).data('ref'), true);
-            },
-            mouseleave: function (event) {
-                self.unhighlightPostAndReplies($(event.target).data('ref'));
-            },
-            click: function (event) {
-                var postContainer = $('#jb3-posts-container');
-                var quoted = $('#' + $(event.target).data('ref'));
-                if (quoted.length > 0) {
-                    postContainer.scrollTop(quoted[0].offsetTop - event.clientY + postContainer.offset().top + 10);
-                }
-            }
-        }, ".jb3-cite");
-        $('#jb3-posts').on({
-            mouseenter: function (event) {
-                self.highlightPostAndReplies($(event.target).parent().attr('id'), false);
-            },
-            mouseleave: function (event) {
-                self.unhighlightPostAndReplies($(event.target).parent().attr('id'));
-            }
-        }, ".jb3-post-time");
-        $('#jb3-posts').on({
             click: function (event) {
                 var button = $(event.target);
                 var post = button.parents('.jb3-post');
@@ -108,6 +85,7 @@ jb3 = {
                 self.insertTextInMessageControl('/revise #' + post.attr('id') + ' ');
             }
         }, ".jb3-revise-button");
+        jb3_common.initHighlight();
         jb3_common.initTotozLazyLoading();
         self.initNickname();
         self.coin = new Worker("/assets/coincoin/webdirectcoin.js");
