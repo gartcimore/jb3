@@ -137,13 +137,13 @@
 }
 
 .jb3-post-is-reply-to-mine .jb3-post-icon {
-    background-image: url("/common/icons/post/reply-to-mine.png");
+    background-image: url("/assets/common/icons/post/reply-to-mine.png");
 }
 
 .jb3-post-is-bigorno .jb3-post-icon {
-    background-image: url("/common/icons/post/bigorno.png");
+    background-image: url("/assets/common/icons/post/bigorno.png");
 }
 
 .jb3-post-is-mine .jb3-post-icon {
-    background-image: url("/common/icons/post/mine.png");
+    background-image: url("/assets/common/icons/post/mine.png");
 }
