@@ -28,6 +28,8 @@ jb3 = {
         self.controlsRoom.val(roomInURI || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
         if (roomInURI === self.controlsRoom.val()) {
             $('#jb3-roster').hide();
+            $('header').hide();
+            $("#jb3-layout").css('top', '0px');
         }
         self.controlsRoom.change(function () {
             var selectedRoom = localStorage.selectedRoom = self.previouslySelectedRoom = self.controlsRoom.val();
