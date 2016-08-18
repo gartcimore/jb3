@@ -49,6 +49,7 @@ public class WebDirectCoinConnectedMoules {
                 try {
                     if (null != moule) {
                         moule.sendMessage(message);
+                        Logger.getLogger(getClass().getName()).log(Level.FINE, "Send to moule #" + moule.getId() + " : " + payload);
                     }
                 } catch (Exception ex) {
                     Logger.getLogger(getClass().getName()).log(Level.WARNING, null, ex);
