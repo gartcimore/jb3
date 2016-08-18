@@ -45,11 +45,12 @@ public class WebDirectCoinConnectedMoules {
             messageS2C.setPosts(posts);
             String payload = objectMapper.writeValueAsString(messageS2C);
             TextMessage message = new TextMessage(payload);
+            System.out.println("Send to moules: " + payload);
             for (WebSocketSession moule : moules.keySet()) {
                 try {
                     if (null != moule) {
                         moule.sendMessage(message);
-                        Logger.getLogger(getClass().getName()).log(Level.FINE, "Send to moule #" + moule.getId() + " : " + payload);
+                        System.out.println("Send to moule #" + moule.getId());
                     }
                 } catch (Exception ex) {
                     Logger.getLogger(getClass().getName()).log(Level.WARNING, null, ex);
