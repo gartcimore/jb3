@@ -3,7 +3,7 @@ jb3_common = {
         try {
             return JSON.parse(localStorage.rooms);
         } catch (e) {
-            return [{rname: "batavie"}, {rname: "dlfp"}, {rname: "euromussels"}, {rname: "moules"}, {rname: "sveetch"}, {rname: "nimage"}];
+            return [{rname: "batavie"}, {rname: "dlfp"}, {rname: "euromussels"}, {rname: "moules"}, {rname: "sveetch"}, {rname: "libregamesinitiatives"}];
         }
     },
     initTotozLazyLoading: function () {
