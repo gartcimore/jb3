@@ -25,5 +25,11 @@ public class CoincoinController {
 		model.addAttribute("wro-group", "rooms");
 		return "rooms/rooms";
 	}
+	
+	@RequestMapping(path = "/paste", method = RequestMethod.GET)
+	public String paste(Model model) {
+		model.addAttribute("wro-group", "paste");
+		return "paste/paste";
+	}
 
 }

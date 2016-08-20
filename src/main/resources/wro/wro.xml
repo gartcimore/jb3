@@ -5,7 +5,7 @@
 		<js>/assets/common/common.js</js>
 		<js>/assets/common/post-to-html.js</js>
 		<js>/assets/archives/archives.js</js>
-		<css>classpath:META-INF/resources/webjars/blaze/2.6.0/dist/blaze.min.css
+		<css>classpath:META-INF/resources/webjars/blaze/2.12.0/dist/blaze.min.css
 		</css>
 		<css>/assets/common/reset.css</css>
 		<css>/assets/common/posts.css</css>
@@ -22,7 +22,7 @@
 		<js>/assets/common/post-to-html.js</js>
 		<js>/assets/common/common.js</js>
 		<js>/assets/coincoin/coincoin.js</js>
-		<css>classpath:META-INF/resources/webjars/blaze/2.6.0/dist/blaze.min.css
+		<css>classpath:META-INF/resources/webjars/blaze/2.12.0/dist/blaze.min.css
 		</css>
 		<css>/assets/common/reset.css</css>
 		<css>/assets/common/posts.css</css>
@@ -33,11 +33,23 @@
 		<js>classpath:META-INF/resources/webjars/jquery/3.0.0/jquery.js</js>
 		<js>/assets/common/post-to-html.js</js>
 		<js>/assets/fortunes/fortunes.js</js>
-		<css>classpath:META-INF/resources/webjars/blaze/2.6.0/dist/blaze.min.css
+		<css>classpath:META-INF/resources/webjars/blaze/2.12.0/dist/blaze.min.css
 		</css>
 		<css>/assets/common/reset.css</css>
 		<css>/assets/common/posts.css</css>
 		<css>/assets/fortunes/fortunes.css</css>
+	</group>
+	<group name="paste">
+		<js>classpath:META-INF/resources/webjars/jquery/3.0.0/jquery.js</js>
+		<js>classpath:META-INF/resources/webjars/jquery-form/3.51/jquery.form.js</js>
+		<js>classpath:META-INF/resources/webjars/riot/2.4.1/riot.js</js>
+		<js>/assets/thirdparty/picedit/picedit.js</js>
+		<js>/assets/tags/jb3-paste-form--tag.js</js>
+		<js>/assets/paste/paste.js</js>
+		<css>/assets/common/reset.css</css>
+		<css>/assets/thirdparty/picedit/picedit.css</css>
+		<css>classpath:META-INF/resources/webjars/blaze/2.12.0/dist/blaze.min.css
+		</css>
 	</group>
 	<group name="rooms">
 		<js>classpath:META-INF/resources/webjars/jquery/3.0.0/jquery.js</js>
@@ -47,8 +59,7 @@
 		<js>/assets/tags/jb3-room-editor--tag.js</js>
 		<js>/assets/rooms/rooms.js</js>
 		<css>/assets/common/reset.css</css>
-		<css>classpath:META-INF/resources/webjars/blaze/2.6.0/dist/blaze.min.css
+		<css>classpath:META-INF/resources/webjars/blaze/2.12.0/dist/blaze.min.css
 		</css>
 	</group>
-
 </groups>
