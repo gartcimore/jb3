@@ -72,7 +72,7 @@ public abstract class AbstractBouchotGateway implements Gateway, SchedulableGate
     }
 
     private synchronized void parsePosts(Document doc) throws JsonProcessingException {
-        System.out.println(DateTime.now() + " " + getClass().getName() + " refresh");
+    	Logger.getLogger(getClass().getName()).log(Level.FINE, "import bouchot backend");
         Elements postsToImport = doc.select("post");
         ArrayList<Post> newPosts = new ArrayList<Post>();
         for (ListIterator<Element> iterator = postsToImport.listIterator(postsToImport.size()); iterator
