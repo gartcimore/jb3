@@ -10,10 +10,9 @@ riot
 		     </div>\
 			<div class="c-tabs__tab { \'c-tabs__tab--active\': selectedTab == \'text\' }">\
 				<form name="pasteTextForm" class="c-fieldset" action="/api/paste/text" method="post">\
-					<label class="c-label c-form-element">\
-					  Text:\
-					  <textarea name="ptext" class="c-label__field" type="text"></textarea>\
-					</label>\
+					<div class="c-form-element">\
+						<textarea name="ptext" class="c-field" type="text"></textarea>\
+					</div>\
 					<input type="submit" class="c-button c-button--primary"" >\
 				</form>\
 				<div if="{ pastedTextUrl }" class="c-card  c-card--success">\
@@ -31,13 +30,10 @@ riot
 			</div>\
 			<div class="c-tabs__tab { \'c-tabs__tab--active\': selectedTab == \'image\' }">\
 				<form name="pasteImageForm" class="c-fieldset" action="/api/paste/image" method="post">\
-						<label class="c-label c-form-element">\
-							Image:\
-							<div class="c-form-element">\
-								<input name="pimage" type="file"></input>\
-							</div>\
-						</label>\
-						<input type="submit" class="c-button c-button--primary"" >\
+					<div class="c-form-element">\
+						<input name="pimage" type="file"></input>\
+					</div>\
+					<input type="submit" class="c-button c-button--primary"" >\
 				</form>\
 				<div if="{ pastedImageUrl }" class="c-card  c-card--success">\
 				  <div class="c-card__content c-card__content--divider">Pasted!</div>\
@@ -54,12 +50,11 @@ riot
 			</div>\
 			<div class="c-tabs__tab { \'c-tabs__tab--active\': selectedTab == \'file\' }">\
 				<form name="pasteFileForm" class="c-fieldset" action="/api/paste/file" method="post">\
-					<label class="c-label c-form-element">\
-					  File:\
-					  <input name="pfile" class="c-label__field" type="file"></input>\
-					</label>\
-					<input type="submit" class="c-button c-button--primary"" >\
-					 <progress value="0" max="100"></progress> \
+					<div class="c-form-element">\
+						<input name="pfile" class="c-label__field" type="file"></input>\
+					</div>\
+					<input type="submit" class="c-button c-button--primary" >\
+					<progress value="0" max="100"></progress>\
 				</form>\
 				<div if="{ pastedFileUrl }" class="c-card  c-card--success">\
 				  <div class="c-card__content c-card__content--divider">Pasted!</div>\
