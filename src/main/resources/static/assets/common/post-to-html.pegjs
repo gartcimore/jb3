@@ -11,7 +11,7 @@ postItem
  / .
 
 url
- = protocol:$((("http" "s"?) / "ftp") "://") domain:$([^ \t\r\n/])+ remaining:$([^ \t\r\n])*
+ = protocol:$((("http" "s"?) / "ftp") "://") domain:$([^< \t\r\n/])+ remaining:$([^< \t\r\n])*
  { return '<a href="' + protocol + domain + remaining + '" target="_blank">'+ domain +'</a>';}
  
 canard
