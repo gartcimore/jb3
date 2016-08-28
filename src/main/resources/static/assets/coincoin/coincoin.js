@@ -49,8 +49,11 @@ jb3 = {
             	self.postCurrentMessage();
             }
         });
-        $("#jb3-controls-message-container button").click(function() {
+        $("#jb3-controls-message-post").click(function() {
         	self.postCurrentMessage();
+        });
+        $("#jb3-controls-message-attach").click(function() {
+        	self.pasteModal.trigger('show');
         });
         $('#jb3-posts').on('click', '.jb3-post-time', function (e) {
             var postId = $(e.target).parent().attr('id');
@@ -151,6 +154,11 @@ jb3 = {
             localStorage.nickname = self.controlsNickname.val();
             self.coin.postMessage({type: "nickname", nickname: localStorage.nickname});
         });
+        riot.mount('jb3-modal');
+        self.pasteModal = riot.mount('jb3-paste-modal')[0];
+        self.pasteModal.on('pasted', function(pastedText) {
+        	self.insertTextInMessageControl(pastedText);        	
+        })
     },
     highlightPostAndReplies: function (postId, showPopup) {
         var post = $('#' + postId);
