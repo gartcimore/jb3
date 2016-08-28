@@ -157,40 +157,11 @@
 				$(this._fileinput).on("change", function() {
 					build_img_from_file(this.files);
 				});
-				// If Firefox (doesn't support clipboard object), create DIV to catch pasted image
-				if (!window.Clipboard) { // Firefox
-					var pasteCatcher = $(document.createElement("div"));
-					pasteCatcher.prop("contenteditable","true").css({
-						"position" : "absolute", 
-						"left" : -999,
-						"width" : 0,
-						"height" : 0,
-						"overflow" : "hidden",
-						"outline" : 0,
-						"opacity" : 0
-					});
-					$(document.body).prepend(pasteCatcher);
-				}
 				// Bind onpaste event to capture images from the the clipboard
 				$(document).on("paste", function(event) {
 					var items = (event.clipboardData  || event.originalEvent.clipboardData).items;
 					var blob;
-					if(!items) {
-						pasteCatcher.get(0).focus();
-                        pasteCatcher.on('DOMSubtreeModified', function(){
-                            var child = pasteCatcher.children().last().get(0);
-							pasteCatcher.html("");
-							if (child) {
-								if (child.tagName === "IMG" && child.src.substr(0, 5) == 'data:') {
-									_this._create_image_with_datasrc(child.src);
-								}
-                                else if (child.tagName === "IMG" && child.src.substr(0, 4) == 'http') {
-									_this._create_image_with_datasrc(child.src, false, false, true);
-								}
-							}
-                        });
-					}
-					else {
+					if(items) {
 						for (var i = 0; i < items.length; i++) {
 						  if (items[i].type.indexOf("image") === 0) {
 							blob = items[i].getAsFile();
