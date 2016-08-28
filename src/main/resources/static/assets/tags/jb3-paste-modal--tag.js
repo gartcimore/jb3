@@ -27,8 +27,8 @@ riot
 							}, {
 								type : "secondary",
 								action : function() {
-									self.modal.hide();
 									self.pasteForm.clear();
+									self.modal.hide();
 								},
 								text : "Cancel"
 							} ];

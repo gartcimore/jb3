@@ -85,10 +85,11 @@ riot
 					self.clear = function() {
 						self.pastedTextError = null;
 						self.pastedTextUrl = null;
+						self.pastedImageError = null;
+						self.pastedImageUrl = null;
 						self.pastedFileError = null;
 						self.pastedFileUrl = null;
-						self.pastedFileError = null;
-						self.pastedFileUrl = null;
+						this.update();
 					}
 					$(self.pasteTextForm).ajaxForm({
 						success : function(data) {
