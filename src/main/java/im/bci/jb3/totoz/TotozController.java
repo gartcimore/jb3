@@ -4,12 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,7 +46,17 @@ public class TotozController {
 		if (!totozFile.exists()) {
 			FileUtils.copyURLToFile(new URL("https://nsfw.totoz.eu/img/" + totoz), totozFile);
 		}
-		return ResponseEntity.ok().lastModified(totozFile.lastModified()).body(new FileSystemResource(totozFile));
+		return ResponseEntity.ok().lastModified(totozFile.lastModified()).contentType(detectContentType(totozFile))
+				.contentLength(totozFile.length()).body(new FileSystemResource(totozFile));
+	}
+
+	private MediaType detectContentType(File totozFile) {
+		try {
+			return MediaType.parseMediaType(Files.probeContentType(totozFile.toPath()));
+		} catch (Exception e) {
+			return MediaType.ALL;
+		}
+
 	}
 
 }
