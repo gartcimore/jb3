@@ -11,7 +11,7 @@ jb3_common = {
             mouseenter: function (event) {
                 var totoz = $(event.target);
                 if (totoz.find('img').length === 0) {
-                    var totozImg = '<img src="https://nsfw.totoz.eu/img/' + totoz.text() + '"/>';
+                    var totozImg = '<img src="/totoz/img/' + totoz.text() + '"/>';
                     totoz.append(totozImg);
                 }
             },
