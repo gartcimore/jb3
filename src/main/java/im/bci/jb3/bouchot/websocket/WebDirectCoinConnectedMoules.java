@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import im.bci.jb3.bouchot.data.Post;
 import im.bci.jb3.bouchot.websocket.messages.MessageS2C;
@@ -39,7 +39,7 @@ public class WebDirectCoinConnectedMoules {
 		ackMessage = new TextMessage(objectMapper.writeValueAsString(message));
 	}
 
-	private List<WebSocketSession> moules = Collections.synchronizedList(new ArrayList<WebSocketSession>());
+	private CopyOnWriteArrayList<WebSocketSession> moules = new CopyOnWriteArrayList<WebSocketSession>();
 
 	public void send(List<Post> posts) {
 		try {
@@ -48,16 +48,14 @@ public class WebDirectCoinConnectedMoules {
 			String payload = objectMapper.writeValueAsString(messageS2C);
 			TextMessage message = new TextMessage(payload);
 			System.out.println("Send to moules: " + payload);
-			synchronized (moules) {
-				for (WebSocketSession moule : moules) {
-					try {
-						if (null != moule) {
-							moule.sendMessage(message);
-							System.out.println("Send to moule " + printableMouleId(moule));
-						}
-					} catch (Exception ex) {
-						Logger.getLogger(getClass().getName()).log(Level.WARNING, null, ex);
+			for (WebSocketSession moule : moules) {
+				try {
+					if (null != moule && moule.isOpen()) {
+						moule.sendMessage(message);
+						System.out.println("Send to moule " + printableMouleId(moule));
 					}
+				} catch (Exception ex) {
+					Logger.getLogger(getClass().getName()).log(Level.WARNING, null, ex);
 				}
 			}
 		} catch (Exception ex) {
@@ -68,7 +66,7 @@ public class WebDirectCoinConnectedMoules {
 	String printableMouleId(WebSocketSession moule) {
 		StringBuilder sb = new StringBuilder('#').append(moule.getId());
 		Presence presence = (Presence) moule.getAttributes().get("moule-presence");
-		if(null != presence) {
+		if (null != presence) {
 			sb.append('(').append(presence.getNickname()).append(')');
 		}
 		return sb.toString();
@@ -104,17 +102,21 @@ public class WebDirectCoinConnectedMoules {
 		MessageS2C messageS2C = new MessageS2C();
 		messageS2C.setPresence(presenceS2C);
 		TextMessage message = new TextMessage(objectMapper.writeValueAsString(messageS2C));
-		synchronized (moules) {
-			for (WebSocketSession m : moules) {
-				try {
-					if (null != m && !m.getId().equals(moule.getId())) {
+		ArrayList<WebSocketSession> disconnectedMoules = new ArrayList<>();
+		for (WebSocketSession m : moules) {
+			try {
+				if (null != m && m.isOpen()) {
+					if (!m.getId().equals(moule.getId())) {
 						m.sendMessage(message);
 					}
-				} catch (Exception ex) {
-					Logger.getLogger(getClass().getName()).log(Level.WARNING, null, ex);
+				} else {
+					disconnectedMoules.add(m);
 				}
+			} catch (Exception ex) {
+				Logger.getLogger(getClass().getName()).log(Level.WARNING, null, ex);
 			}
 		}
+		moules.removeAll(disconnectedMoules);
 	}
 
 	public void sendNorloge(WebSocketSession moule, Post post) throws IOException {
