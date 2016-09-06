@@ -17,7 +17,6 @@ public class DlfpGateway extends AbstractBouchotGateway {
         conf.setCookieName("linuxfr.org_session");
         conf.setReferrer("https://linuxfr.org/board");
         conf.setMessageContentParameterName("board[message]");
-        conf.setUsingCrapCertificate(true);
         return conf;
     }
 
