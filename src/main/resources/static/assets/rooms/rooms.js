@@ -27,6 +27,11 @@ function Jb3Rooms() {
 		roomEditor.update();
 	});
 	
+	roomEditor.on('cancel-edit-room', function() {
+		self.rooms = jb3_common.getRooms();
+		roomList.update();
+	});
+	
 	roomEditor.on('delete-room', function(roomToDelete) {
 		self.rooms = jb3_common.getRooms().filter(function(r) {
 			return r.rname != roomToDelete.rname;
