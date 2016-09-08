@@ -3,8 +3,11 @@ jb3_common = {
         try {
             return JSON.parse(localStorage.rooms);
         } catch (e) {
-            return [{rname: "batavie"}, {rname: "dlfp"}, {rname: "euromussels"}, {rname: "moules"}, {rname: "sveetch"}, {rname: "libregamesinitiatives"}];
+            this.getDefaultRooms();
         }
+    },
+    getDefaultRooms: function () {
+        return [{rname: "batavie"}, {rname: "dlfp"}, {rname: "euromussels"}, {rname: "moules"}, {rname: "sveetch"}, {rname: "libregamesinitiatives"}];
     },
     initTotozLazyLoading: function () {
         $('.jb3-posts').on({

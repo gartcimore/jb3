@@ -40,5 +40,13 @@ function Jb3Rooms() {
 		roomList.update();
 		roomEditor.update();
 	});
+	
+	roomEditor.on('reset-all-rooms', function(roomToDelete) {
+		self.rooms = jb3_common.getDefaultRooms();
+		localStorage.rooms = JSON.stringify(self.rooms);
+		roomList.update();
+		roomEditor.update();
+	});
+	
 }
 new Jb3Rooms();
