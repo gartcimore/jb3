@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Controller
 @RequestMapping("/totoz")
@@ -44,7 +45,8 @@ public class TotozController {
 			throws MalformedURLException, IOException {
 		File totozFile = new File(totozDir, totoz);
 		if (!totozFile.exists()) {
-			FileUtils.copyURLToFile(new URL("https://nsfw.totoz.eu/img/" + totoz), totozFile);
+			URL totozUrl = UriComponentsBuilder.fromHttpUrl("https://nsfw.totoz.eu/img/").path(totoz).build().toUri().toURL();
+			FileUtils.copyURLToFile(totozUrl, totozFile);
 		}
 		return ResponseEntity.ok().lastModified(totozFile.lastModified()).contentType(detectContentType(totozFile))
 				.contentLength(totozFile.length()).body(new FileSystemResource(totozFile));
