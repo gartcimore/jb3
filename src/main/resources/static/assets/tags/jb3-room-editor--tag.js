@@ -1,7 +1,7 @@
 riot.tag(
 				'jb3-room-editor',
 '<fieldset class="c-fieldset">\
-		<h2 class="c-heading c-heading--small" if="{ rname.value }">{ rname.value }</h2>\
+		<h2 class="c-heading c-heading--small" if="{ rname.value }"><a class="c-link" href="/?room={ rname.value }">{ rname.value }</a></h2>\
 		<label class="c-label c-form-element" if="{ rname.value == \'dlfp\' }">\
 		  Login:\
 		  <input name="rlogin" class="c-label__field" type="text">\
