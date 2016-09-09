@@ -49,6 +49,23 @@ jb3 = {
             	self.postCurrentMessage();
             }
         });
+        $('#jb3-show-controls').click(function() {
+        	var header = $('header');
+        	var layout = $('#jb3-layout');
+        	if(header.css('display') == 'block') {
+        		header.css('display', 'none');
+        		layout.css('top', '0px');
+        	} else {
+        		header.css('display', 'block');
+        		layout.css('top', '57px');
+        	}
+        	var roster = $('#jb3-roster');
+        	if(roster.css('display') == 'flex') {
+        		roster.css('display', 'none');
+        	} else {
+        		roster.css('display', 'flex');
+        	}
+        });
         $("#jb3-controls-message-post").click(function() {
         	self.postCurrentMessage();
         });

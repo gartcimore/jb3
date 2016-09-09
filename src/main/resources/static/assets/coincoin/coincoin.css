@@ -4,12 +4,13 @@ body {
 
 header {
 	position: relative;
+	display: none;
 	z-index: 3;
 }
 
 #jb3-layout {
     position: fixed;
-    top: 57px;
+    top: 0px;
     bottom: 0px;
     left: 0px;
     right: 0px;
@@ -26,7 +27,6 @@ header {
 
 #jb3-layout-horizontal {
     display: flex;
-    resize: vertical;
     overflow: auto;
     height: 100%;
 }
@@ -47,10 +47,23 @@ header {
 #jb3-roster {
     resize: horizontal;
     overflow: auto;
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: flex-end;
     padding: 2px;
+}
+
+/* desktop */
+@media only screen and (min-width: 768px) {
+    #jb3-roster {
+    	display: flex;
+    }
+    header {
+    	display: block;
+    }
+    #jb3-layout {
+    	top: 57px;
+    }
 }
 
 #jb3-roster .c-menu {
