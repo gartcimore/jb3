@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<site baseurl="{{baseurl}}" name="jb3" title="jb3" version="666">
+<board name="{{room}}" title="{{room}}"> <backend
+	path="/legacy/xml?room={{room}}" public="true" refresh="10"
+	tags_encoded="true" /> <post anonymous="true" max_length="512"
+	method="post" path="/legacy/post?room={{room}}"> <field
+	name="message">$m</field></post></board></site>

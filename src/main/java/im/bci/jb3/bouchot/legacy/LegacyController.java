@@ -47,12 +47,23 @@ public class LegacyController {
 
     @Autowired
     private LegacyUtils legacyUtils;
+    
+    @Value("${jb3.room.default}")
+    private String defaultRoom;
 
     private Period postsGetPeriod;
     
     @Value("${jb3.posts.get.period}")
     public void setPostsGetPeriod(String p) {
         postsGetPeriod = ISOPeriodFormat.standard().parsePeriod(p);
+    }
+    
+    @RequestMapping(path = "/discovery", method = RequestMethod.GET)
+    public String discovery(@RequestParam(value = "room", required = false) String room, Model model, HttpServletResponse response) {
+        model.addAttribute("room", StringUtils.isNotBlank(room) ? room : defaultRoom);
+        model.addAttribute("baseurl", ServletUriComponentsBuilder.fromCurrentRequest().replacePath("").build().toString());
+        response.setContentType("text/xml");
+        return "bouchot/legacy/discovery";
     }
 
     @RequestMapping(value = "/post", method = RequestMethod.POST)
