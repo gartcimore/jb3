@@ -79,6 +79,13 @@ jb3 = {
                 self.controlsMessage.focus();
             }
         });
+        $('#jb3-posts').on('click', '.jb3-post-nickname', function (e) {
+            var nickname = $(e.target).text();
+            if (nickname) {
+                self.controlsMessage.val(self.controlsMessage.val() + nickname + '< ');
+                self.controlsMessage.focus();
+            }
+        });
         $('#jb3-posts').on({
             click: function (event) {
                 var button = $(event.target);
