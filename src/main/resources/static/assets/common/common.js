@@ -1,10 +1,14 @@
 jb3_common = {
     getRooms: function () {
+    	var rooms;
         try {
-            return JSON.parse(localStorage.rooms);
+        	rooms = JSON.parse(localStorage.rooms);
         } catch (e) {
-            this.getDefaultRooms();
         }
+        if(!rooms) {
+        	rooms = this.getDefaultRooms();
+        }
+        return rooms;
     },
     getDefaultRooms: function () {
         return [{rname: "batavie"}, {rname: "dlfp"}, {rname: "euromussels"}, {rname: "moules"}, {rname: "sveetch"}, {rname: "libregamesinitiatives"}];
