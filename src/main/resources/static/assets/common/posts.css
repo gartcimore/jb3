@@ -1,85 +1,89 @@
 .jb3-posts {
-    display : table;
-    border-spacing: 2px 1px;
+	border-spacing: 2px 1px;
 }
 
 .jb3-post {
-    display : table-row;
+	
 }
 
 .jb3-revisions {
-    display: none;
+	display: none;
 }
 
 .jb3-revisions-button {
-    margin-left: 4px;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+	margin-left: 4px;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
 .jb3-revise-button {
-    margin-left: 4px;
-    cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+	margin-left: 4px;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
 .jb3-post .jb3-revise-button {
-    color: rgba(0, 0, 0, 0.0);
+	color: rgba(0, 0, 0, 0.0);
 }
 
 .jb3-post-is-mine:hover .jb3-revise-button {
-    color: initial;
+	color: initial;
 }
 
 .jb3-post:nth-of-type(odd) {
-    background-color: #FBFBFB;
+	background-color: #FBFBFB;
 }
 
 .jb3-post-time {
-    display : table-cell;
-    padding-right: 5px;
-    padding-left: 5px;
-    text-align: center;
-    color: black;
-    font-weight: bold;
-    white-space: nowrap;
+	padding-right: 5px;
+	padding-left: 5px;
+	text-align: center;
+	color: black;
+	font-weight: bold;
+	white-space: nowrap;
+	border-radius: 8px;
+	border: 1px solid grey;
+	display: inline-block;
 }
 
 .jb3-post-room {
-    display : table-cell;
-    padding-right: 5px;
-    padding-left: 5px;
-    color: #25662D;
+	padding-right: 5px;
+	padding-left: 5px;
+	color: #25662D;
+	font-weight: normal;
 }
 
 .jb3-post-nickname {
-    display : table-cell;
-    padding-right: 5px;
-    padding-left: 5px;
-    color: #833;
+	padding-right: 5px;
+	padding-left: 5px;
+	color: #833;
+	display: inline-block;
+	word-break: break-all;
+	border-radius: 8px;
+	border: 1px solid grey;
 }
 
 .jb3-post-message {
-    display : table-cell;
-    padding-right: 5px;
-    padding-left: 5px;
-    color: black;
-    word-break: break-all;
+	padding-right: 5px;
+	padding-left: 5px;
+	color: black;
+	word-break: break-all;
+	display: block;
 }
 
 .jb3-post-message a {
-    font-weight: bold;
-    color: #1690f3;
+	font-weight: bold;
+	color: #1690f3;
 }
 
 .jb3-post-message a:hover {
-    text-decoration: underline;
+	text-decoration: underline;
 }
 
 .jb3-post-message a:visited {
@@ -87,63 +91,88 @@
 }
 
 .jb3-cite {
-    color: #5F7FBF;
+	color: #5F7FBF;
 }
 
 .jb3-cite-mine {
-    font-weight: bold;
-    color: #C00;
+	font-weight: bold;
+	color: #C00;
 }
 
 .jb3-cited-by-me .jb3-post-time {
-    font-weight: bold;
-    color: #C00;
+	font-weight: bold;
+	color: #C00;
 }
 
 .jb3-cited .jb3-post-time {
-    font-weight: bold;
-    color: #5F7FBF;
+	font-weight: bold;
+	color: #5F7FBF;
 }
 
 .jb3-highlight {
-    background-color: #FFD202 !important;
+	background-color: #FFD202 !important;
 }
 
 .jb3-totoz {
-    position: relative;
-    font-weight: bold;
-    color: #0A1;
+	position: relative;
+	font-weight: bold;
+	color: #0A1;
 }
 
 .jb3-totoz img {
-    display: none;
+	display: none;
 }
 
 .jb3-totoz:hover img {
-    display: inline;
-    position: absolute;
-    bottom: 100%;
+	display: inline;
+	position: absolute;
+	bottom: 100%;
 }
 
 .jb3-bigorno {
-    border: 1px solid #F00;
+	border: 1px solid #F00;
 }
 
 .jb3-post-icon {
-    width: 16px;
-    height: 16px;
-    display: table-cell;
-    background-repeat: no-repeat;
+	background-repeat: no-repeat;
 }
 
 .jb3-post-is-reply-to-mine .jb3-post-icon {
-    background-image: url("/assets/common/icons/post/reply-to-mine.png");
+	background-image: url("/assets/common/icons/post/reply-to-mine.png");
+	width: 16px;
+	height: 16px;
+	display: inline-block;
 }
 
 .jb3-post-is-bigorno .jb3-post-icon {
-    background-image: url("/assets/common/icons/post/bigorno.png");
+	background-image: url("/assets/common/icons/post/bigorno.png");
+	width: 16px;
+	height: 16px;
+	display: inline-block;
 }
 
 .jb3-post-is-mine .jb3-post-icon {
-    background-image: url("/assets/common/icons/post/mine.png");
+	background-image: url("/assets/common/icons/post/mine.png");
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+}
+
+/* desktop */
+@media only screen and (min-width: 768px) {
+	.jb3-post-time {
+		border: none;
+	}
+	.jb3-post-nickname {
+		width: 8em;
+		border: none;
+	}
+	.jb3-post-message {
+		display: inline;
+	}
+	.jb3-post-icon {
+		width: 16px;
+		height: 16px;
+		display: inline-block;
+	}
 }
