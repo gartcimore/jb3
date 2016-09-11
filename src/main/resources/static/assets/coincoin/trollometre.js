@@ -1,128 +1,97 @@
-function ChauveMetric() {
-	this.name = 'chauve';
+function TrollMetric(name, options) {
+	this.name = name;
+	this.nicknameRegex = options.nickname;
+	this.messageRegex = options.message;
 	this.nbPostMatching = 0;
-	this.nbPostNotMatching = 0;
 }
-ChauveMetric.prototype.feed = function(post) {
-	if (/(single|normal)/i.test(post.nickname)
-			|| /(chauve|dégarni|bald|cheveu|crâne|shampoing|peigne|domi)/i
-					.test(post.message)) {
+
+TrollMetric.prototype.feed = function(post) {
+	if ((this.nicknameRegex && this.nicknameRegex.test(post.nickname))
+			|| (this.messageRegex && this.messageRegex.test(post.message))) {
 		this.nbPostMatching++;
-	} else {
-		this.nbPostNotMatching++;
 	}
 }
 
-function SexismeMetric() {
-	this.name = 'sexisme';
-	this.nbPostMatching = 0;
-	this.nbPostNotMatching = 0;
+function Trollometre(canvasElement) {
+	var self = this;
+	this.nbPost = 0;
+	this.metrics = [
+			new TrollMetric(
+					"chauve",
+					{
+						nickname : /\b(single|normal)\b/i,
+						message : /\b(single|bald|cheveu|crâne|domi|dégarni|homophobe|lourd|peigne|pédale|shampoing|vtt|vélo)\b/i
+					}),
+			new TrollMetric(
+					"sexisme",
+					{
+						nickname : /\b(adonai|flanagan)\b/i,
+						message : /\b(sexisme|adonai|boobs|couple|femelle|féminisme|féministe|genre|jupe|linge|male|ménage|pantalon|transexuel|vaisselle|soumise|patriarcat|matriarcat)\b/i
+					}),
+			new TrollMetric(
+					"politique",
+					{
+						nickname : /\b(adonai|flanagan|pap)\b/i,
+						message : /\b(balladur|banlieue|banque|banquier|capitaliste|chirac|communisme|communiste|europe|facho|hitler|hollande|jean marie|jlm|juppé|lepen|libéral|libéralisme|libre échange|macron|marine|melanchon|melancon|meluche|meluchon|nabot|nain|pap|patrie|pauvre|politique|prolétaire|prolo|racisme|raciste|réact|réaction|réactionnaire|république|riche|rouge|sarko|sarkozy|socialisme|staline|villepin)\b/i
+					}),
+			new TrollMetric(
+					"linux",
+					{
+						message : /\b(archlinux|bash|daubian|debian|gcc|gnome|gnu|hurd|kde|linux|microsoft|redcrap|redhat|rms|shell|slackware|stallman|systemd|wayland|x11|xfce|xwindow)\b/i
+					}),
+			new TrollMetric(
+					"hipster",
+					{
+						nickname : /\b(houplaboom)\b/i,
+						message : /\b(apple|barbe|bio|dae|équitable|fixie|graine|hipster|houpla|houplaboom|quinoa|régime|tatouage|végétarien)\b/i
+					}),
+			new TrollMetric(
+					"cinéma",
+					{
+						message : /\b(allocine|blockbuster|camera|chrisix|cinema|cinéma|dune|lynch|nanar|navet|pon|réalisateur|woody\sallen)\b/i
+					}),
+			new TrollMetric(
+					"dev",
+					{
+						message : /\b(ant|architecte|autotools|C|C\+\+|cloud|cmake|css|dev|fullstack|html|java|javascript|make|maven|perl|php|python|ruby|scalable)\b/i
+					}),
+			new TrollMetric(
+					"coincoin",
+					{
+						message : /\b(b3|backend|bouchot|c2|coincoin|dlfp|euromussels|gaycoincoin|gcc|gcoincoin|jb3|miaoli|olcc|wmcc)\b/i
+					}) ];
+	var data = {
+		labels : [],
+		datasets : [ {
+			backgroundColor : "rgba(255,99,132,0.2)",
+			borderColor : "rgba(255,99,132,1)",
+			pointBackgroundColor : "rgba(255,99,132,1)",
+			pointBorderColor : "#fff",
+			pointHoverBackgroundColor : "#fff",
+			pointHoverBorderColor : "rgba(255,99,132,1)",
+			data : []
+		} ]
+	};
+	this.chart = new Chart(canvasElement, {
+		type : 'radar',
+		data : data,
+		options : {
+			legend : {
+				display : false
+			},
+			scale : {
+				display : true,
+				ticks : {
+					display : false
+				}
+			}
+		}
+	});
 }
-SexismeMetric.prototype.feed = function(post) {
-	if (/(femme|femelle|fille|gonzesse|mâle|bitch|pute|salope|jupe|connasse|pilule|ivg|macho|mariage)/i
-			.test(post.message)) {
-		this.nbPostMatching++;
-	} else {
-		this.nbPostNotMatching++;
-	}
-}
-
-function PolitiqueMetric() {
-	this.name = 'politique';
-	this.nbPostMatching = 0;
-	this.nbPostNotMatching = 0;
-}
-PolitiqueMetric.prototype.feed = function(post) {
-	if (/(politique|mélanchon|méluchon|jlm|adonai|sarko|marine|lepen|juppé|chirac|mitterand|royal|écolo|républi|impôt|taxe|social|travail|patrie|droite|gauche)/i
-			.test(post.message)) {
-		this.nbPostMatching++;
-	} else {
-		this.nbPostNotMatching++;
-	}
-}
-
-function LinuxMetric() {
-	this.name = 'linux';
-	this.nbPostMatching = 0;
-	this.nbPostNotMatching = 0;
-}
-LinuxMetric.prototype.feed = function(post) {
-	if (/(linux|unix|wayland|systemd|microsoft|debian|redhat|fedora|slackware|archlinux|gcc|java|python|ruby|rmll|stallman|apple|macbook)/i.test(post.message)) {
-		this.nbPostMatching++;
-	} else {
-		this.nbPostNotMatching++;
-	}
-}
-
-function HipsterMetric() {
-	this.name = 'hipster';
-	this.nbPostMatching = 0;
-	this.nbPostNotMatching = 0;
-}
-HipsterMetric.prototype.feed = function(post) {
-	if (/(hipster|barbe|fixie|houpla|graine|soja|gluten|régime|bobo|mainstream|vapote|végan|bio)/i.test(post.message)) {
-		this.nbPostMatching++;
-	} else {
-		this.nbPostNotMatching++;
-	}
-}
-
-function CinemaMetric() {
-	this.name = 'cinéma';
-	this.nbPostMatching = 0;
-	this.nbPostNotMatching = 0;
-}
-CinemaMetric.prototype.feed = function(post) {
-	if (/(ciné|pon|dune|lynch|villain|marvel|superman|batman|réalisateur|remake|reboot)/i.test(post.message)) {
-		this.nbPostMatching++;
-	} else {
-		this.nbPostNotMatching++;
-	}
-}
-
- function Trollometre(canvasElement) {
- var self = this;
- this.metrics = [ new ChauveMetric(), new SexismeMetric(),
- new PolitiqueMetric(), new LinuxMetric(), new HipsterMetric(),
- new CinemaMetric() ];
- var data = {
- labels : this.metrics.map(function(metric) {
- return metric.name;
- }),
- datasets : [ {
- backgroundColor : "rgba(255,99,132,0.2)",
- borderColor : "rgba(255,99,132,1)",
- pointBackgroundColor : "rgba(255,99,132,1)",
- pointBorderColor : "#fff",
- pointHoverBackgroundColor : "#fff",
- pointHoverBorderColor : "rgba(255,99,132,1)",
- data : this.metrics
- .map(function(metric) {
- return self.metricToValue(metric);
- })
- } ]
- };
- this.chart = new Chart(canvasElement, {
- type : 'radar',
- data : data,
- options : {
- legend : {
- display : false
- },
- scale : {
- display : true,
- ticks : {
- display : false
- }
- }
- }
- });
- }
 
 Trollometre.prototype.metricToValue = function(metric) {
-	if (metric.nbPostMatching > 0) {
-		var totalPosts = metric.nbPostMatching + metric.nbPostNotMatching;
-		return metric.nbPostMatching * 100 / totalPosts;
+	if (this.nbPost > 0) {
+		return metric.nbPostMatching * 100 / this.nbPost;
 	} else {
 		return 0;
 	}
@@ -130,14 +99,21 @@ Trollometre.prototype.metricToValue = function(metric) {
 
 Trollometre.prototype.update = function() {
 	var self = this;
-	this.chart.data.datasets[0].data = this.metrics.map(function(metric) {
+	this.metrics.sort(function(a, b) {
+		return b.nbPostMatching - a.nbPostMatching;
+	});
+	var topMetrics = this.metrics.slice(0,5);
+	this.chart.data.labels = topMetrics.map(function(metric) {
+		return metric.name;
+	})
+	this.chart.data.datasets[0].data = topMetrics.map(function(metric) {
 		return self.metricToValue(metric);
 	});
 	this.chart.update();
 
 }
 Trollometre.prototype.feed = function(post) {
-
+	this.nbPost++;
 	this.metrics.map(function(metric) {
 		return metric.feed(post);
 	});
