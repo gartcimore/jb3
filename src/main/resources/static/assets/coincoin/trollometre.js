@@ -20,7 +20,7 @@ function Trollometre(canvasElement) {
 					"chauve",
 					{
 						nickname : /\b(single|normal)\b/i,
-						message : /\b(single|bald|cheveu|crâne|domi|dégarni|homophobe|lourd|peigne|pédale|shampoing|vtt|vélo)\b/i
+						message : /\b(single|bald|cheveu|crâne|domi|dégarni|homophobe|lourd|math|peigne|pédale|shampoing|vtt|vélo)\b/i
 					}),
 			new TrollMetric(
 					"sexisme",
@@ -32,7 +32,7 @@ function Trollometre(canvasElement) {
 					"politique",
 					{
 						nickname : /\b(adonai|flanagan|pap)\b/i,
-						message : /\b(balladur|banlieue|banque|banquier|capitaliste|chirac|communisme|communiste|europe|facho|hitler|hollande|jean marie|jlm|juppé|lepen|libéral|libéralisme|libre échange|macron|marine|melanchon|melancon|meluche|meluchon|nabot|nain|pap|patrie|pauvre|politique|prolétaire|prolo|racisme|raciste|réact|réaction|réactionnaire|république|riche|rouge|sarko|sarkozy|socialisme|staline|villepin)\b/i
+						message : /\b(balladur|banlieue|banque|banquier|capitaliste|chirac|communisme|communiste|europe|facho|hitler|hollande|insurrection|jean marie|jlm|juppé|lepen|libéral|libéralisme|libre échange|macron|marine|melanchon|melancon|meluche|meluchon|nabot|nain|occitanie|pap|patrie|pauvre|politique|prolétaire|prolo|racisme|raciste|réact|réaction|réactionnaire|république|riche|rouge|sarko|sarkozy|socialisme|staline|villepin)\b/i
 					}),
 			new TrollMetric(
 					"linux",
@@ -43,12 +43,12 @@ function Trollometre(canvasElement) {
 					"hipster",
 					{
 						nickname : /\b(houplaboom)\b/i,
-						message : /\b(apple|barbe|bio|dae|équitable|fixie|graine|hipster|houpla|houplaboom|quinoa|régime|tatouage|végétarien)\b/i
+						message : /\b(apple|barbe|bio|dae|équitable|fixie|graine|hipster|houpla|houplaboom|quinoa|régime|tatouage|tofu|végétarien)\b/i
 					}),
 			new TrollMetric(
 					"cinéma",
 					{
-						message : /\b(allocine|blockbuster|camera|chrisix|cinema|cinéma|dune|lynch|nanar|navet|pon|réalisateur|woody\sallen)\b/i
+						message : /\b(allocine|blockbuster|camera|chrisix|cinema|cinéma|dune|imdb|lynch|nanar|navet|pon|réalisateur|woody\sallen)\b/i
 					}),
 			new TrollMetric(
 					"dev",
@@ -59,6 +59,17 @@ function Trollometre(canvasElement) {
 					"coincoin",
 					{
 						message : /\b(b3|backend|bouchot|c2|coincoin|dlfp|euromussels|gaycoincoin|gcc|gcoincoin|jb3|miaoli|olcc|wmcc)\b/i
+					}),
+			new TrollMetric(
+					"windows",
+					{
+						message : /\b(windows|gate|surface|windaube|virus|malware|drm|microsoft)\b/i
+					}),
+			new TrollMetric(
+					"alcool",
+					{
+						nickname : /\b(joalland)\b/i,
+						message : /\b(alcool|bar|bière|Clément|diplomatico|joalland|jojo|longueteau|menthe|mojito|pirate|piraterie|rhum|ti'punch|verre|vin|whisky)\b/i
 					}) ];
 	var data = {
 		labels : [],
@@ -102,7 +113,7 @@ Trollometre.prototype.update = function() {
 	this.metrics.sort(function(a, b) {
 		return b.nbPostMatching - a.nbPostMatching;
 	});
-	var topMetrics = this.metrics.slice(0,5);
+	var topMetrics = this.metrics.slice(0, 5);
 	this.chart.data.labels = topMetrics.map(function(metric) {
 		return metric.name;
 	})
