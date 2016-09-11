@@ -19,7 +19,7 @@ function SexismeMetric() {
 	this.nbPostNotMatching = 0;
 }
 SexismeMetric.prototype.feed = function(post) {
-	if (/(femme|femelle|fille|gonzesse|mâle|bitch|pute|salope|jupe|connasse)/i
+	if (/(femme|femelle|fille|gonzesse|mâle|bitch|pute|salope|jupe|connasse|pilule|ivg|macho|mariage)/i
 			.test(post.message)) {
 		this.nbPostMatching++;
 	} else {
@@ -33,7 +33,7 @@ function PolitiqueMetric() {
 	this.nbPostNotMatching = 0;
 }
 PolitiqueMetric.prototype.feed = function(post) {
-	if (/(politique|mélanchon|méluchon|jlm|sarko|juppé|droite|gauche)/i
+	if (/(politique|mélanchon|méluchon|jlm|adonai|sarko|marine|lepen|juppé|chirac|mitterand|royal|écolo|républi|impôt|taxe|social|travail|patrie|droite|gauche)/i
 			.test(post.message)) {
 		this.nbPostMatching++;
 	} else {
@@ -47,7 +47,7 @@ function LinuxMetric() {
 	this.nbPostNotMatching = 0;
 }
 LinuxMetric.prototype.feed = function(post) {
-	if (/(linux|unix|wayland|systemd)/i.test(post.message)) {
+	if (/(linux|unix|wayland|systemd|microsoft|debian|redhat|fedora|slackware|archlinux|gcc|java|python|ruby|rmll|stallman|apple|macbook)/i.test(post.message)) {
 		this.nbPostMatching++;
 	} else {
 		this.nbPostNotMatching++;
@@ -60,7 +60,7 @@ function HipsterMetric() {
 	this.nbPostNotMatching = 0;
 }
 HipsterMetric.prototype.feed = function(post) {
-	if (/(hipster|barbe|fixie|houpla)/i.test(post.message)) {
+	if (/(hipster|barbe|fixie|houpla|graine|soja|gluten|régime|bobo|mainstream|vapote|végan|bio)/i.test(post.message)) {
 		this.nbPostMatching++;
 	} else {
 		this.nbPostNotMatching++;
@@ -73,7 +73,7 @@ function CinemaMetric() {
 	this.nbPostNotMatching = 0;
 }
 CinemaMetric.prototype.feed = function(post) {
-	if (/(ciné|pon|dune)/i.test(post.message)) {
+	if (/(ciné|pon|dune|lynch|villain|marvel|superman|batman|réalisateur|remake|reboot)/i.test(post.message)) {
 		this.nbPostMatching++;
 	} else {
 		this.nbPostNotMatching++;
