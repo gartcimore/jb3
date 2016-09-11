@@ -54,26 +54,18 @@ header {
 }
 
 /* desktop */
-@media
-only
-screen
-and
-(min-width:
-768px)
-{
-#jb3-roster {
-	display: flex;
+@media only screen and (min-width: 768px) {
+	#jb3-roster {
+		display: flex;
+	}
+	header {
+		display: block;
+	}
+	#jb3-layout {
+		top: 57px;
+	}
 }
 
-header {
-	display: block;
-}
-
-#jb3-layout {
-	top: 57px;
-}
-
-}
 #jb3-roster .c-menu {
 	max-height: 100%;
 }
@@ -88,7 +80,7 @@ header {
 }
 
 #jb3-controls-nickname {
-    flex: 0 1 auto;
+	flex: 0 1 auto;
 }
 
 #jb3-controls-room {
@@ -117,4 +109,9 @@ header {
 #jb3-post-popup-content {
 	background-color: #f3f3f3;
 	border-radius: 4px;
+}
+
+#trollometre {
+	width: 100%;
+	padding-bottom: 5px;
 }

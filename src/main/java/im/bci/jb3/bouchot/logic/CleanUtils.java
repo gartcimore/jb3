@@ -64,7 +64,7 @@ public class CleanUtils {
 			nickname = bigornozify(nickname);
 		}
                 if(StringUtils.isBlank(nickname)) {
-                    nickname = "AnonymousMussel";
+                    nickname = "coward";
                 }
 		return nickname;
 	}

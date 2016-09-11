@@ -22,12 +22,14 @@
 		<js>classpath:META-INF/resources/webjars/jquery-form/3.51/jquery.form.js
 		</js>
 		<js>classpath:META-INF/resources/webjars/riot/2.4.1/riot.js</js>
+		<js>classpath:META-INF/resources/webjars/chart.js/2.2.2/dist/Chart.js</js>
 		<js>/assets/thirdparty/picedit/picedit.js</js>
 		<js>/assets/tags/jb3-paste-form--tag.js</js>
 		<js>/assets/tags/jb3-modal--tag.js</js>
 		<js>/assets/tags/jb3-paste-modal--tag.js</js>
 		<js>/assets/common/post-to-html.js</js>
 		<js>/assets/common/common.js</js>
+		<js>/assets/coincoin/trollometre.js</js>
 		<js>/assets/coincoin/coincoin.js</js>
 		<css>classpath:META-INF/resources/webjars/blaze/2.12.0/dist/blaze.min.css
 		</css>

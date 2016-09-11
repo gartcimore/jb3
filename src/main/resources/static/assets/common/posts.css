@@ -166,6 +166,9 @@
 	.jb3-post-nickname {
 		width: 8em;
 		border: none;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	.jb3-post-message {
 		display: inline;

@@ -125,6 +125,7 @@ jb3 = {
         url = url.protocol(url.protocol() === "https" ? "wss" : "ws").path("/webdirectcoin");
         self.coin.postMessage({type: "connect", url: url.toString()});
         self.updateMessages();
+        self.initTrollometre();
     },
     postCurrentMessage: function() {
         var selectedRoom = this.controlsRoom.val();
@@ -239,9 +240,12 @@ jb3 = {
             var userNickname = $('#jb3-controls-nickname').val();
             var wasAtbottom = self.isPostsContainerAtBottom();
             for (var d in data) {
-                self.onMessage(userNickname, data[d]);
+            	var message = data[d];
+            	this.trollometre.feed(message);
+                self.onMessage(userNickname, message);
             }
             self.updateNorloges();
+            self.trollometre.update();
             if (wasAtbottom) {
                 self.scrollPostsContainerToBottom();
             }
@@ -356,6 +360,9 @@ jb3 = {
             cite.text(moment(norloge.time).format(self.norlogeFullFormat));
             cite.removeClass('jb3-cite-raw');
     	} );
+    },
+    initTrollometre: function() {
+    	this.trollometre = new Trollometre(document.getElementById("trollometre"));
     }
 };
 jb3.init();
