@@ -38,6 +38,7 @@ jb3 = {
             unselectedRoomPosts.appendTo(self.hiddenMessagesContainer);
             selectedRoomPosts.appendTo(self.messagesContainer);
             self.scrollPostsContainerToBottom();
+            self.trollometre.update(selectedRoom);
         });
         self.controlsMessage.bind('keypress', function (event) {
             if (event.altKey) {
@@ -245,7 +246,7 @@ jb3 = {
                 self.onMessage(userNickname, message);
             }
             self.updateNorloges();
-            self.trollometre.update();
+            self.trollometre.update(this.controlsRoom.val());
             if (wasAtbottom) {
                 self.scrollPostsContainerToBottom();
             }
