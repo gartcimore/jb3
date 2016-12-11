@@ -53,7 +53,7 @@ function Trollometre(canvasElement) {
 			new TrollMetric(
 					"dev",
 					{
-						message : /\b(ant|architectes?|autotools|C|C\+\+|cloud|cmake|css|dev|fullstack|html|java|javascript|make|maven|perl|php|python|ruby|scalable|sysadmins?)\b/i
+						message : /\b(ant|architectes?|autotools|C\+\+|cloud|cmake|css|dev|fullstack|html|java|javascript|make|maven|perl|php|python|ruby|scalable|sysadmins?)\b/i
 					}),
 			new TrollMetric(
 					"coincoin",
