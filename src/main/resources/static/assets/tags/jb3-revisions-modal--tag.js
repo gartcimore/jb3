@@ -1,6 +1,6 @@
 riot
         .tag(
-                'jb3-modal',
+                'jb3-revisions-modal',
                 '\
 				<div class="c-overlay" if="{ opts.visible }" onclick="{ hide }"></div>\
 				<div class="c-modal"  if="{ opts.visible }" style="height: 80%; overflow: scroll">\
@@ -9,23 +9,22 @@ riot
 				    <h3 class="c-heading c-heading--small">{ opts.title }</h3>\
 				  </header>\
 				  <div class="c-modal__body">\
-				  	<yield/>\
+				  	<jb3-raw content="{ opts.revisions }"></jb3-raw>\
 				  </div>\
-				  <footer class="c-modal__footer  c-modal__footer--block">\
-				 	<button each="{ opts.buttons }" type="button" class="c-button { \'c-button--\' + type }" onclick="{ action }" style="{ style }">\
-				 		{ text }\
-				 	</button>\
-				 	</footer>\
 				</div>\
 ',
                 function (opts) {
                     var self = this;
-                    this.show = function () {
+                    //self.raw = self.tags['jb3-raw'];
+                    this.on('show', function (revisions) {
+                        this.opts.revisions = revisions;
                         this.opts.visible = true;
                         this.update();
-                    };
+                        //  self.raw.content = revisions;
+                        //self.raw.update();
+                    });
                     this.hide = function () {
                         self.opts.visible = false;
                         self.update();
-                    }
+                    };
                 });

@@ -92,22 +92,9 @@ jb3 = {
                 var button = $(event.target);
                 var post = button.parents('.jb3-post');
                 var revisions = $('#' + post.attr('id') + '-revisions');
-                $.colorbox({html: revisions.html(), title: 'Revisions'});
+                self.revisionsModal.trigger('show', revisions.html());
             }
         }, ".jb3-revisions-button");
-        $('#jb3-posts').on({
-            click: function (event) {
-                var link = $(event.target);
-                var href = link.attr('href');
-                if (href) {
-                    if (/\.(png|jpe?g)$/i.test(href)) {
-                        $.colorbox({href: href, maxWidth: "90%", maxHeight: "90%"});
-                        event.stopPropagation();
-                        event.preventDefault();
-                    }
-                }
-            }
-        }, "a");
         $('#jb3-posts').on({
             click: function (event) {
                 var button = $(event.target);
@@ -180,11 +167,13 @@ jb3 = {
             localStorage.nickname = self.controlsNickname.val();
             self.coin.postMessage({type: "nickname", nickname: localStorage.nickname});
         });
+        riot.mount('jb3-raw');
         riot.mount('jb3-modal');
+        self.revisionsModal = riot.mount('jb3-revisions-modal')[0];
         self.pasteModal = riot.mount('jb3-paste-modal')[0];
         self.pasteModal.on('pasted', function(pastedText) {
         	self.insertTextInMessageControl(pastedText);        	
-        })
+        });
     },
     highlightPostAndReplies: function (postId, showPopup) {
         var post = $('#' + postId);
