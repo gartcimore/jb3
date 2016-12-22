@@ -13,7 +13,6 @@
 	</group>
 	<group name="coincoin">
 		<js>classpath:META-INF/resources/webjars/jquery/3.0.0/jquery.js</js>
-		</js>
 		<js>classpath:META-INF/resources/webjars/handlebars/4.0.2/handlebars.js
 		</js>
 		<js>classpath:META-INF/resources/webjars/URI.js/1.14.1/URI.js</js>
