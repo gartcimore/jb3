@@ -3,7 +3,7 @@ riot
                 'jb3-modal',
                 '\
 				<div class="c-overlay" if="{ opts.visible }" onclick="{ hide }"></div>\
-				<div class="c-modal"  if="{ opts.visible }" style="height: 80%; overflow: scroll">\
+				<div class="c-modal"  if="{ opts.visible }" style="overflow: scroll">\
 				  <header class="c-modal__header">\
 				    <button type="button" class="c-button c-button--close" onclick="{ hide }">×</button>\
 				    <h3 class="c-heading c-heading--small">{ opts.title }</h3>\
