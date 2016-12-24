@@ -2,24 +2,24 @@ riot.tag(
 				'jb3-room-editor',
 '<fieldset class="c-fieldset">\
 		<h2 class="c-heading c-heading--small" if="{ rname.value }"><a class="c-link" href="/?room={ rname.value }">{ rname.value }</a></h2>\
-		<label class="c-label c-form-element" if="{ rname.value == \'dlfp\' }">\
+		<label class="c-label o-form-element" if="{ rname.value == \'dlfp\' }">\
 		  Login:\
-		  <input name="rlogin" class="c-label__field" type="text">\
+		  <input name="rlogin" class="c-field c-field--label" type="text">\
 		</label>\
-		<label class="c-label c-form-element" if="{ rname.value == \'dlfp\' }">\
+		<label class="c-label o-form-element" if="{ rname.value == \'dlfp\' }">\
 		  Password / Cookie / ... :\
-		  <input name="rauth" class="c-label__field" type="text">\
+		  <input name="rauth" class="c-field c-field--label" type="text">\
 		</label>\
 		<div class="c-input-group" if="{ !rname.value }">\
 				<input name="rname" class="c-field" type="text" placeholder="Type new room\'s name">\
-			    <button if="{ !rname.value }" class="c-button c-button--primary" onclick="{ save }">Create new room</button>\
+			    <button if="{ !rname.value }" class="c-button c-button--info" onclick="{ save }">Create new room</button>\
 		</div>\
-		<div class="c-form-element" if="{ !rname.value }" >\
-				<button class="c-button c-button--secondary" onclick="{ resetAll }">Reset all rooms</button>\
+		<div class="o-form-element" if="{ !rname.value }" >\
+				<button class="c-button c-button--warning" onclick="{ resetAll }">Reset all rooms</button>\
 		</div>\
-		<button if="{ rname.value == \'dlfp\' }" class="c-button c-button--primary" onclick="{ save }">Save</button>\
+		<button if="{ rname.value == \'dlfp\' }" class="c-button c-button--info" onclick="{ save }">Save</button>\
 		<button if="{ rname.value }" class="c-button" onclick="{ cancel }">Cancel</button>\
-		<button if="{ rname.value }" class="c-button c-button--secondary" onclick="{ del }">Delete</button>\
+		<button if="{ rname.value }" class="c-button c-button--warning" onclick="{ del }">Delete</button>\
 </fieldset>\
 ',
 				function(opts) {

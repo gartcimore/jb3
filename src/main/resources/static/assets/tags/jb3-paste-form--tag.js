@@ -11,47 +11,47 @@ riot
 		     </div>\
 			<div class="c-tabs__tab { \'c-tabs__tab--active\': selectedTab == \'text\' }">\
 				<form name="pasteTextForm" class="c-fieldset" action="/api/paste/text" method="post">\
-					<div class="c-form-element">\
+					<div class="o-form-element">\
 						<textarea name="ptext" class="c-field" type="text"></textarea>\
 					</div>\
-					<input type="submit" class="c-button c-button--primary"" >\
+					<input type="submit" class="c-button c-button--info"" >\
 				</form>\
 				<div if="{ pastedTextUrl }" class="c-card  c-card--success">\
-				  <div class="c-card__content c-card__content--divider">Pasted!</div>\
-				  <div class="c-card__content">\
+				  <div class="c-card__item c-card__item--divider">Pasted!</div>\
+				  <div class="c-card__item">\
 				    <p class="c-paragraph"><a class="c-link jb3-pasted-url" href="{ pastedTextUrl }">{ pastedTextUrl }</a></p>\
 				  </div>\
 				</div>\
 				<div if="{ pastedTextError }" class="c-card  c-card--error">\
-				  <div class="c-card__content c-card__content--divider">Error :-(</div>\
-				  <div class="c-card__content">\
+				  <div class="c-card__item c-card__item--divider">Error :-(</div>\
+				  <div class="c-card__item">\
 				    <p class="c-paragraph">{ pastedTextError }</p>\
 				  </div>\
 				</div>\
 			</div>\
 			<div class="c-tabs__tab { \'c-tabs__tab--active\': selectedTab == \'image\' }">\
 				<form name="pasteImageForm" class="c-fieldset" action="/api/paste/image" method="post">\
-					<div class="c-form-element">\
+					<div class="o-form-element">\
 						<input name="pimage" type="file"></input>\
 					</div>\
-					<input type="submit" class="c-button c-button--primary"" >\
+					<input type="submit" class="c-button c-button--info"" >\
 				</form>\
 				<div if="{ pastedImageUrl }" class="c-card  c-card--success">\
-				  <div class="c-card__content c-card__content--divider">Pasted!</div>\
-				  <div class="c-card__content">\
+				  <div class="c-card__item c-card__item--divider">Pasted!</div>\
+				  <div class="c-card__item">\
 				    <p class="c-paragraph"><a class="c-link  jb3-pasted-url" href="{ pastedImageUrl }">{ pastedImageUrl }</a></p>\
 				  </div>\
 				</div>\
 				<div if="{ pastedImageError }" class="c-card  c-card--error">\
-				  <div class="c-card__content c-card__content--divider">Error :-(</div>\
-				  <div class="c-card__content">\
+				  <div class="c-card__item c-card__item--divider">Error :-(</div>\
+				  <div class="c-card__item">\
 				    <p class="c-paragraph">{ pastedImageError }</p>\
 				  </div>\
 				</div>\
 			</div>\
                         <div class="c-tabs__tab { \'c-tabs__tab--active\': selectedTab == \'sketch\' }">\
 				<div name="pasteSketchForm" class="c-fieldset">\
-                                    <div class="c-form-element">\
+                                    <div class="o-form-element">\
                                         <div class="jb3-paste-sketch-tools">\
                                             <a href="#jb3-paste-sketch-canvas" data-color="#000000" style="background: #000000;"></a>\
                                             <a href="#jb3-paste-sketch-canvas" data-color="#001290" style="background: #001290;"></a>\
@@ -89,39 +89,39 @@ riot
                                         </div>\
                                         <canvas id="jb3-paste-sketch-canvas" width="512" height="384"></canvas>\
                                     </div>\
-                                    <button class="jb3-paste-sketch-upload-button c-button c-button--primary"" >Upload</button>\
+                                    <button class="jb3-paste-sketch-upload-button c-button c-button--info"" >Upload</button>\
                                     <progress value="0" max="100"></progress>\
 				</div>\
 				<div if="{ pastedSketchUrl }" class="c-card  c-card--success">\
-				  <div class="c-card__content c-card__content--divider">Pasted!</div>\
-				  <div class="c-card__content">\
+				  <div class="c-card__item c-card__item--divider">Pasted!</div>\
+				  <div class="c-card__item">\
 				    <p class="c-paragraph"><a class="c-link  jb3-pasted-url" href="{ pastedSketchUrl }">{ pastedSketchUrl }</a></p>\
 				  </div>\
 				</div>\
 				<div if="{ pastedSketchError }" class="c-card  c-card--error">\
-				  <div class="c-card__content c-card__content--divider">Error :-(</div>\
-				  <div class="c-card__content">\
+				  <div class="c-card__item c-card__item--divider">Error :-(</div>\
+				  <div class="c-card__item">\
 				    <p class="c-paragraph">{ pastedSketchError }</p>\
 				  </div>\
 				</div>\
 			</div>\
-			<div class="c-tabs__tab { \'c-tabs__tab--active\': selectedTab == \'file\' }">\\n\
+			<div class="c-tabs__tab { \'c-tabs__tab--active\': selectedTab == \'file\' }">\
 				<form name="pasteFileForm" class="c-fieldset" action="/api/paste/file" method="post">\
-					<div class="c-form-element">\
-						<input name="pfile" class="c-label__field" type="file"></input>\
+					<div class="o-form-element">\
+						<input name="pfile" class="c-field c-field--label" type="file"></input>\
 					</div>\
-					<input type="submit" class="c-button c-button--primary" >\
+					<input type="submit" class="c-button c-button--info" >\
 					<progress value="0" max="100"></progress>\
 				</form>\
 				<div if="{ pastedFileUrl }" class="c-card  c-card--success">\
-				  <div class="c-card__content c-card__content--divider">Pasted!</div>\
-				  <div class="c-card__content">\
+				  <div class="c-card__item c-card__item--divider">Pasted!</div>\
+				  <div class="c-card__item">\
 				    <p class="c-paragraph"><a class="c-link  jb3-pasted-url" href="{ pastedFileUrl }">{ pastedFileUrl }</a></p>\
 				  </div>\
 				</div>\
 				<div if="{ pastedFileError }" class="c-card  c-card--error">\
-				  <div class="c-card__content c-card__content--divider">Error :-(</div>\
-				  <div class="c-card__content">\
+				  <div class="c-card__item c-card__item--divider">Error :-(</div>\
+				  <div class="c-card__item">\
 				    <p class="c-paragraph">{ pastedFileError }</p>\
 				  </div>\
 				</div>\

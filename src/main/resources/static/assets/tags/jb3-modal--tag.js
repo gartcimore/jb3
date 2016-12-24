@@ -3,19 +3,23 @@ riot
                 'jb3-modal',
                 '\
 				<div class="c-overlay" if="{ opts.visible }" onclick="{ hide }"></div>\
-				<div class="c-modal"  if="{ opts.visible }" style="overflow: scroll">\
-				  <header class="c-modal__header">\
-				    <button type="button" class="c-button c-button--close" onclick="{ hide }">×</button>\
-				    <h3 class="c-heading c-heading--small">{ opts.title }</h3>\
-				  </header>\
-				  <div class="c-modal__body">\
-				  	<yield/>\
-				  </div>\
-				  <footer class="c-modal__footer  c-modal__footer--block">\
-				 	<button each="{ opts.buttons }" type="button" class="c-button { \'c-button--\' + type }" onclick="{ action }" style="{ style }">\
-				 		{ text }\
-				 	</button>\
+				<div class="o-modal o-modal--full"  if="{ opts.visible }">\
+                                    <div class="c-card">\
+                                        <header class="c-card__header">\
+                                            <button type="button" class="c-button c-button--close" onclick="{ hide }">×</button>\
+                                            <h3 class="c-heading c-heading--small">{ opts.title }</h3>\
+                                        </header>\
+                                        <div class="c-card__body o-panel">\
+                                              <yield/>\
+                                        </div>\
+                                        <footer class="c-card__footer  c-card__footer--block">\
+                                            <div class="c-input-group">\
+                                                <button each="{ opts.buttons }" type="button" class="c-button c-button--block { \'c-button--\' + type }" onclick="{ action }" style="{ style }">\
+                                                    { text }\
+                                                </button>\
+                                            </div>\
 				 	</footer>\
+                                    </div>\
 				</div>\
 ',
                 function (opts) {

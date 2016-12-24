@@ -12,7 +12,7 @@ riot
 					self.pasteForm = self.modal.tags['jb3-paste-form'];
 					self.buttons = [
 							{
-								type : "primary",
+								type : "info",
 								action : function() {
 									var pastedUrls = $(self.root).find(
 											' .jb3-pasted-url').map(
@@ -25,7 +25,7 @@ riot
 								},
 								text : "Attach"
 							}, {
-								type : "secondary",
+								type : "warning",
 								action : function() {
 									self.pasteForm.clear();
 									self.modal.hide();

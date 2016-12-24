@@ -5,7 +5,7 @@
 		<js>/assets/common/common.js</js>
 		<js>/assets/common/post-to-html.js</js>
 		<js>/assets/archives/archives.js</js>
-		<css>classpath:META-INF/resources/webjars/blaze/2.12.0/dist/blaze.min.css
+		<css>classpath:META-INF/resources/webjars/blaze/3.2.0/dist/blaze.min.css
 		</css>
 		<css>/assets/common/reset.css</css>
 		<css>/assets/common/posts.css</css>
@@ -32,7 +32,7 @@
 		<js>/assets/common/common.js</js>
 		<js>/assets/coincoin/trollometre.js</js>
 		<js>/assets/coincoin/coincoin.js</js>
-		<css>classpath:META-INF/resources/webjars/blaze/2.12.0/dist/blaze.min.css
+		<css>classpath:META-INF/resources/webjars/blaze/3.2.0/dist/blaze.min.css
 		</css>
 		<css>/assets/common/reset.css</css>
 		<css>/assets/thirdparty/picedit/picedit.css</css>
@@ -43,7 +43,7 @@
 		<js>classpath:META-INF/resources/webjars/jquery/3.0.0/jquery.js</js>
 		<js>/assets/common/post-to-html.js</js>
 		<js>/assets/fortunes/fortunes.js</js>
-		<css>classpath:META-INF/resources/webjars/blaze/2.12.0/dist/blaze.min.css
+		<css>classpath:META-INF/resources/webjars/blaze/3.2.0/dist/blaze.min.css
 		</css>
 		<css>/assets/common/reset.css</css>
 		<css>/assets/common/posts.css</css>
@@ -60,7 +60,7 @@
 		<js>/assets/paste/paste.js</js>
 		<css>/assets/common/reset.css</css>
 		<css>/assets/thirdparty/picedit/picedit.css</css>
-		<css>classpath:META-INF/resources/webjars/blaze/2.12.0/dist/blaze.min.css
+		<css>classpath:META-INF/resources/webjars/blaze/3.2.0/dist/blaze.min.css
 		</css>
 	</group>
 	<group name="rooms">
@@ -71,7 +71,7 @@
 		<js>/assets/tags/jb3-room-editor--tag.js</js>
 		<js>/assets/rooms/rooms.js</js>
 		<css>/assets/common/reset.css</css>
-		<css>classpath:META-INF/resources/webjars/blaze/2.12.0/dist/blaze.min.css
+		<css>classpath:META-INF/resources/webjars/blaze/3.2.0/dist/blaze.min.css
 		</css>
 	</group>
 </groups>

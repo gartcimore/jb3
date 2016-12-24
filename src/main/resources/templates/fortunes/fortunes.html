@@ -13,16 +13,16 @@
 	<main class="o-container o-container--large">
 	<section class="u-letter-box--super">
 		<form class="c-fieldset">
-			<label class="c-label"> Year: <input class="c-label__field"
+			<label class="c-label"> Year: <input class="c-field c-field--label"
 				type="number" name="year" value="{{rq.year}}">
-			</label> <label class="c-label"> Room: <input class="c-label__field"
+			</label> <label class="c-label"> Room: <input class="c-field c-field--label"
 				type="text" name="roomFilter" value="{{rq.roomFilter}}">
 			</label>
-			<label class="c-label"> Nickname: <input class="c-label__field"
+			<label class="c-label"> Nickname: <input class="c-field c-field--label"
 				type="text" name="nicknameFilter" value="{{rq.nicknameFilter}}">
-			</label> <label class="c-label"> Message: <input class="c-label__field"
+			</label> <label class="c-label"> Message: <input class="c-field c-field--label"
 				type="text" name="messageFilter" value="{{rq.messageFilter}}">
-			</label><div class="c-form-element"><input type="submit" class="c-button c-button--secondary"
+			</label><div class="o-form-element"><input type="submit" class="c-button c-button--warning"
 				value="Search"></div>
 		</form>
 		{{#if fortunes }}

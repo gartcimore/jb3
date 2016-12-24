@@ -15,19 +15,19 @@
 		<form id="search-form" class="c-fieldset">
 			<input type="hidden" name="page" value="{{rq.page}}"> <input
 				type="hidden" name="pageSize" value="{{rq.pageSize}}"> <label
-				class="c-label"> Date: <input class="c-label__field"
+				class="c-label"> Date: <input class="c-field c-field--label"
 				type="date" name="date" value="{{rq.date}}">
-			</label> <label class="c-label"> Room: <input class="c-label__field"
+			</label> <label class="c-label"> Room: <input class="c-field c-field--label"
 				type="text" name="roomFilter" value="{{rq.roomFilter}}">
 			</label> <label class="c-label"> Nickname: <input
-				class="c-label__field" type="text" name="nicknameFilter"
+				class="c-field c-field--label" type="text" name="nicknameFilter"
 				value="{{rq.nicknameFilter}}">
 			</label> <label class="c-label"> Message: <input
-				class="c-label__field" type="text" name="messageFilter"
+				class="c-field c-field--label" type="text" name="messageFilter"
 				value="{{rq.messageFilter}}">
 			</label>
-			<div class="c-form-element">
-				<input type="submit" class="c-button c-button--secondary"
+			<div class="o-form-element">
+				<input type="submit" class="c-button c-button--warning"
 					value="Search">
 			</div>
 		</form>
