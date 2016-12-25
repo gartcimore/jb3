@@ -55,6 +55,8 @@ riot
                                         <div class="jb3-paste-sketch-tools">\
                                             <input name="sketchColor" type="color" value="#000" onchange="{ changeSketchColor }"></input>\
                                             <input name="sketchPenSize" min="0" max="32" value="5" type="range" onchange="{ changeSketchPenSize }"></input>\
+                                            <button class="c-button" onclick="{ undoSketch }">&cularr;</button>\
+                                            <button class="c-button" onclick="{ redoSketch }">&curarr;</button>\
                                         </div>\
                                         <div name="sketchCanvasContainer" class="jb3-paste-sketch-container" width="512" height="384"></div>\
                                     </div>\
@@ -100,19 +102,6 @@ riot
 '.jb3-paste-sketch-tools {\
     margin-bottom: 10px;\
 }\
-.jb3-paste-sketch-tools a {\
-    border: 1px solid black;\
-    min-width:10px;\
-    height: 30px;\
-    line-height: 30px;\
-    padding: 0 10px;\
-    vertical-align: middle;\
-    text-align: center;\
-    text-decoration: none;\
-    display: inline-block;\
-    color: black;\
-    font-weight: bold;\
-}\
 .jb3-paste-sketch-container {\
     margin:auto;\
     max-width: 100%;\
@@ -135,6 +124,12 @@ riot
                                 size: 5
                             }
                         });
+                        this.undoSketch = function() {
+                            this.sketchpad.undo();
+                        };
+                        this.redoSketch = function() {
+                            this.sketchpad.redo();
+                        };
                         this.changeSketchColor = function(e) {
                             this.sketchpad.setLineColor(e.target.value);
                         };
