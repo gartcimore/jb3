@@ -53,43 +53,12 @@ riot
 				<div name="pasteSketchForm" class="c-fieldset">\
                                     <div class="o-form-element">\
                                         <div class="jb3-paste-sketch-tools">\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#000000" style="background: #000000;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#001290" style="background: #001290;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#0027FB" style="background: #0027FB;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#9B1708" style="background: #9B1708;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#9A2091" style="background: #9A2091;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#952FFC" style="background: #952FFC;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#FF3016" style="background: #FF3016;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#FF3592" style="background: #FF3592;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#FF3FFC" style="background: #FF3FFC;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#008F15" style="background: #008F15;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#009092" style="background: #009092;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#0094FC" style="background: #0094FC;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#949119" style="background: #949119;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#929292" style="background: #929292;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#8E96FC" style="background: #8E96FC;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#FF9621" style="background: #FF9621;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#FF9794" style="background: #FF9794;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#FF9AFD" style="background: #FF9AFD;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#00F92C" style="background: #00F92C;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#00FA96" style="background: #00FA96;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#00FCFE" style="background: #00FCFE;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#80FA2E" style="background: #80FA2E;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#7EFB96" style="background: #7EFB96;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#78FDFE" style="background: #78FDFE;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#FFFD33" style="background: #FFFD33;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#FFFD98" style="background: #FFFD98;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-color="#FFFFFF" style="background: #FFFFFF;"></a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-size="1" style="background: #ccc">1</a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-size="4" style="background: #ccc">4</a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-size="8" style="background: #ccc">8</a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-size="16" style="background: #ccc">16</a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-tool="marker">Marker</a>\
-                                            <a href="#jb3-paste-sketch-canvas" data-tool="eraser">Eraser</a>\
+                                            <input name="sketchColor" type="color" value="#000" onchange="{ changeSketchColor }"></input>\
+                                            <input name="sketchPenSize" min="0" max="32" value="5" type="range" onchange="{ changeSketchPenSize }"></input>\
                                         </div>\
-                                        <canvas id="jb3-paste-sketch-canvas" width="512" height="384"></canvas>\
+                                        <div name="sketchCanvasContainer" class="jb3-paste-sketch-container" width="512" height="384"></div>\
                                     </div>\
-                                    <button class="jb3-paste-sketch-upload-button c-button c-button--info"" >Upload</button>\
+                                    <button class="c-button c-button--info" onclick="{ uploadSketch }" >Upload</button>\
                                     <progress value="0" max="100"></progress>\
 				</div>\
 				<div if="{ pastedSketchUrl }" class="c-card  c-card--success">\
@@ -144,42 +113,60 @@ riot
     color: black;\
     font-weight: bold;\
 }\
-#jb3-paste-sketch-canvas {\
+.jb3-paste-sketch-container {\
+    margin:auto;\
+    max-width: 100%;\
+}\
+.jb3-paste-sketch-container canvas {\
     border: 1px solid black;\
+    margin:auto;\
+    max-width: 100%;\
 }\
 ',
                 function(opts) {
                 var self = this;
                         this.selectedTab = 'text';
                         var sketchForm = $(self.pasteSketchForm);
-                        sketchForm.find('#jb3-paste-sketch-canvas').sketch();
-                        sketchForm.find('.jb3-paste-sketch-upload-button').click(function() {
-                        var canvas = sketchForm.find('canvas')[0];
-                        canvas.toBlob(function(blob) {
-                        var formData = new FormData();
-                                formData.append("pimage", blob, "sketch.png");
-                                var xhr = new XMLHttpRequest;
-                                xhr.onprogress = function(e) {
-                                    var percentComplete = (e.loaded / e.total) * 100;
-                                    sketchForm.find('progress').val(percentComplete);
-                                };
-                                xhr.onreadystatechange = function (event) {
-                                    if (xhr.readyState == 4) {
-                                        if (xhr.status == 200) {
-                                            var data = JSON.parse(xhr.response);
-                                            self.pastedSketchError = null;
-                                            self.pastedSketchUrl = data.url;
-                                        } else {
-                                            self.pastedSketchError = 'Error during image upload';
-                                            self.pastedSketchUrl = null;
-                                        }
-                                        self.update();
-                                    }
-                                };
-                                xhr.open("POST", "/api/paste/image");
-                                xhr.send(formData);
-                        }, "image/png");
-                });
+                        this.sketchpad = new Sketchpad(this.sketchCanvasContainer, {
+                            width: 512,
+                            height: 384,
+                            line: {
+                                color: '#000',
+                                size: 5
+                            }
+                        });
+                        this.changeSketchColor = function(e) {
+                            this.sketchpad.setLineColor(e.target.value);
+                        };
+                        this.changeSketchPenSize = function(e) {
+                            this.sketchpad.setLineSize(e.target.value);
+                        };
+                        this.uploadSketch = function() {
+                                this.sketchpad.canvas.toBlob(function(blob) {
+                                var formData = new FormData();
+                                        formData.append("pimage", blob, "sketch.png");
+                                        var xhr = new XMLHttpRequest;
+                                        xhr.onprogress = function(e) {
+                                            var percentComplete = (e.loaded / e.total) * 100;
+                                            sketchForm.find('progress').val(percentComplete);
+                                        };
+                                        xhr.onreadystatechange = function (event) {
+                                            if (xhr.readyState == 4) {
+                                                if (xhr.status == 200) {
+                                                    var data = JSON.parse(xhr.response);
+                                                    self.pastedSketchError = null;
+                                                    self.pastedSketchUrl = data.url;
+                                                } else {
+                                                    self.pastedSketchError = 'Error during image upload';
+                                                    self.pastedSketchUrl = null;
+                                                }
+                                                self.update();
+                                            }
+                                        };
+                                        xhr.open("POST", "/api/paste/image");
+                                        xhr.send(formData);
+                                }, "image/png");
+                        };
                         self.selectTab = function(e) {
                         self.selectedTab = e.target.dataset.tab
                         };

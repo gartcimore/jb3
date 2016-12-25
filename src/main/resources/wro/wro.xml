@@ -22,7 +22,7 @@
 		<js>classpath:META-INF/resources/webjars/riot/2.4.1/riot.js</js>
 		<js>classpath:META-INF/resources/webjars/chart.js/2.2.2/dist/Chart.js</js>
 		<js>/assets/thirdparty/picedit/picedit.js</js>
-                <js>/assets/thirdparty/sketch.js</js>
+                <js>/assets/thirdparty/responsive-sketchpad.js</js>
                 <js>/assets/tags/jb3-raw--tag.js</js>
 		<js>/assets/tags/jb3-paste-form--tag.js</js>
 		<js>/assets/tags/jb3-modal--tag.js</js>
@@ -55,7 +55,7 @@
 		</js>
 		<js>classpath:META-INF/resources/webjars/riot/2.4.1/riot.js</js>
 		<js>/assets/thirdparty/picedit/picedit.js</js>
-                <js>/assets/thirdparty/sketch.js</js>
+                <js>/assets/thirdparty/responsive-sketchpad.js</js>
 		<js>/assets/tags/jb3-paste-form--tag.js</js>
 		<js>/assets/paste/paste.js</js>
 		<css>/assets/common/reset.css</css>
