@@ -14,7 +14,7 @@ riot
 							{
 								type : "info",
 								action : function() {
-									var pastedUrls = $(self.root).find(
+									var pastedUrls = $(self.root).find('.c-tabs__tab--active').find(
 											' .jb3-pasted-url').map(
 											function(_, e) {
 												return e.getAttribute('href');
