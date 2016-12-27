@@ -79,8 +79,11 @@ riot
 			</div>\
                         <div class="c-tabs__tab { \'c-tabs__tab--active\': selectedTab == \'record\' }">\
                             <div class="o-form-element">\
-                                <button class="c-button" onclick="{ startRecord }">Record</button>\
-                                <button class="c-button" onclick="{ stopRecord }">Stop</button>\
+                                <button class="c-button" onclick="{ toggleMic }">Switch { mediaRecorder ? "off" : "on" } mic</button>\
+                                <button if="{ mediaRecorder }" class="c-button" onclick="{ toggleRecord }">\
+                                    { mediaRecorder && mediaRecorder.state == "recording" ? "Stop" : "Record" }\
+                                    <img style="width:1em; height:1em;" if="{ mediaRecorder && mediaRecorder.state == \'recording\'}" src="/assets/icons/audio.svg" alt="recording">\
+                                </button>\
                             </div>\
                             <div class="o-form-element">\
                                 <audio name="recordedAudio" controls></audio>\
@@ -141,36 +144,48 @@ riot
                 function(opts) {
                     var self = this;
                     this.selectedTab = 'text';
-                        this.startRecord = function() {
-                            this.cancelRecord();
-                            var constraints = { audio: true, video: false }; 
-                            navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream) {
-                                self.mediaRecorder = new MediaRecorder(mediaStream);
-                                self.recordedChunks = [];
-                                self.mediaRecorder.ondataavailable = function(e) {
-                                    self.recordedChunks.push(e.data);
-                                }
-                                self.mediaRecorder.start();
-                            },function(){
-                                console.log('prout');
-                            })
-                            .catch(function(err) { 
-                                console.log(err.name + ": " + err.message);
-                            });
-                        };
-                        this.cancelRecord = function() {
+                        this.toggleMic = function() {
                             if(self.mediaRecorder) {
-                                self.mediaRecorder.onstop = null;
+                                var mediaRecorder = self.mediaRecorder;
+                                self.mediaRecorder = null;
+                                mediaRecorder.stream.getTracks().forEach(function(track) {
+                                    track.stop();
+                                });
+                            } else {
+                                var constraints = { audio: true, video: false }; 
+                                navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream) {
+                                    self.mediaRecorder = new MediaRecorder(mediaStream);
+                                    self.recordedChunks = [];
+                                    self.mediaRecorder.ondataavailable = function(e) {
+                                        self.recordedChunks.push(e.data);
+                                    }
+                                    self.mediaRecorder.onstop = function() {
+                                        self.recordedBlob = new Blob(self.recordedChunks, { 'type' : 'audio/ogg; codecs=opus' });
+                                        self.recordedChunks = [];
+                                        self.recordedAudio.src = window.URL.createObjectURL(self.recordedBlob);
+                                        self.recordedAudio.play();
+                                    };
+                                    self.update();
+                                },function(){
+                                    console.log('No audio recording device available.');
+                                })
+                                .catch(function(err) { 
+                                    console.log(err.name + ": " + err.message);
+                                });
+                            }
+                        };
+                        this.toggleRecord = function() {
+                            if(self.mediaRecorder && self.mediaRecorder.state == "recording") {
                                 self.mediaRecorder.stop();
+                            } else {
                                 self.recordedChunks = [];
+                                self.mediaRecorder.start();
                             }
                         };
                         this.stopRecord = function() {
                             if(self.mediaRecorder) {
-                                self.mediaRecorder.onstop = function() {
-                                    self.recordedBlob = new Blob(self.recordedChunks, { 'type' : 'audio/ogg; codecs=opus' });
-                                    self.recordedChunks = [];
-                                    self.recordedAudio.src = window.URL.createObjectURL(self.recordedBlob);
+                                this.mediaRecorder.onstop = function() {
+
                                 }
                                 self.mediaRecorder.stop();
                             }

@@ -155,6 +155,7 @@
 					<include>**/*.tag</include>
 					<include>**/*.css</include>
 					<include>**/*.png</include>
+                                        <include>**/*.svg</include>
 				</includes>
 			</resource>
 		</resources>
