@@ -155,7 +155,14 @@ jb3_post_to_html = /*
         peg$c11 = peg$classExpectation(["<", " ", "\t", "\r", "\n", "/"], true, false),
         peg$c12 = /^[^< \t\r\n]/,
         peg$c13 = peg$classExpectation(["<", " ", "\t", "\r", "\n"], true, false),
-        peg$c14 = function(protocol, domain, remaining) { return '<a href="' + protocol + domain + remaining + '" target="_blank">'+ domain +'</a>';},
+        peg$c14 = function(protocol, domain, remaining) { 
+            var fullUrl = protocol + domain + remaining;
+            if( /(ogg|mp3|wav)$/i.test(remaining) ) {
+                return '<audio src="' + fullUrl + '" controls preload="none" title="' + fullUrl + '"></audio>';
+            } else {
+                return '<a href="' + fullUrl + '" target="_blank">'+ domain +'</a>';
+            }
+         },
         peg$c15 = "\\_",
         peg$c16 = peg$literalExpectation("\\_", false),
         peg$c17 = "&lt;",

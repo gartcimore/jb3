@@ -12,7 +12,14 @@ postItem
 
 url
  = protocol:$((("http" "s"?) / "ftp") "://") domain:$([^< \t\r\n/])+ remaining:$([^< \t\r\n])*
- { return '<a href="' + protocol + domain + remaining + '" target="_blank">'+ domain +'</a>';}
+ { 
+    var fullUrl = protocol + domain + remaining;
+    if( /(ogg|mp3|wav)$/i.test(remaining) ) {
+        return '<audio src="' + fullUrl + '" controls preload="none" title="' + fullUrl + '"></audio>';
+    } else {
+        return '<a href="' + fullUrl + '" target="_blank">'+ domain +'</a>';
+    }
+ }
  
 canard
 = canard:$("\\_" teteCanard "&lt;" / "&gt;" teteCanard "_/")
