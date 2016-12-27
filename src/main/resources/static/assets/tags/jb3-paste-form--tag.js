@@ -267,13 +267,17 @@ riot
                         self.selectedTab = e.target.dataset.tab
                         };
                         self.clear = function() {
-                        self.pastedTextError = null;
-                                self.pastedTextUrl = null;
-                                self.pastedImageError = null;
-                                self.pastedImageUrl = null;
-                                self.pastedFileError = null;
-                                self.pastedFileUrl = null;
-                                this.update();
+                            self.pastedTextError = null;
+                            self.pastedTextUrl = null;
+                            self.pastedImageError = null;
+                            self.pastedImageUrl = null;
+                            self.pastedSketchUrl = null;
+                            self.pastedSketchError = null;
+                            self.pastedRecordUrl = null;
+                            self.pastedRecordError = null;
+                            self.pastedFileError = null;
+                            self.pastedFileUrl = null;
+                            this.update();
                         }
                 $(self.pasteTextForm).ajaxForm({
                 success : function(data) {
