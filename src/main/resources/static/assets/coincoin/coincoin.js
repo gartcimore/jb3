@@ -11,10 +11,10 @@ jb3 = {
         self.controlsMessage = $('#jb3-controls-message');
         self.controlsRoom = $('#jb3-controls-room');
         self.controlsNickname = $('#jb3-controls-nickname');
-        var rooms = jb3_common.getRooms();
         self.rooms = {};
+        self.rooms[self.controlsRoom.val()] = {};
         self.controlsRoom.append(
-                $.map(rooms, function (v, k) {
+                $.map(jb3_common.getRooms(), function (v, k) {
                     self.rooms[v.rname] = {
                         auth: v.rauth,
                         login: v.rlogin
