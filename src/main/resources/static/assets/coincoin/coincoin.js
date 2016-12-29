@@ -13,18 +13,23 @@ jb3 = {
         self.controlsNickname = $('#jb3-controls-nickname');
         var rooms = jb3_common.getRooms();
         self.rooms = {};
-        self.rooms[self.controlsRoom.val()] = {};
         self.controlsRoom.append(
                 $.map(rooms, function (v, k) {
                     self.rooms[v.rname] = {
                         auth: v.rauth,
                         login: v.rlogin
                     };
-                    return $("<option>").val(v.rname).text(v.rname);
+                    return new Option(v.rname, v.rname);
                 })
                 );
-        self.controlsRoom.attr("size", rooms.length + 1);
         var roomInURI = URI(window.location).search(true).room;
+        if(roomInURI) {
+            if(self.controlsRoom.find("option[value='" +roomInURI + "']").length === 0 ) {
+                self.controlsRoom.append(new Option(roomInURI, roomInURI));
+                self.rooms[roomInURI] = {};
+            }
+        }
+        self.controlsRoom.attr("size", self.controlsRoom.find('option').length);
         self.controlsRoom.val(roomInURI || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
         if (roomInURI === self.controlsRoom.val()) {
             $('#jb3-roster').hide();
