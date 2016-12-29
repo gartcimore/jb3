@@ -74,4 +74,13 @@
 		<css>classpath:META-INF/resources/webjars/blaze/3.2.0/dist/blaze.min.css
 		</css>
 	</group>
+        <group name="visio">
+		<js>classpath:META-INF/resources/webjars/jquery/3.0.0/jquery.js</js>
+		<js>classpath:META-INF/resources/webjars/riot/2.4.1/riot.js</js>
+                <js>/assets/thirdparty/classpath:nextRTC.js</js>
+                <js>/assets/visio/visio.js</js>
+		<css>/assets/common/reset.css</css>
+		<css>classpath:META-INF/resources/webjars/blaze/3.2.0/dist/blaze.min.css
+		</css>
+	</group>
 </groups>
