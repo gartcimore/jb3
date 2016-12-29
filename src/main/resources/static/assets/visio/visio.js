@@ -1,6 +1,8 @@
 function Rtcoin() {
+    var rtcCoinURL = URI();
+    rtcCoinURL = rtcCoinURL.protocol(rtcCoinURL.protocol() === "https" ? "wss" : "ws").path("/rtcoin");
     this.nextRTC = new NextRTC({
-        wsURL: 'ws://localhost:8080/rtcoin',
+        wsURL: rtcCoinURL,
         mediaConfig: {
             video: true,
             audio: true

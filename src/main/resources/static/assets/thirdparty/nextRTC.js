@@ -47,7 +47,7 @@ function NextRTC(config) {
 				stream : stream
 			});
 			nextRTC.request('join', null, convId);
-		}, error);
+		}, NextRTCError);
 	};
 
 	this.create = function(convId, custom) {
@@ -58,7 +58,7 @@ function NextRTC(config) {
 				stream : stream
 			});
 			nextRTC.request('create', null, convId, custom);
-		}, error);
+		}, NextRTCError);
 	};
 
 	this.request = function(signal, to, convId, custom) {
@@ -121,7 +121,7 @@ function NextRTC(config) {
             pc['pc'].setLocalDescription(desc)
                 .then(function() {
                     nextRTC.request('offerResponse', signal.from, desc.sdp);
-                }, error);
+                }, NextRTCError);
         });
 	};
 
@@ -173,7 +173,7 @@ function NextRTC(config) {
 
 	this.candidate = function(nextRTC, signal) {
 	    var pc = nextRTC.preparePeerConnection(nextRTC, signal.from);
-   	    pc['pc'].addIceCandidate(new RTCIceCandidate(JSON.parse(signal.content.replace(new RegExp('\'', 'g'), '"'))), success, error);
+   	    pc['pc'].addIceCandidate(new RTCIceCandidate(JSON.parse(signal.content.replace(new RegExp('\'', 'g'), '"'))), NextRTCSuccess, NextRTCError);
     }
 
 	this.init = function() {
@@ -207,10 +207,10 @@ if (document.addEventListener) {
 	});
 }
 
-var error = function(error) {
-	console.log('error ' + JSON.stringify(error));
+var NextRTCError = function(error) {
+    console.log('nextRTC error: ' + error);
 };
 
-var success = function(success) {
+var NextRTCSuccess = function(success) {
 	console.log('success ' + JSON.stringify(success));
 };
