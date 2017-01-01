@@ -1,13 +1,20 @@
 var jb3VisioTemplate = '\
-<div>\
-    Conversation id:<input name="conversationId" type="text"/>\
-    <button onclick="{ createConversation }">Create</button>\
-    <button onclick="{ joinConversation }">Join</button>\
-    <button onclick="{ leaveConversation }">Leave</button>\
+<div class="c-input-group">\
+    <div class="o-field">\
+        <input name="conversationId" list="rooms" class="c-field">\
+        <datalist id="rooms">\
+            <option each="{ rooms }" value="{ rname }">\
+        </datalist>\
+    </div>\
+    <button onclick="{ createConversation }" class="c-button  c-button--brand" >Create</button>\
+    <button onclick="{ joinConversation }" class="c-button  c-button--info" >Join</button>\
+    <button onclick="{ leaveConversation }" class="c-button c-button--warning" >Leave</button>\
 </div>\
-<div>\
-    <jb3-visio-local-video if="{ localVideoStream }" name="localVideo" stream="{ localVideoStream }"></jb3-visio-local-video>\
-    <div each="{ name, moule in remoteMoules }">\
+<div class="o-grid  o-grid--wrap">\
+    <div class="o-grid__cell">\
+        <jb3-visio-local-video if="{ localVideoStream }" name="localVideo" stream="{ localVideoStream }"></jb3-visio-local-video>\
+    </div>\
+    <div class="o-grid__cell" each="{ name, moule in remoteMoules }">\
         <jb3-visio-remote-video name="{ name }" stream="{ moule.stream }"></jb3-visio-local-video>\
     </div>\
 </div>\
@@ -17,6 +24,9 @@ var jb3VisioTemplate = '\
 ';
 function jb3VisioConstructor(opts) {
     var self = this;
+    self.rooms = jb3_common.getRooms();
+    self.rooms.unshift( { rname: opts.defaultroom } );
+    self.conversationId.value = opts.defaultroom;
     self.logs = [];
     self.remoteMoules = {};
     var rtcCoinURL = URI();

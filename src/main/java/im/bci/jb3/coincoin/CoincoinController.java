@@ -34,6 +34,7 @@ public class CoincoinController {
         
 	@RequestMapping(path = "/visio", method = RequestMethod.GET)
 	public String visio(Model model) {
+                model.addAttribute("jb3DefaultRoom", defaultRoom);
 		model.addAttribute("wro-group", "visio");
 		return "visio/visio";
 	}
