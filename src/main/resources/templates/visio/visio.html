@@ -11,22 +11,7 @@
 <body class="c-text">
 	{{> partials/header}}
 	<main class="o-container o-container--large">
-            <section>
-                <div id="container"></div>
-            </section><div>
-            <section>
-                Conversation id:<input id="convId" type="text"/>
-                <button onclick="rtcCoin.createConversation()">Create</button>
-                <button onclick="rtcCoin.createBroadcastConversation()">Create broadcast</button>
-                <button onclick="rtcCoin.joinConversation()">Join</button>
-                <button onclick="rtcCoin.leaveConversation()">Leave</button>
-            </section>
-            <section>
-                <ul id="log"></ul>
-            </section>
-            <section>
-                <video id="template" width="320" height="240" autoplay controls></video>
-            </section>
+            <jb3-visio></jb3-visio>
 	</main>
 	{{> partials/js}}
 </body>

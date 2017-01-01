@@ -78,6 +78,9 @@
 		<js>classpath:META-INF/resources/webjars/jquery/3.0.0/jquery.js</js>
                 <js>classpath:META-INF/resources/webjars/URI.js/1.14.1/URI.js</js>
 		<js>classpath:META-INF/resources/webjars/riot/2.4.1/riot.js</js>
+                <js>/assets/tags/jb3-visio--tag.js</js>
+                <js>/assets/tags/jb3-visio-local-video--tag.js</js>
+                <js>/assets/tags/jb3-visio-remote-video--tag.js</js>
                 <js>/assets/thirdparty/nextRTC.js</js>
                 <js>/assets/visio/visio.js</js>
 		<css>/assets/common/reset.css</css>
