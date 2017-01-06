@@ -36,7 +36,7 @@ public class FormatMessageHelper implements Helper<Post> {
 
     public static class NorlogeFormatter {
         public String format(Post post) {
-            return Norloge.norlogeParseFullFormatter.print(post.getTime());
+            return Norloge.norlogePrintFormatter.print(post.getTime());
         }
     }
 

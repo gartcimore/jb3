@@ -150,12 +150,13 @@ public class Norloge {
         return !((this.bouchot == null) ? (other.bouchot != null) : !this.bouchot.equals(other.bouchot));
     }
 
-    private static final DateTimeFormatter norlogePrintFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
-    public static final DateTimeFormatter norlogeParseFullFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
+    public static final DateTimeFormatter norlogePrintFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
+    private static final DateTimeFormatter norlogeParseFullIsoFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
+    private static final DateTimeFormatter norlogeParseFullFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
     private static final DateTimeFormatter norlogeParseLongFormatter = DateTimeFormat.forPattern("MM/dd#HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
     private static final DateTimeFormatter norlogeParseNormalFormatter = DateTimeFormat.forPattern("HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
     private static final DateTimeFormatter norlogeParseShortFormatter = DateTimeFormat.forPattern("HH:mm").withZone(LegacyUtils.legacyTimeZone);
-    private static final Pattern norlogesPattern = Pattern.compile("((#(?<id>\\w+))|(?<time>(?<date>((?<year>\\d\\d\\d\\d)/)?(?:1[0-2]|0[1-9])/(?:3[0-1]|[1-2][0-9]|0[1-9])#)?((?:2[0-3]|[0-1][0-9])):([0-5][0-9])(:(?<seconds>[0-5][0-9]))?)(?<exp>[¹²³]|[:\\^][1-9]|[:\\^][1-9][0-9])?)(@(?<bouchot>[\\w.]+))?");
+    private static final Pattern norlogesPattern = Pattern.compile("((#(?<id>\\w+))|(?<time>(?<date>((?<year>\\d\\d\\d\\d)[/-])?(?:1[0-2]|0[1-9])[/-](?:3[0-1]|[1-2][0-9]|0[1-9])[#T])?((?:2[0-3]|[0-1][0-9])):([0-5][0-9])(:(?<seconds>[0-5][0-9]))?)(?<exp>[¹²³]|[:\\^][1-9]|[:\\^][1-9][0-9])?)(@(?<bouchot>[\\w.]+))?");
 
     public static class ParsedNorloges extends ArrayList<Norloge> {
 
@@ -229,7 +230,11 @@ public class Norloge {
     }
 
     private static Norloge parseNorlogeTime(String item) {
-        DateTime norlogeTime = parseNorlogeTimeWithFormat(item, norlogeParseFullFormatter);
+        DateTime norlogeTime = parseNorlogeTimeWithFormat(item, norlogeParseFullIsoFormatter);
+        if (null != norlogeTime) {
+            return new Norloge().withTime(norlogeTime).withHasYear(true).withHasMonth(true).withHasDay(true).withHasSeconds(true);
+        }
+        norlogeTime = parseNorlogeTimeWithFormat(item, norlogeParseFullFormatter);
         if (null != norlogeTime) {
             return new Norloge().withTime(norlogeTime).withHasYear(true).withHasMonth(true).withHasDay(true).withHasSeconds(true);
         }

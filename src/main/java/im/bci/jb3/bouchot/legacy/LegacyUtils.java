@@ -8,7 +8,6 @@ import java.util.regex.Matcher;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
-import org.joda.time.DateTimeFieldType;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -59,10 +58,8 @@ public class LegacyUtils {
         return sb.toString();
     }
 
-    private static final DateTimeFormatter toLegacyFullNorlogeFormatter = DateTimeFormat.forPattern("yyyy/MM/dd#HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
-    private static final DateTimeFormatter toLegacyLongNorlogeFormatter = DateTimeFormat.forPattern("MM/dd#HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
+    private static final DateTimeFormatter toLegacyFullIsoNorlogeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
     private static final DateTimeFormatter toLegacyNormalNorlogeFormatter = DateTimeFormat.forPattern("HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
-    private static final DateTimeFormatter toLegacyShortNorlogeFormatter = DateTimeFormat.forPattern("HH:mm").withZone(LegacyUtils.legacyTimeZone);
 
     public String convertToLegacyNorloges(String message, final DateTime postTime, final String room) {
         final StringBuffer sb = new StringBuffer();
@@ -96,19 +93,12 @@ public class LegacyUtils {
     }
 
     private static final DateTimeComparator dayComparator = DateTimeComparator.getDateOnlyInstance();
-    private static final DateTimeComparator yearComparator = DateTimeComparator.getInstance(DateTimeFieldType.year());
 
     private DateTimeFormatter findLegacyNorlogeFormatter(DateTime postTime, DateTime referencedPostTime) {
         if (dayComparator.compare(referencedPostTime, postTime) == 0) {
-            if (referencedPostTime.getSecondOfMinute() == 0) {
-                return toLegacyShortNorlogeFormatter;
-            } else {
-                return toLegacyNormalNorlogeFormatter;
-            }
-        } else if (yearComparator.compare(referencedPostTime, postTime) == 0) {
-            return toLegacyLongNorlogeFormatter;
+            return toLegacyNormalNorlogeFormatter;
         } else {
-            return toLegacyFullNorlogeFormatter;
+            return toLegacyFullIsoNorlogeFormatter;
         }
     }
 
