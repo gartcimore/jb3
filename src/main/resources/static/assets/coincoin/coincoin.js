@@ -31,6 +31,7 @@ jb3 = {
         }
         self.controlsRoom.attr("size", self.controlsRoom.find('option').length);
         self.controlsRoom.val(roomInURI || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
+        $('#jb3-visio-link').attr('href', "/visio?room=" + self.controlsRoom.val());
         if (roomInURI === self.controlsRoom.val()) {
             $('#jb3-roster').hide();
             $('header').hide();
@@ -44,6 +45,7 @@ jb3 = {
             selectedRoomPosts.appendTo(self.messagesContainer);
             self.scrollPostsContainerToBottom();
             self.trollometre.update(selectedRoom);
+            $('#jb3-visio-link').attr('href', "/visio?room=" + selectedRoom);
         });
         self.controlsMessage.bind('keypress', function (event) {
             if (event.altKey) {

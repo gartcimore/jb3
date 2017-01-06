@@ -3,8 +3,10 @@ package im.bci.jb3.coincoin;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/")
@@ -33,8 +35,8 @@ public class CoincoinController {
 	}
         
 	@RequestMapping(path = "/visio", method = RequestMethod.GET)
-	public String visio(Model model) {
-                model.addAttribute("jb3DefaultRoom", defaultRoom);
+	public String visio(Model model, @RequestParam(name="room", required = false) String room) {
+                model.addAttribute("jb3VisioDefaultRoom", StringUtils.isEmpty(room) ? this.defaultRoom : room);
 		model.addAttribute("wro-group", "visio");
 		return "visio/visio";
 	}
