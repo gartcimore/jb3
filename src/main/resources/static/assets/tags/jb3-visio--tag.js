@@ -39,9 +39,8 @@ function jb3VisioConstructor(opts) {
         },
         peerConfig: {
             iceServers: [
-                {urls: "stun:23.21.150.121"},
-                {urls: "stun:stun.l.google.com:19302"},
-                {urls: "turn:numb.viagenie.ca", credential: "webrtcdemo", username: "louis@mozilla.com"}
+                {urls: "stun:turn.bci.im"},
+                {urls: "turn:turn.bci.im", credential: "ornottobe", username: "jb3" }
             ],
             iceTransportPolicy: 'all',
             rtcpMuxPolicy: 'negotiate'
