@@ -26,7 +26,7 @@ function jb3VisioConstructor(opts) {
     var self = this;
     self.rooms = jb3_common.getRooms();
     self.rooms.unshift( { rname: opts.defaultroom } );
-    self.conversationId.value = opts.defaultroom;
+    self.conversationId.value = URI(window.location).search(true).room;
     self.logs = [];
     self.remoteMoules = {};
     var rtcCoinURL = URI();
@@ -72,12 +72,15 @@ function jb3VisioConstructor(opts) {
         self.logs.push(event.from + " left!");
     });
     this.createConversation = function () {
+        history.pushState(self.conversationId.value, self.conversationId.value, URI(window.location).setSearch('room', self.conversationId.value));
         this.nextRTC.create(self.conversationId.value);
     };
     this.createBroadcastConversation = function () {
+        history.pushState(self.conversationId.value, self.conversationId.value, URI(window.location).setSearch('room', self.conversationId.value));
         this.nextRTC.create(self.conversationId.value, {type: 'BROADCAST'});
     };
     this.joinConversation = function () {
+        history.pushState(self.conversationId.value, self.conversationId.value, URI(window.location).setSearch('room', self.conversationId.value));
         this.nextRTC.join(self.conversationId.value);
     };
     this.leaveConversation = function () {
