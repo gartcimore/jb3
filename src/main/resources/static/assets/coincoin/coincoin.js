@@ -117,8 +117,13 @@ jb3 = {
             self.onCoinMessage(event);
         };
         var url = URI();
-        url = url.protocol(url.protocol() === "https" ? "wss" : "ws").path("/webdirectcoin");
-        self.coin.postMessage({type: "connect", url: url.toString()});
+        var wurl = new URI({
+            protocol: url.protocol() === "https" ? "wss" : "ws",
+            hostname: url.hostname(),
+            port: url.port(),
+            path: "/webdirectcoin"
+        });
+        self.coin.postMessage({type: "connect", url: wurl.toString()});
         self.updateMessages();
         self.initTrollometre();
     },
