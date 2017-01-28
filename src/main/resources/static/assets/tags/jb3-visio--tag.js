@@ -10,10 +10,10 @@ var jb3VisioTemplate = '\
 </form>\
 <div class="o-grid  o-grid--wrap" >\
     <div class="o-grid__cell">\
-        <jb3-visio-local-video if="{ localVideoStream }" name="localVideo" stream="{ localVideoStream }"></jb3-visio-local-video>\
+        <jb3-visio-local-video if="{ localVideoStream }" name="localVideo" stream="{ localVideoStream }" nickname="{ localStorage.nickname }"></jb3-visio-local-video>\
     </div>\
     <div class="o-grid__cell" each="{ name, moule in remoteMoules }">\
-        <jb3-visio-remote-video name="{ name }" stream="{ moule.stream }"></jb3-visio-local-video>\
+        <jb3-visio-remote-video name="{ name }" stream="{ moule.stream }" nickname="{ moule.nickname }"></jb3-visio-local-video>\
     </div>\
 </div>\
 <div class="c-input-group u-letter-box--medium" if="{ localVideoStream }">\
@@ -60,19 +60,30 @@ function jb3VisioConstructor(opts) {
         self.nextRTC.on('joined', function (nextRTC, event) {
             console.log(JSON.stringify(event));
             self.logs.push('You have been joined to conversation ' + event.content);
+            self.nextRTC.request('text', null, self.conversationId.value, {nickname: localStorage.nickname});
         });
         self.nextRTC.on('newJoined', function (nextRTC, event) {
             console.log(JSON.stringify(event));
             self.logs.push('Member with id ' + event.from + ' has joined conversation');
+            self.nextRTC.request('text', null, self.conversationId.value, {nickname: localStorage.nickname});
         });
         self.nextRTC.on('localStream', function (member, stream) {
             self.localVideoStream = URL.createObjectURL( stream.stream );
             self.update();
         });
         self.nextRTC.on('remoteStream', function (member, stream) {
-            self.remoteMoules[stream.member] = { stream: URL.createObjectURL( stream.stream ) };
+            self.remoteMoules[stream.member] = self.remoteMoules[stream.member] || {}; 
+            self.remoteMoules[stream.member].stream = URL.createObjectURL( stream.stream );
             self.update();
         });
+        self.nextRTC.on('text', function (nextRTC, event) {
+            if(event.custom.nickname) {
+                self.remoteMoules[event.from] = self.remoteMoules[event.from] || {};
+                self.remoteMoules[event.from].nickname = event.custom.nickname;
+                self.update();
+            }
+        });
+
         self.nextRTC.on('left', function (nextRTC, event) {
             console.log(JSON.stringify(event));
             delete self.remoteMoules[event.from];
@@ -92,6 +103,12 @@ function jb3VisioConstructor(opts) {
         self.nextRTC.leave();
         self.reset();
     };
+    window.addEventListener('storage', function(event) {
+        if(event.key === 'nickname' && self.nextRTC && self.conversationId.value) {
+            self.nextRTC.request('text', null, self.conversationId.value, {nickname: event.newValue});
+            self.update();
+        }
+    }, false);
     self.reset();
 }
 ;
