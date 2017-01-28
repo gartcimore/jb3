@@ -63,7 +63,7 @@ function NextRTC(config) {
             that.signaling.send(w);
         }
         that.channelReady = true;
-    }
+    };
 
     this.preparePeerConnection = function(nextRTC, member) {
         if (nextRTC.peerConnections[member] == undefined) {
@@ -88,7 +88,7 @@ function NextRTC(config) {
                     setTimeout(function(){ handle(pc, evt); }, 2000);
                 }
             };
-            nextRTC.peerConnections[member] = {}
+            nextRTC.peerConnections[member] = {};
             nextRTC.peerConnections[member]['pc'] = pc;
             nextRTC.peerConnections[member]['rem'] = false;
         }
@@ -153,7 +153,7 @@ function NextRTC(config) {
     this.candidate = function(nextRTC, signal) {
         var pc = nextRTC.preparePeerConnection(nextRTC, signal.from);
         pc['pc'].addIceCandidate(new RTCIceCandidate(JSON.parse(signal.content.replace(new RegExp('\'', 'g'), '"'))), that.success, that.error);
-    }
+    };
 
     this.init = function() {
         this.on('offerRequest', this.offerRequest);
