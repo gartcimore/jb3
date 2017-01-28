@@ -8,10 +8,7 @@ var jb3VisioTemplate = '\
     </div>\
     <input if="{ conversationId.value }" type="submit" class="c-button c-button--info" value="Join">\
 </form>\
-<div class="c-input-group" if="{ localVideoStream }">\
-   <button onclick="{ leaveConversation }" class="c-button c-button--warning" >Leave</button>\
-</div>\
-<div class="o-grid  o-grid--wrap">\
+<div class="o-grid  o-grid--wrap" >\
     <div class="o-grid__cell">\
         <jb3-visio-local-video if="{ localVideoStream }" name="localVideo" stream="{ localVideoStream }"></jb3-visio-local-video>\
     </div>\
@@ -19,8 +16,12 @@ var jb3VisioTemplate = '\
         <jb3-visio-remote-video name="{ name }" stream="{ moule.stream }"></jb3-visio-local-video>\
     </div>\
 </div>\
-<div>\
-    <ul each="{ log in logs }">{ log }</ul>\
+<div class="c-input-group u-letter-box--medium" if="{ localVideoStream }">\
+   <button onclick="{ leaveConversation }" class="c-button c-button--warning" >Leave</button>\
+</div>\
+<div class="c-card" if="{ logs.length > 0 }">\
+    <div class="c-card__item c-card__item--brand">Room events</div>\
+    <div class="c-card__item" each="{ log in logs }">{ log }</div>\
 </div>\
 ';
 function jb3VisioConstructor(opts) {
