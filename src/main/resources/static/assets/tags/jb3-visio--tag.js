@@ -6,7 +6,7 @@ var jb3VisioTemplate = '\
             <option each="{ rooms }" value="{ rname }">\
         </datalist>\
     </div>\
-    <button if="{ conversationId.value && !localVideoStream }" onclick="{ joinConversation }" class="c-button  c-button--info" >Join</button>\
+    <button if="{ nextRTCReady && conversationId.value && !localVideoStream }" onclick="{ joinConversation }" class="c-button  c-button--info" >Join</button>\
     <button if="{ localVideoStream }" onclick="{ leaveConversation }" class="c-button c-button--warning" >Leave</button>\
 </div>\
 <div class="o-grid  o-grid--wrap">\
@@ -44,6 +44,10 @@ function jb3VisioConstructor(opts) {
             rtcpMuxPolicy: 'negotiate'
         }
     });
+    this.nextRTC.onReady = function() {
+        self.nextRTCReady = true;
+        self.update();
+    };
     this.nextRTC.on('created', function (nextRTC, event) {
         console.log(JSON.stringify(event));
         self.logs.push('Room with id ' + event.content + ' has been created, share it with your friend to start videochat');
@@ -68,6 +72,7 @@ function jb3VisioConstructor(opts) {
         console.log(JSON.stringify(event));
         delete self.remoteMoules[event.from];
         self.logs.push(event.from + " left!");
+        self.update();
     });
     this.changeConversationId = function() {
         self.update();

@@ -68,10 +68,12 @@ function NextRTC(config) {
     this.preparePeerConnection = function(nextRTC, member) {
         if (nextRTC.peerConnections[member] == undefined) {
             var pc = new RTCPeerConnection(config.peerConfig);
-            pc.onaddstream = function(evt) {
-                nextRTC.call('remoteStream', {
-                    member : member,
-                    stream : evt.stream
+            pc.ontrack = function(evt) {
+                evt.streams.forEach( function(stream) {
+                    nextRTC.call('remoteStream', {
+                        member : member,
+                        stream : stream
+                    });    
                 });
             };
             pc.onicecandidate = function(evt) {
@@ -142,7 +144,9 @@ function NextRTC(config) {
     this.close = function(nextRTC, event) {
         nextRTC.signaling.close();
         if(nextRTC.localStream != null){
-            nextRTC.localStream.stop();
+            nextRTC.localStream.getTracks().forEach(function (track) {
+                track.stop();
+            });
         }
     };
 
@@ -165,22 +169,21 @@ function NextRTC(config) {
         if (event.candidate) {
             nextRTC.request('candidate', member, JSON.stringify(event.candidate));
         }
-    }
+    };
 
     this.init();
 
     this.error = function(arg){
         console.log('error: ' + arg);
-    }
+    };
 
     this.success = function(arg){
         console.log('success: ' + arg);
-    }
+    };
 
     that.onReady = function() {
         console.log('It is highly recommended to override method NextRTC.onReady');
     };
-
 
     if (document.addEventListener) {
         document.addEventListener('DOMContentLoaded', function() {
@@ -219,7 +222,9 @@ NextRTC.prototype.leave = function() {
     var nextRTC = this;
     nextRTC.request('left');
     nextRTC.signaling.close();
-    if(nextRTC.localStream != null){
-        nextRTC.localStream.stop();
+    if(nextRTC.localStream !== null){
+        nextRTC.localStream.getTracks().forEach(function(track) {
+            track.stop();
+        });
     }
 };
