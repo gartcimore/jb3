@@ -1,14 +1,13 @@
 var jb3VisioTemplate = '\
 <div class="c-input-group">\
     <div class="o-field">\
-        <input name="conversationId" list="rooms" class="c-field">\
+        <input name="conversationId" placeholder="Type room name" list="rooms" class="c-field" oninput="{ changeConversationId }">\
         <datalist id="rooms">\
             <option each="{ rooms }" value="{ rname }">\
         </datalist>\
     </div>\
-    <button onclick="{ createConversation }" class="c-button  c-button--brand" >Create</button>\
-    <button onclick="{ joinConversation }" class="c-button  c-button--info" >Join</button>\
-    <button onclick="{ leaveConversation }" class="c-button c-button--warning" >Leave</button>\
+    <button if="{ conversationId.value && !localVideoStream }" onclick="{ joinConversation }" class="c-button  c-button--info" >Join</button>\
+    <button if="{ localVideoStream }" onclick="{ leaveConversation }" class="c-button c-button--warning" >Leave</button>\
 </div>\
 <div class="o-grid  o-grid--wrap">\
     <div class="o-grid__cell">\
@@ -25,8 +24,7 @@ var jb3VisioTemplate = '\
 function jb3VisioConstructor(opts) {
     var self = this;
     self.rooms = jb3_common.getRooms();
-    self.rooms.unshift( { rname: opts.defaultroom } );
-    self.conversationId.value = URI(window.location).search(true).room;
+    self.conversationId.value = URI(window.location).search(true).room || '';
     self.logs = [];
     self.remoteMoules = {};
     var rtcCoinURL = URI();
@@ -71,20 +69,19 @@ function jb3VisioConstructor(opts) {
         delete self.remoteMoules[event.from];
         self.logs.push(event.from + " left!");
     });
-    this.createConversation = function () {
-        history.pushState(self.conversationId.value, self.conversationId.value, URI(window.location).setSearch('room', self.conversationId.value));
-        this.nextRTC.create(self.conversationId.value);
-    };
-    this.createBroadcastConversation = function () {
-        history.pushState(self.conversationId.value, self.conversationId.value, URI(window.location).setSearch('room', self.conversationId.value));
-        this.nextRTC.create(self.conversationId.value, {type: 'BROADCAST'});
-    };
+    this.changeConversationId = function() {
+        self.update();
+    }
     this.joinConversation = function () {
         history.pushState(self.conversationId.value, self.conversationId.value, URI(window.location).setSearch('room', self.conversationId.value));
         this.nextRTC.join(self.conversationId.value);
     };
     this.leaveConversation = function () {
         this.nextRTC.leave();
+        self.logs = [];
+        self.remoteMoules = {};
+        self.localVideoStream = null;
+        self.update();
     };
 }
 ;
