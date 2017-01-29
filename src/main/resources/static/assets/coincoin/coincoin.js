@@ -147,7 +147,7 @@ jb3 = {
         }
         if(message.connected) {
             self.refreshMessages();
-            self.coin.postMessage({type: "nickname", nickname: localStorage.nickname});        	
+            self.coin.postMessage({type: "nickname", nickname: jb3_common.getNickname()});        	
         }
         if(message.presence) {
         	self.updateMoulePresence(message.presence);
@@ -163,21 +163,10 @@ jb3 = {
     norlogeFullFormat: "YYYY/MM/DD#HH:mm:ss",
     initNickname: function () {
     	var self = this;
-        if (localStorage.nickname) {
-            self.controlsNickname.val(localStorage.nickname);
-        } else {
-            $.ajax({
-                type: "POST",
-                url: "/api/coincoin/random-nickname",
-                success: function (data) {
-                    localStorage.nickname = data.nickname;
-                    self.controlsNickname.val(localStorage.nickname);
-                }
-            });
-        }
+        self.controlsNickname.val(jb3_common.getNickname());
         self.controlsNickname.change(function () {
-            localStorage.nickname = self.controlsNickname.val();
-            self.coin.postMessage({type: "nickname", nickname: localStorage.nickname});
+            jb3_common.setNickname(self.controlsNickname.val());
+            self.coin.postMessage({type: "nickname", nickname: jb3_common.getNickname()});
         });
         riot.mount('jb3-raw');
         riot.mount('jb3-modal');

@@ -1,12 +1,30 @@
 jb3_common = {
+    getNickname: function () {
+        return localStorage.nickname || (localStorage.nickname = this.randomNickname());
+    },
+    setNickname: function(nickname) {
+        localStorage.nickname = nickname;
+    },
+    randomNickname: function () {
+        var letters = ["aeiouy", 'bcdfghjklmnpqrstvwxz'];
+        var nicknameLength = 3 + Math.floor(Math.random() * 5);
+        var lettersIndex = Math.floor(Math.random() * letters.length);
+        var nickname = "";
+        for (var l = 0; l < nicknameLength; ++l) {
+            var c = letters[lettersIndex].charAt(Math.floor(Math.random() * letters[lettersIndex].length));
+            nickname = nickname.concat(c);
+            lettersIndex = (lettersIndex + 1) % letters.length;
+        }
+        return nickname;
+    },
     getRooms: function () {
-    	var rooms;
+        var rooms;
         try {
-        	rooms = JSON.parse(localStorage.rooms);
+            rooms = JSON.parse(localStorage.rooms);
         } catch (e) {
         }
-        if(!rooms) {
-        	rooms = this.getDefaultRooms();
+        if (!rooms) {
+            rooms = this.getDefaultRooms();
         }
         return rooms;
     },
@@ -26,8 +44,8 @@ jb3_common = {
             }
         }, ".jb3-totoz");
     },
-    initHighlight: function() {
-    	var self = this;
+    initHighlight: function () {
+        var self = this;
         $('.jb3-posts').on({
             mouseenter: function (event) {
                 self.highlightPostAndReplies($(event.target).data('ref'), true);
@@ -68,6 +86,6 @@ jb3_common = {
     }
 };
 
-RegExp.escape = function(str) {
+RegExp.escape = function (str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 };

@@ -10,7 +10,7 @@ var jb3VisioTemplate = '\
 </form>\
 <div class="o-grid  o-grid--wrap" >\
     <div class="o-grid__cell">\
-        <jb3-visio-local-video if="{ localVideoStream }" name="localVideo" stream="{ localVideoStream }" nickname="{ localStorage.nickname }"></jb3-visio-local-video>\
+        <jb3-visio-local-video if="{ localVideoStream }" name="localVideo" stream="{ localVideoStream }" nickname="{ jb3_common.getNickname() }"></jb3-visio-local-video>\
     </div>\
     <div class="o-grid__cell" each="{ name, moule in remoteMoules }">\
         <jb3-visio-remote-video name="{ name }" stream="{ moule.stream }" nickname="{ moule.nickname }"></jb3-visio-local-video>\
@@ -60,12 +60,12 @@ function jb3VisioConstructor(opts) {
         self.nextRTC.on('joined', function (nextRTC, event) {
             console.log(JSON.stringify(event));
             self.logs.push('You have been joined to conversation ' + event.content);
-            self.nextRTC.request('text', null, self.conversationId.value, {nickname: localStorage.nickname});
+            self.nextRTC.request('text', null, self.conversationId.value, {nickname: jb3_common.getNickname()});
         });
         self.nextRTC.on('newJoined', function (nextRTC, event) {
             console.log(JSON.stringify(event));
             self.logs.push('Member with id ' + event.from + ' has joined conversation');
-            self.nextRTC.request('text', null, self.conversationId.value, {nickname: localStorage.nickname});
+            self.nextRTC.request('text', null, self.conversationId.value, {nickname: jb3_common.getNickname()});
         });
         self.nextRTC.on('localStream', function (member, stream) {
             self.localVideoStream = URL.createObjectURL( stream.stream );
