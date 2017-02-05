@@ -143,14 +143,18 @@ jb3 = {
         var self = this;
         var message = event.data;
         if(message.posts) {
-        	self.newMessages = self.newMessages.concat(message.posts);
+            self.newMessages = self.newMessages.concat(message.posts);
+        }
+        if(message.disconnected) {
+            self.clearMoulesPresences();
         }
         if(message.connected) {
+            self.clearMoulesPresences();
             self.refreshMessages();
             self.coin.postMessage({type: "nickname", nickname: jb3_common.getNickname()});        	
         }
         if(message.presence) {
-        	self.updateMoulePresence(message.presence);
+            self.updateMoulePresence(message.presence);
         }
         if(message.webdirectcoin_not_available) {
         	console.log("webdirectcoin is not available");
@@ -213,18 +217,21 @@ jb3 = {
         var postContainer = $('#jb3-posts-container');
         postContainer.scrollTop(postContainer.prop("scrollHeight"));
     },
+    clearMoulesPresences: function() {
+        $('#moules').empty();
+    },
     updateMoulePresence: function(presenceMsg) {
     	var moule = $('#moule-' + presenceMsg.mouleId);
     	if(presenceMsg.presence.nickname) {
-    		if(moule.length == 0) {
-    			$('#moules').append('<li id="moule-'+ presenceMsg.mouleId + '" class="c-list__item"></li>');
-    			moule = $('#moule-' + presenceMsg.mouleId);
-    		}
-    		moule.text(presenceMsg.presence.nickname);
-		} else{
-    		moule.remove();
-    	}
-	},
+            if(moule.length === 0) {
+                    $('#moules').append('<li id="moule-'+ presenceMsg.mouleId + '" class="c-list__item"></li>');
+                    moule = $('#moule-' + presenceMsg.mouleId);
+            }
+            moule.text(presenceMsg.presence.nickname);
+        } else {
+            moule.remove();
+        }
+    },
     onNewMessages: function (data) {
         if (data && data.length > 0) {
             var self = this;

@@ -26,24 +26,27 @@ Webdirectcoin.prototype.connectWebsocket = function() {
 	clearInterval(self.presenceInterval);
 	this.client = new WebSocket(self.url);
 	this.client.onopen = function(event) {
-		console.log("webdirectcoin connected");
-		postMessage({
-			connected: true
-		});
-		self.presenceInterval = setInterval(function() {
-			self.client.send(JSON.stringify(self.presenceMessage));
-		}, self.presenceDelay);
-	}
+            console.log("webdirectcoin connected");
+            postMessage({
+                    connected: true
+            });
+            self.presenceInterval = setInterval(function() {
+                    self.client.send(JSON.stringify(self.presenceMessage));
+            }, self.presenceDelay);
+	};
 	this.client.onerror = function(event) {
-		console.log("webdirectcoin websocket error:\n" + JSON.stringify(event));
-	}
+            console.log("webdirectcoin websocket error:\n" + JSON.stringify(event));
+	};
 	this.client.onclose = function(event) {
-		self.reconnect();
-	}
+            postMessage({
+                    disconnected: true
+            });
+            self.reconnect();
+	};
 	this.client.onmessage = function(event) {
-                var message = JSON.parse(event.data);
-                postMessage(message);
-            };
+            var message = JSON.parse(event.data);
+            postMessage(message);
+        };
 };
 
 Webdirectcoin.prototype.reconnect = function() {
