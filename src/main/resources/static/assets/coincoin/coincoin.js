@@ -146,15 +146,15 @@ jb3 = {
             self.newMessages = self.newMessages.concat(message.posts);
         }
         if(message.disconnected) {
-            self.clearMoulesPresences();
+            self.moulesRoster.trigger('clear-presences');
         }
         if(message.connected) {
-            self.clearMoulesPresences();
+            self.moulesRoster.trigger('clear-presences');
             self.refreshMessages();
             self.coin.postMessage({type: "nickname", nickname: jb3_common.getNickname()});        	
         }
         if(message.presence) {
-            self.updateMoulePresence(message.presence);
+            self.moulesRoster.trigger('presence', message.presence);
         }
         if(message.webdirectcoin_not_available) {
         	console.log("webdirectcoin is not available");
@@ -174,6 +174,7 @@ jb3 = {
         });
         riot.mount('jb3-raw');
         riot.mount('jb3-modal');
+        self.moulesRoster = riot.mount('jb3-moules-roster')[0];
         self.revisionsModal = riot.mount('jb3-revisions-modal')[0];
         self.pasteModal = riot.mount('jb3-paste-modal')[0];
         self.pasteModal.on('pasted', function(pastedText) {
@@ -216,21 +217,6 @@ jb3 = {
     scrollPostsContainerToBottom: function () {
         var postContainer = $('#jb3-posts-container');
         postContainer.scrollTop(postContainer.prop("scrollHeight"));
-    },
-    clearMoulesPresences: function() {
-        $('#moules').empty();
-    },
-    updateMoulePresence: function(presenceMsg) {
-    	var moule = $('#moule-' + presenceMsg.mouleId);
-    	if(presenceMsg.presence.nickname) {
-            if(moule.length === 0) {
-                    $('#moules').append('<li id="moule-'+ presenceMsg.mouleId + '" class="c-list__item"></li>');
-                    moule = $('#moule-' + presenceMsg.mouleId);
-            }
-            moule.text(presenceMsg.presence.nickname);
-        } else {
-            moule.remove();
-        }
     },
     onNewMessages: function (data) {
         if (data && data.length > 0) {
