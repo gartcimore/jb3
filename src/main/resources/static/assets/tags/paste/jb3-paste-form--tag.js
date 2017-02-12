@@ -14,24 +14,7 @@ riot
                             <jb3-paste-text></jb3-paste-text>\
 			</div>\
 			<div class="c-tabs__tab { \'c-tabs__tab--active\': selectedTab == \'image\' }">\
-				<form name="pasteImageForm" class="c-fieldset" action="/api/paste/image" method="post">\
-					<div class="o-form-element">\
-						<input name="pimage" type="file"></input>\
-					</div>\
-					<input type="submit" class="c-button c-button--info"" >\
-				</form>\
-				<div if="{ pastedImageUrl }" class="c-card  c-card--success">\
-				  <div class="c-card__item c-card__item--divider">Pasted!</div>\
-				  <div class="c-card__item">\
-				    <p class="c-paragraph"><a class="c-link  jb3-pasted-url" href="{ pastedImageUrl }">{ pastedImageUrl }</a></p>\
-				  </div>\
-				</div>\
-				<div if="{ pastedImageError }" class="c-card  c-card--error">\
-				  <div class="c-card__item c-card__item--divider">Error :-(</div>\
-				  <div class="c-card__item">\
-				    <p class="c-paragraph">{ pastedImageError }</p>\
-				  </div>\
-				</div>\
+				<jb3-paste-image></jb3-paste-image>\
 			</div>\
                         <div class="c-tabs__tab { \'c-tabs__tab--active\': selectedTab == \'sketch\' }">\
 				<div name="pasteSketchForm" class="c-fieldset">\
@@ -110,6 +93,7 @@ riot
                     var self = this;
                     self.pasteText = self.tags['jb3-paste-text'];
                     self.pasteFile = self.tags['jb3-paste-file'];
+                    self.pasteImage = self.tags['jb3-paste-image'];
                     this.selectedTab = 'text';
                         this.toggleMic = function() {
                             if(self.mediaRecorder) {
@@ -236,28 +220,11 @@ riot
                         self.clear = function() {
                             self.pasteText.clear();
                             self.pasteFile.clear();
-                            self.pastedImageError = null;
-                            self.pastedImageUrl = null;
+                            self.pasteImage.clear();
                             self.pastedSketchUrl = null;
                             self.pastedSketchError = null;
                             self.pastedRecordUrl = null;
                             self.pastedRecordError = null;
                             this.update();
                         }
-                        $(self.pimage)
-                        .picEdit(
-                        {
-                        maxWidth : 'auto',
-                                formSubmitted : function(xhr) {
-                                if (xhr.status == 200) {
-                                var data = JSON.parse(xhr.response);
-                                        self.pastedImageError = null;
-                                        self.pastedImageUrl = data.url;
-                                } else {
-                                self.pastedImageError = 'Error during image upload';
-                                        self.pastedImageUrl = null;
-                                }
-                                self.update();
-                                }
-                        });
                 });
