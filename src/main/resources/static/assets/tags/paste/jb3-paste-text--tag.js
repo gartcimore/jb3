@@ -22,6 +22,10 @@ var jb3PasteTextStyles = '\
 ';
 var jb3PasteTextConstructor = function () {
     var self = this;
+    self.clear = function () {
+        self.pastedTextError = null;
+        self.pastedTextUrl = null;
+    };
     self.submit = function (event) {
         event.preventDefault();
         var xhr = new XMLHttpRequest();
