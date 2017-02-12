@@ -9,7 +9,7 @@ var jb3PasteFileTemplate = '\
 <div if="{ pastedFileUrl }" class="c-card  c-card--success">\
   <div class="c-card__item c-card__item--divider">Pasted!</div>\
   <div class="c-card__item">\
-    <p class="c-paragraph"><a class="c-link  jb3-pasted-url" href="{ pastedFileUrl }">{ pastedFileUrl }</a></p>\
+    <p class="c-paragraph"><a class="c-link  jb3-pasted-url" href="{ pastedFileUrl }" target="_blank">{ pastedFileUrl }</a></p>\
   </div>\
 </div>\
 <div if="{ pastedFileError }" class="c-card  c-card--error">\
