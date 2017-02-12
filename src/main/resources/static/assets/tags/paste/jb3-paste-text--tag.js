@@ -1,5 +1,5 @@
 var jb3PasteTextTemplate = '\
-<form name="pasteTextForm" class="c-fieldset" action="/api/paste/text" method="post">\
+<form name="pasteTextForm" class="c-fieldset" onsubmit="{ submit }">\
         <div class="o-form-element">\
                 <textarea name="ptext" class="c-field" type="text"></textarea>\
         </div>\
@@ -18,25 +18,30 @@ var jb3PasteTextTemplate = '\
   </div>\
 </div>\
 ';
-
 var jb3PasteTextStyles = '\
 ';
-
-function jb3PasteTextConstructor() {
+var jb3PasteTextConstructor = function () {
     var self = this;
-    $(self.pasteTextForm).ajaxForm({
-        success: function (data) {
-            self.pastedTextError = null;
-            self.pastedTextUrl = data.url;
-            self.update();
-        },
-        error: function () {
-            self.pastedTextError = 'Error during text upload';
-            self.pastedTextUrl = null;
-            self.update();
-        }
-    });
-
-}
+    self.submit = function (event) {
+        event.preventDefault();
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function (event) {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    var data = JSON.parse(xhr.response);
+                    self.pastedTextError = null;
+                    self.pastedTextUrl = data.url;
+                } else {
+                    self.pastedTextError = 'Error during text upload';
+                    self.pastedTextUrl = null;
+                }
+                self.update();
+            }
+        };
+        xhr.open("POST", "/api/paste/text");
+        xhr.send(new FormData(event.target));
+        return false;
+    };
+};
 
 riot.tag('jb3-paste-text', jb3PasteTextTemplate, jb3PasteTextStyles, jb3PasteTextConstructor);
