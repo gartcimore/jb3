@@ -24,8 +24,9 @@
         <js>/assets/tags/jb3-moules-roster--tag.js</js>
         <js>/assets/tags/jb3-raw--tag.js</js>
         <js>/assets/tags/paste/jb3-paste-image--tag.js</js>
-        <js>/assets/tags/paste/jb3-paste-text--tag.js</js>
         <js>/assets/tags/paste/jb3-paste-file--tag.js</js>
+        <js>/assets/tags/paste/jb3-paste-sketch--tag.js</js>
+        <js>/assets/tags/paste/jb3-paste-text--tag.js</js>
         <js>/assets/tags/paste/jb3-paste-form--tag.js</js>
         <js>/assets/tags/jb3-modal--tag.js</js>
         <js>/assets/tags/jb3-paste-modal--tag.js</js>
@@ -58,6 +59,7 @@
         <js>/assets/thirdparty/responsive-sketchpad.js</js>
         <js>/assets/tags/paste/jb3-paste-image--tag.js</js>
         <js>/assets/tags/paste/jb3-paste-file--tag.js</js>
+        <js>/assets/tags/paste/jb3-paste-sketch--tag.js</js>
         <js>/assets/tags/paste/jb3-paste-text--tag.js</js>
         <js>/assets/tags/paste/jb3-paste-form--tag.js</js>
         <js>/assets/paste/paste.js</js>
