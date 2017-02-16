@@ -1,50 +1,51 @@
-riot
-        .tag(
-                'jb3-paste-form',
-                '\
-		<div class="c-tabs">\
-		    <div class="c-tabs__headings">\
-			    <div class="c-tab-heading { \'c-tab-heading--active\': selectedTab == \'text\' }" data-tab="text" onclick="{ selectTab }">Text</div>\
-			    <div class="c-tab-heading { \'c-tab-heading--active\': selectedTab == \'image\' }" data-tab="image" onclick="{ selectTab }">Image</div>\
-			    <div class="c-tab-heading { \'c-tab-heading--active\': selectedTab == \'sketch\' }" data-tab="sketch" onclick="{ selectTab }">Sketch</div>\
-                            <div class="c-tab-heading { \'c-tab-heading--active\': selectedTab == \'record\' }" data-tab="record" onclick="{ selectTab }">Record</div>\
-			    <div class="c-tab-heading { \'c-tab-heading--active\': selectedTab == \'file\' }" data-tab="file" onclick="{ selectTab }">File</div>\
-		     </div>\
-			<div class="c-tabs__tab { \'c-tabs__tab--active\': selectedTab == \'text\' }">\
-                            <jb3-paste-text></jb3-paste-text>\
-			</div>\
-			<div class="c-tabs__tab { \'c-tabs__tab--active\': selectedTab == \'image\' }">\
-				<jb3-paste-image></jb3-paste-image>\
-			</div>\
-                        <div class="c-tabs__tab { \'c-tabs__tab--active\': selectedTab == \'sketch\' }">\
-                            <jb3-paste-sketch></jb3-paste-sketch>\
-			</div>\
-                        <div class="c-tabs__tab { \'c-tabs__tab--active\': selectedTab == \'record\' }">\
-                            <jb3-paste-record></jb3-paste-record>\
-                        </div>\
-			<div class="c-tabs__tab { \'c-tabs__tab--active\': selectedTab == \'file\' }">\
-                            <jb3-paste-file></jb3-paste-file>\
-			</div>\
-		</div>\
-',
-                '',
-                function(opts) {
-                var self = this;
-                        self.pasteText = self.tags['jb3-paste-text'];
-                        self.pasteFile = self.tags['jb3-paste-file'];
-                        self.pasteImage = self.tags['jb3-paste-image'];
-                        self.pasteRecord = self.tags['jb3-paste-record'];
-                        self.pasteSketch = self.tags['jb3-paste-sketch'];
-                        this.selectedTab = 'text';
-                        self.selectTab = function(e) {
-                        self.selectedTab = e.target.dataset.tab
-                        };
-                        self.clear = function() {
-                        self.pasteText.clear();
-                                self.pasteFile.clear();
-                                self.pasteImage.clear();
-                                self.pasteRecord.clear();
-                                self.pasteSketch.clear();
-                                this.update();
-                        }
-                });
+var jb3PasteFormConstructor = function (opts) {
+    var self = this;
+    self.selectedTab = null;
+    self.pasteFile = self.tags['jb3-paste-file'];
+    self.pasteImage = self.tags['jb3-paste-image'];
+    self.pasteRecord = self.tags['jb3-paste-record'];
+    self.pasteText = self.tags['jb3-paste-text'];
+    self.pasteSketch = self.tags['jb3-paste-sketch'];
+    self.selectTab = function (e) {
+        self.selectedTab = e.target.dataset.tab;
+    };
+    self.getPasted = function () {
+        return self.pasteFile.pastedFileUrl
+                || self.pasteImage.pastedImageUrl
+                || self.pasteRecord.pastedRecordUrl
+                || self.pasteText.pastedTextUrl
+                || self.pasteSketch.pastedSketchUrl;
+    };
+    self.clear = function () {
+        self.selectedTab = null;
+        self.pasteText.clear();
+        self.pasteFile.clear();
+        self.pasteImage.clear();
+        self.pasteRecord.clear();
+        self.pasteSketch.clear();
+        this.update();
+    };
+};
+
+var jb3PasteFormTemplate = '\
+<div if="{ !selectedTab}" class="jb3-paste-form-buttons">\
+        <button class="c-button u-super c-button--block" data-tab="text" onclick="{ selectTab }">Text</button>\
+        <button class="c-button u-super c-button--block" data-tab="image" onclick="{ selectTab }">Image</button>\
+        <button class="c-button u-super c-button--block" data-tab="sketch" onclick="{ selectTab }">Sketch</button>\
+        <button class="c-button u-super c-button--block" data-tab="record" onclick="{ selectTab }">Record</button>\
+        <button class="c-button u-super c-button--block" data-tab="file" onclick="{ selectTab }">File</button>\
+ </div>\
+<jb3-paste-text if="{ selectedTab == \'text\' }"></jb3-paste-text>\
+<jb3-paste-image if="{ selectedTab == \'image\' }"></jb3-paste-image>\
+<jb3-paste-sketch if="{ selectedTab == \'sketch\' }"></jb3-paste-sketch>\
+<jb3-paste-record if="{ selectedTab == \'record\' }"></jb3-paste-record>\
+<jb3-paste-file if="{ selectedTab == \'file\' }"></jb3-paste-file>\
+';
+
+var jb3PasteFormStyles = '\
+	.jb3-paste-form-buttons .c-button {\
+		margin: 5px 0;\
+	}\
+';
+
+riot.tag('jb3-paste-form', jb3PasteFormTemplate, jb3PasteFormStyles, jb3PasteFormConstructor);
