@@ -7,8 +7,11 @@ riot.tag(
 		  <input name="rlogin" class="c-field c-field--label" type="text">\
 		</label>\
 		<label class="c-label o-form-element" if="{ rname.value == \'dlfp\' }">\
-		  Password / Cookie / ... :\
+		  Cookie :\
 		  <input name="rauth" class="c-field c-field--label" type="text">\
+			<form action="/dlfp/connect" >\
+				<input type="submit" class="c-button c-button--info" value="Connect">\
+			</form>\
 		</label>\
 		<div class="c-input-group" if="{ !rname.value }">\
 				<input name="rname" class="c-field" type="text" placeholder="Type new room\'s name">\
