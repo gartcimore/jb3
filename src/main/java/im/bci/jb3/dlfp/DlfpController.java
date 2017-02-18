@@ -20,10 +20,10 @@ import org.springframework.web.servlet.view.RedirectView;
 @RequestMapping("/dlfp")
 public class DlfpController {
 
-	@Value("${jb3.dlfp.oauth.client_id}")
+	@Value("${jb3.dlfp.oauth.client_id:}")
 	private String clientId;
 
-	@Value("${jb3.dlfp.oauth.client_secret}")
+	@Value("${jb3.dlfp.oauth.client_secret:}")
 	private String clientSecret;
 
 	@RequestMapping(path = "/connect", method = RequestMethod.GET)
