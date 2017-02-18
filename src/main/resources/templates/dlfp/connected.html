@@ -1,48 +1,55 @@
 <!DOCTYPE html>
 <html id="jb3-posts-container">
-<head>
-<title>jb3 visio</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex,nofollow">
-{{> partials/css}}
-<link rel="icon" type="image/png" href="/favicon.png">
-</head>
-<body class="c-text">
-	{{> partials/header}}
-	<main class="o-container o-container--large">
-	<section class="u-letter-box--medium">
-		{{#if token }}
-		<h1 class="c-heading c-heading--large">DLFP connection succeed!</h1>
-		<table class="c-table">
-			<caption class="c-table__caption">OAUTH token</caption>
-			<thead class="c-table__head">
-				<tr class="c-table__row c-table__row--heading">
-					<th class="c-table__cell">Access token</th>
-					<th class="c-table__cell">Refresh token</th>
-					<th class="c-table__cell">Expires in</th>
-				</tr>
-			</thead>
-			<tbody class="c-table__body">
-				<tr class="c-table__row">
-					<td class="c-table__cell">{{ token.access_token }}</td>
-					<td class="c-table__cell">{{ token.refresh_token }}</td>
-					<td class="c-table__cell">{{ token.expires_in }}</td>
-				</tr>
-			</tbody>
-		</table>
-		{{else}}
-		<h1 class="c-heading c-heading--large">DLFP connection failed!</h1>
-		{{/if}}
-	</section>
-	</main>
-	<script type="text/javascript">
-		localStorage.dlfpToken = {
-			access_token: '{{ token.access_token }}',
-			refresh_token: '{{ token.access_token }}',
-			expires_in: '{{ token.expires_in }}'
-		};
-	</script>
-	{{> partials/js}}
-</body>
+    <head>
+        <title>jb3 dlfp connected</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="robots" content="noindex,nofollow">
+        {{> partials/css}}
+        <link rel="icon" type="image/png" href="/favicon.png">
+    </head>
+    <body class="c-text">
+        {{> partials/header}}
+        <main class="o-container o-container--large">
+            <section class="u-letter-box--medium">
+                {{#if token }}
+                <h1 class="c-heading c-heading--large">DLFP connection succeed!</h1>
+                <table class="c-table">
+                    <caption class="c-table__caption">OAUTH token</caption>
+                    <thead class="c-table__head">
+                        <tr class="c-table__row c-table__row--heading">
+                            <th class="c-table__cell">Access token</th>
+                            <th class="c-table__cell">Refresh token</th>
+                            <th class="c-table__cell">Expires in</th>
+                        </tr>
+                    </thead>
+                    <tbody class="c-table__body">
+                        <tr class="c-table__row">
+                            <td class="c-table__cell">{{ token.access_token }}</td>
+                            <td class="c-table__cell">{{ token.refresh_token }}</td>
+                            <td class="c-table__cell">{{ token.expires_in }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                {{else}}
+                <h1 class="c-heading c-heading--large">DLFP connection failed!</h1>
+                {{/if}}
+            </section>
+        </main>
+        <script type="text/javascript">
+            var rooms = JSON.parse(localStorage.rooms);
+            var existingIndex = rooms.findIndex(function (r) {
+                return r.rname === 'dlfp';
+            });
+            if (existingIndex >= 0) {
+                rooms[existingIndex].token = {
+                    access_token: '{{ token.access_token }}',
+                    refresh_token: '{{ token.refresh_token }}',
+                    expires_in: '{{ token.expires_in }}'
+                };
+                localStorage.rooms = JSON.stringify(self.rooms);
+            }
+        </script>
+        {{> partials/js}}
+    </body>
 </html>
