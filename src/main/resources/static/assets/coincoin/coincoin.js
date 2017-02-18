@@ -15,10 +15,7 @@ jb3 = {
         self.rooms[self.controlsRoom.val()] = {};
         self.controlsRoom.append(
                 $.map(jb3_common.getRooms(), function (v, k) {
-                    self.rooms[v.rname] = {
-                        auth: v.rauth,
-                        login: v.rlogin
-                    };
+                    self.rooms[v.rname] = {};
                     return new Option(v.rname, v.rname);
                 })
                 );
@@ -126,10 +123,12 @@ jb3 = {
         self.coin.postMessage({type: "connect", url: wurl.toString()});
         self.updateMessages();
         self.initTrollometre();
+        setTimeout(function(){ self.refreshDlfpToken(); }, 1000);
+        setInterval(function(){ self.refreshDlfpToken(); }, 60 * 60 * 1000);
     },
     postCurrentMessage: function() {
         var selectedRoom = this.controlsRoom.val();
-        this.postMessage(this.controlsNickname.val(), this.controlsMessage.val(), selectedRoom, this.rooms[selectedRoom].auth);
+        this.postMessage(this.controlsNickname.val(), this.controlsMessage.val(), selectedRoom, localStorage.getItem(selectedRoom + "-auth"));
         this.controlsMessage.val('');
     },
     updateMessages: function () {
@@ -347,6 +346,24 @@ jb3 = {
     },
     initTrollometre: function() {
     	this.trollometre = new Trollometre(document.getElementById("trollometre"));
+    },
+    refreshDlfpToken: function() {
+        var dlfpAuth = localStorage.getItem("dlfp-auth");
+        if(dlfpAuth) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function (event) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        localStorage.setItem("dlfp-auth", xhr.response);
+                    }
+                }
+            };
+            var token = JSON.parse(dlfpAuth);
+            var body = new FormData();
+            body.append("token", token.refresh_token);
+            xhr.open("POST", "/dlfp/refresh-token");
+            xhr.send(body);
+        }
     }
 };
 jb3.init();

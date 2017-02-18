@@ -1,5 +1,14 @@
 package im.bci.jb3.bouchot.gateway;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import im.bci.jb3.bouchot.legacy.LegacyUtils;
+import im.bci.jb3.dlfp.DlfpOauthToken;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.joda.time.DateTime;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -8,6 +17,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DlfpGateway extends AbstractBouchotGateway {
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private static BouchotConfig createConf() {
         BouchotConfig conf = new BouchotConfig();
@@ -22,6 +34,25 @@ public class DlfpGateway extends AbstractBouchotGateway {
 
     public DlfpGateway() {
         super(createConf());
+    }
+
+    @Override
+    public void post(String nickname, String message, String auth) {
+        try {
+            DlfpOauthToken token = objectMapper.readValue(auth, DlfpOauthToken.class);
+            Connection.Response response = Jsoup.connect("https://linuxfr.org/api/v1/board")
+                    .data("bearer_token", token.getAccess_token())
+                    .data("message",
+                            legacyUtils.convertToLegacyNorloges(message,
+                                    DateTime.now().withZone(LegacyUtils.legacyTimeZone).secondOfMinute()
+                                    .roundFloorCopy(), getRoom()))
+                    .method(Connection.Method.POST)
+                    .ignoreContentType(true)
+                    .execute();
+            importPosts();
+        } catch (Exception ex) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

@@ -2,9 +2,6 @@ package im.bci.jb3.dlfp;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jsoup.Connection;
-import org.jsoup.Connection.Response;
-import org.jsoup.Jsoup;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -19,6 +16,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -43,37 +41,6 @@ public class DlfpController {
         return new RedirectView("https://linuxfr.org/api/oauth/authorize");
     }
 
-    public static class OauthToken {
-
-        private String access_token;
-        private String refresh_token;
-        private String expires_in;
-
-        public String getAccess_token() {
-            return access_token;
-        }
-
-        public void setAccess_token(String access_token) {
-            this.access_token = access_token;
-        }
-
-        public String getRefresh_token() {
-            return refresh_token;
-        }
-
-        public void setRefresh_token(String refresh_token) {
-            this.refresh_token = refresh_token;
-        }
-
-        public String getExpires_in() {
-            return expires_in;
-        }
-
-        public void setExpires_in(String expires_in) {
-            this.expires_in = expires_in;
-        }
-    }
-
     @RequestMapping(path = "/connected", method = RequestMethod.GET)
     public String connect(Model model, @RequestParam String code) {
         try {
@@ -91,9 +58,9 @@ public class DlfpController {
 
             HttpEntity formEntity = new HttpEntity<>(requestBody, headers);
 
-            ResponseEntity<OauthToken> response
+            ResponseEntity<DlfpOauthToken> response
                     = restTemplate.exchange("https://linuxfr.org/api/oauth/token", HttpMethod.POST,
-                            formEntity, OauthToken.class);
+                            formEntity, DlfpOauthToken.class);
             model.addAttribute("token", response.getBody());
         } catch (Exception ex) {
             Logger.getLogger(DlfpController.class.getName()).log(Level.WARNING, null, ex);
@@ -102,8 +69,9 @@ public class DlfpController {
         return "dlfp/connected";
     }
 
-        @RequestMapping(path = "/refresh-token", method = RequestMethod.GET)
-    public String refreshToken(Model model, @RequestParam String token) {
+    @ResponseBody
+    @RequestMapping(path = "/refresh-token", method = RequestMethod.POST)
+    public DlfpOauthToken refreshToken(@RequestParam String token) {
         try {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
@@ -118,17 +86,17 @@ public class DlfpController {
 
             HttpEntity formEntity = new HttpEntity<>(requestBody, headers);
 
-            ResponseEntity<OauthToken> response
+            ResponseEntity<DlfpOauthToken> response
                     = restTemplate.exchange("https://linuxfr.org/api/oauth/token", HttpMethod.POST,
-                            formEntity, OauthToken.class);
-            model.addAttribute("token", response.getBody());
+                            formEntity, DlfpOauthToken.class);
+            return response.getBody();
         } catch (Exception ex) {
             Logger.getLogger(DlfpController.class.getName()).log(Level.WARNING, null, ex);
+            throw ex;
         }
-        model.addAttribute("wro-group", "dlfp");
-        return "dlfp/connected";
+
     }
-    
+
     private String buildRedirectURI() {
         return ServletUriComponentsBuilder.fromCurrentRequest().replacePath("/dlfp/connected").replaceQuery("").build().toString();
     }

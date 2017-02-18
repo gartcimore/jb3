@@ -40,7 +40,7 @@ public abstract class AbstractBouchotGateway implements Gateway, SchedulableGate
     @Autowired
     private PostRepository postPepository;
     @Autowired
-    private LegacyUtils legacyUtils;
+    protected LegacyUtils legacyUtils;
     private long lastPostId = -1;
 
     @Value("${jb3.secure}")
@@ -53,7 +53,7 @@ public abstract class AbstractBouchotGateway implements Gateway, SchedulableGate
         this.config = config;
     }
 
-    private void importPosts() {
+    protected void importPosts() {
         try {
             Connection connect = Jsoup.connect(config.getGetUrl())
                     .validateTLSCertificates(validateCrapCertificate || !config.isUsingCrapCertificate());
