@@ -236,8 +236,7 @@ jb3 = {
     }
     , onMessage: function (userNickname, message) {
         message.message = jb3_post_to_html.parse(message.message);
-        var room = this.rooms[message.room];
-        message.postIsMine = message.nickname === userNickname || (room && message.nickname === room.login) ? " jb3-post-is-mine" : "";
+        message.postIsMine = message.nickname === userNickname || (message.room && message.nickname === localStorage.getItem(message.room + '-login')) ? " jb3-post-is-mine" : "";
         message.postIsBigorno = message.message.search(new RegExp("(moules|" + RegExp.escape(userNickname) + ")&lt;", "i")) >= 0 ? " jb3-post-is-bigorno" : "";
         var container = this.controlsRoom.val() === message.room ? this.messagesContainer : this.hiddenMessagesContainer;
         var messageDiv = this.messageTemplate(message);
