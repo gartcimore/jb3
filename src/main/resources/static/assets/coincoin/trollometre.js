@@ -62,7 +62,7 @@ Trollometre.prototype.getMetricsForRoom = function (room) {
                 "politique",
                 {
                     nickname: /\b(adonai|flanagan|pap)\b/i,
-                    message: /\b(balladur|banlieues?|banques?|banquiers?|capitalistes?|classes?|chirac|communismes?|communistes?|coppé|europes?|fachos?|hitler|hollande|insurrections?|jean marie|jlm|juppé|lepen|libérals?|libéralismes?|libre échange|macron|marine|melanchon|melancon|meluche|meluchon|nabots?|nains?|occitanie|pap|patries?|pauvres?|politiques?|prolétaires?|prolos?|racismes?|racistes?|réacts?|réactions?|réactionnaires?|républiques?|riches?|rouges?|sarko|sarkozy|socialismes?|staline|totalitaires?|uniformes?|villepin)\b/i
+                    message: /\b(balladur|banlieues?|banques?|banquiers?|capitalistes?|classes?|chirac|communismes?|communistes?|coppé|europes?|fachos?|hitler|hollande|insurrections?|jean marie|jlm|juppé|lepen|libérals?|libéralismes?|libre échange|macron|marine|mélenchon|melanchon|melanchon|melancon|meluche|meluchon|nabots?|nains?|occitanie|pap|patries?|pauvres?|politiques?|prolétaires?|prolos?|racismes?|racistes?|réacts?|réactions?|réactionnaires?|républiques?|riches?|rouges?|sarko|sarkozy|socialismes?|staline|totalitaires?|uniformes?|villepin)\b/i
                 }),
         new TrollMetric(
                 "linux",
