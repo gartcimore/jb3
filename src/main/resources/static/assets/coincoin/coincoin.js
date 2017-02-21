@@ -128,8 +128,13 @@ jb3 = {
     },
     postCurrentMessage: function() {
         var selectedRoom = this.controlsRoom.val();
-        this.postMessage(this.controlsNickname.val(), this.controlsMessage.val(), selectedRoom, localStorage.getItem(selectedRoom + "-auth"));
-        this.controlsMessage.val('');
+        var auth = localStorage.getItem(selectedRoom + "-auth");
+        if(selectedRoom === 'dlfp' && !auth) {
+            window.location.href = "/dlfp/connect";
+        } else {
+            this.postMessage(this.controlsNickname.val(), this.controlsMessage.val(), selectedRoom, auth);
+            this.controlsMessage.val('');
+        }
     },
     updateMessages: function () {
         var self = this;
