@@ -44,7 +44,7 @@ public class DlfpController {
     }
 
     @RequestMapping(path = "/connected", method = RequestMethod.GET)
-    public String connect(Model model, @RequestParam String code) {
+    public String connected(Model model, @RequestParam String code) {
         try {
             DlfpOauthToken token = retrieveToken(code);
             model.addAttribute("token", token);
