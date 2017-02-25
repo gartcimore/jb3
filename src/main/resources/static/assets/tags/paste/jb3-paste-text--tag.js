@@ -3,7 +3,7 @@ var jb3PasteTextTemplate = '\
         <div class="o-form-element">\
                 <textarea name="ptext" class="c-field" type="text"></textarea>\
         </div>\
-        <input type="submit" class="c-button c-button--info"" >\
+        <input type="submit" class="c-button c-button--info" >\
 </form>\
 <div if="{ pastedTextUrl }" class="c-card  c-card--success">\
   <div class="c-card__item c-card__item--divider">Pasted!</div>\

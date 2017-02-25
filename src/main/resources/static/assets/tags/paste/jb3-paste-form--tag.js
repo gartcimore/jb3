@@ -5,6 +5,7 @@ var jb3PasteFormConstructor = function (opts) {
     self.pasteImage = self.tags['jb3-paste-image'];
     self.pasteRecord = self.tags['jb3-paste-record'];
     self.pasteText = self.tags['jb3-paste-text'];
+    self.pasteTotoz = self.tags['jb3-paste-totoz'];
     self.pasteSketch = self.tags['jb3-paste-sketch'];
     self.selectTab = function (e) {
         self.selectedTab = e.target.dataset.tab;
@@ -14,11 +15,13 @@ var jb3PasteFormConstructor = function (opts) {
                 || self.pasteImage.pastedImageUrl
                 || self.pasteRecord.pastedRecordUrl
                 || self.pasteText.pastedTextUrl
+                || self.pasteTotoz.pastedTotoz
                 || self.pasteSketch.pastedSketchUrl;
     };
     self.clear = function () {
         self.selectedTab = null;
         self.pasteText.clear();
+        self.pasteTotoz.clear();
         self.pasteFile.clear();
         self.pasteImage.clear();
         self.pasteRecord.clear();
@@ -29,12 +32,14 @@ var jb3PasteFormConstructor = function (opts) {
 
 var jb3PasteFormTemplate = '\
 <div if="{ !selectedTab}" class="jb3-paste-form-buttons">\
+        <button class="c-button u-super c-button--block" data-tab="totoz" onclick="{ selectTab }">Totoz</button>\
         <button class="c-button u-super c-button--block" data-tab="text" onclick="{ selectTab }">Text</button>\
         <button class="c-button u-super c-button--block" data-tab="image" onclick="{ selectTab }">Image</button>\
         <button class="c-button u-super c-button--block" data-tab="sketch" onclick="{ selectTab }">Sketch</button>\
         <button class="c-button u-super c-button--block" data-tab="record" onclick="{ selectTab }">Record</button>\
         <button class="c-button u-super c-button--block" data-tab="file" onclick="{ selectTab }">File</button>\
- </div>\
+</div>\
+<jb3-paste-totoz if="{ selectedTab == \'totoz\' }"></jb3-paste-totoz>\
 <jb3-paste-text if="{ selectedTab == \'text\' }"></jb3-paste-text>\
 <jb3-paste-image if="{ selectedTab == \'image\' }"></jb3-paste-image>\
 <jb3-paste-sketch if="{ selectedTab == \'sketch\' }"></jb3-paste-sketch>\

@@ -13,6 +13,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
 import im.bci.jb3.bouchot.data.PasteRepository;
+import java.util.ArrayList;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 
@@ -56,5 +61,19 @@ public class PasteApiController {
 			mv.setUrl(pasteRepository.saveFilePaste(pfile));
 		}
 		return mv;
+	}
+        
+        @RequestMapping(path = "/totoz/search", method = RequestMethod.GET)
+	public ArrayList<Totoz> searchTotoz(@RequestParam(name="terms", required = true) String terms
+                , @RequestParam(name="offset", required = false, defaultValue = "0") int offset) throws IOException {
+                Document doc = Jsoup.connect("https://nsfw.totoz.eu/search.xml").data("terms", terms)
+                        .data("offset", Integer.toString(offset)).get();
+                ArrayList<Totoz> totozList = new ArrayList<>();
+                for(Element t : doc.select("totoz")) {
+                    Totoz totoz = new Totoz();
+                    totoz.setName(t.select("name").text());
+                    totozList.add(totoz);
+                }
+                return totozList;
 	}
 }
