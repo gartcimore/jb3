@@ -41,7 +41,7 @@ var jb3PasteTotozConstructor = function () {
                 if (xhr.status === 200) {
                     self.totozList = JSON.parse(xhr.response);
                 } else {
-                    self.totozError = 'Error during text upload';
+                    self.totozError = 'Error during totoz search';
                     self.totozList = null;
                 }
                 self.update();
