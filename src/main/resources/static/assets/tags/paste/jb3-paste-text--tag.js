@@ -1,5 +1,5 @@
 var jb3PasteTextTemplate = '\
-<form name="pasteTextForm" class="c-fieldset" onsubmit="{ submit }">\
+<form name="pasteTextForm" class="c-fieldset" onsubmit="{ submit }" accept-charset="UTF-8">\
         <div class="o-form-element">\
                 <textarea name="ptext" class="c-field" type="text"></textarea>\
         </div>\
