@@ -43,7 +43,8 @@ var jb3PasteTextConstructor = function () {
             }
         };
         xhr.open("POST", "/api/paste/text");
-        xhr.send(new FormData(event.target));
+        xhr.setRequestHeader('Content-Type', 'text/plain; charset=UTF-8');
+        xhr.send(self.ptext.value);
         return false;
     };
 };

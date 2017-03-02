@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -33,7 +34,7 @@ public class PasteApiController {
     private PasteRepository pasteRepository;
 
     @RequestMapping(path = "/text", method = RequestMethod.POST)
-    public PastedMV paste(String ptext) throws FileNotFoundException, IOException {
+    public PastedMV paste(@RequestBody String ptext) throws FileNotFoundException, IOException {
         PastedMV mv = new PastedMV();
         if (StringUtils.isNotBlank(ptext)) {
             mv.setUrl(pasteRepository.saveTextPaste(ptext));
