@@ -66,6 +66,9 @@ var jb3PasteRecordConstructor = function () {
                         self.pastedRecordUrl = null;
                     }
                     self.update();
+                    if (self.pastedResult && self.pastedResult.scrollIntoView) {
+                        self.pastedResult.scrollIntoView();
+                    }
                 }
             };
             xhr.open("POST", "/api/paste/file");
@@ -73,6 +76,9 @@ var jb3PasteRecordConstructor = function () {
         }
     };
 };
+
+var jb3PasteRecordStyles = '\
+';
 
 var jb3PasteRecordTemplate = '\
 <div class="o-form-element">\
@@ -89,20 +95,20 @@ var jb3PasteRecordTemplate = '\
     <button class="c-button c-button--info" onclick="{ uploadRecord }" >Upload</button>\
     <progress name="recordProgress" value="0" max="100"></progress>\
 </div>\
-<div if="{ pastedRecordUrl }" class="c-card  c-card--success">\
-      <div class="c-card__item c-card__item--divider">Pasted!</div>\
+<div name="pastedResult">\
+    <div if="{ pastedRecordUrl }" class="c-card">\
+          <div class="c-card__item c-card__item--divider c-card__item--success">Pasted!</div>\
+          <div class="c-card__item">\
+            <p class="c-paragraph"><a class="c-link  jb3-pasted-url" href="{ pastedRecordUrl }">{ pastedRecordUrl }</a></p>\
+          </div>\
+    </div>\
+    <div if="{ pastedRecordError }" class="c-card">\
+      <div class="c-card__item c-card__item--divider c-card__item--error">Error :-(</div>\
       <div class="c-card__item">\
-        <p class="c-paragraph"><a class="c-link  jb3-pasted-url" href="{ pastedRecordUrl }">{ pastedRecordUrl }</a></p>\
+        <p class="c-paragraph">{ pastedRecordError }</p>\
       </div>\
+    </div>\
 </div>\
-<div if="{ pastedRecordError }" class="c-card  c-card--error">\
-  <div class="c-card__item c-card__item--divider">Error :-(</div>\
-  <div class="c-card__item">\
-    <p class="c-paragraph">{ pastedRecordError }</p>\
-  </div>\
-</div>\
-';
-var jb3PasteRecordStyles = '\
 ';
 
 riot.tag('jb3-paste-record', jb3PasteRecordTemplate, jb3PasteRecordStyles, jb3PasteRecordConstructor);

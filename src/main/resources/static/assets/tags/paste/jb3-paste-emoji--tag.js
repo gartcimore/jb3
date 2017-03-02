@@ -1,31 +1,3 @@
-var jb3PasteEmojiTemplate = '\
-<form name="pasteEmojiForm" class="c-fieldset" onsubmit="{ submit }">\
-        <div class="o-form-element">\
-                <input name="terms" class="c-field c-field--label" type="text"></input>\
-        </div>\
-        <input type="submit" class="c-button c-button--info" value="Search" >\
-</form>\
-<div if="{ emojiList }"class="o-grid  o-grid--wrap" >\
-    <virtual each="{ emojiList }" >\
-        <div data-name="{ name }" class="{ o-grid__cell: true, jb3-paste-emoji-selected: selected}" onclick="{ selectEmoji }">\
-            <div>{ character }</div>\
-            <div>{ name }</div>\
-        </div>\
-    </virtual>\
-</div>\
-<div if="{ emojiError }" class="c-card  c-card--error">\
-  <div class="c-card__item c-card__item--divider">Error :-(</div>\
-  <div class="c-card__item">\
-    <p class="c-paragraph">{ emojiError }</p>\
-  </div>\
-</div>\
-';
-var jb3PasteEmojiStyles = '\
-    .jb3-paste-emoji-selected {\
-        background-color: #e5eaec;\
-        border-radius: 4px;\
-    }\
-';
 var jb3PasteEmojiConstructor = function () {
     var self = this;
     self.clear = function () {
@@ -51,18 +23,49 @@ var jb3PasteEmojiConstructor = function () {
         xhr.send();
         return false;
     };
-    self.selectEmoji = function(event) {
+    self.selectEmoji = function (event) {
         self.pastedEmoji = "";
-        self.emojiList.forEach(function(emoji) {
-            if(emoji.name === event.currentTarget.dataset.name) {
+        self.emojiList.forEach(function (emoji) {
+            if (emoji.name === event.currentTarget.dataset.name) {
                 emoji.selected = !emoji.selected;
             }
-            if(emoji.selected) {
+            if (emoji.selected) {
                 self.pastedEmoji = self.pastedEmoji.concat(emoji.character);
             }
         });
         self.update();
     };
 };
+
+var jb3PasteEmojiStyles = '\
+    .jb3-paste-emoji-selected {\
+        background-color: #e5eaec;\
+        border-radius: 4px;\
+    }\
+';
+
+var jb3PasteEmojiTemplate = '\
+<form name="pasteEmojiForm" class="c-fieldset" onsubmit="{ submit }">\
+        <div class="o-form-element">\
+                <input name="terms" class="c-field c-field--label" type="text"></input>\
+        </div>\
+        <input type="submit" class="c-button c-button--info" value="Search" >\
+</form>\
+<div if="{ emojiList }"class="o-grid  o-grid--wrap" >\
+    <virtual each="{ emojiList }" >\
+        <div data-name="{ name }" class="{ o-grid__cell: true, jb3-paste-emoji-selected: selected}" onclick="{ selectEmoji }">\
+            <div>{ character }</div>\
+            <div>{ name }</div>\
+        </div>\
+    </virtual>\
+</div>\
+<div if="{ emojiError }" class="c-card">\
+  <div class="c-card__item c-card__item--divider c-card__item--error">Error :-(</div>\
+  <div class="c-card__item">\
+    <p class="c-paragraph">{ emojiError }</p>\
+  </div>\
+</div>\
+';
+
 
 riot.tag('jb3-paste-emoji', jb3PasteEmojiTemplate, jb3PasteEmojiStyles, jb3PasteEmojiConstructor);

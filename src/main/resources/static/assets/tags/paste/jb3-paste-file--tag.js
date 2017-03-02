@@ -1,26 +1,3 @@
-var jb3PasteFileTemplate = '\
-<form name="pasteFileForm" class="c-fieldset" onsubmit="{ submit }">\
-        <div class="o-form-element">\
-                <input name="pfile" class="c-field c-field--label" type="file"></input>\
-        </div>\
-        <input type="submit" class="c-button c-button--info" >\
-        <progress name="fileProgress" value="0" max="100"></progress>\
-</form>\
-<div if="{ pastedFileUrl }" class="c-card  c-card--success">\
-  <div class="c-card__item c-card__item--divider">Pasted!</div>\
-  <div class="c-card__item">\
-    <p class="c-paragraph"><a class="c-link  jb3-pasted-url" href="{ pastedFileUrl }" target="_blank">{ pastedFileUrl }</a></p>\
-  </div>\
-</div>\
-<div if="{ pastedFileError }" class="c-card  c-card--error">\
-  <div class="c-card__item c-card__item--divider">Error :-(</div>\
-  <div class="c-card__item">\
-    <p class="c-paragraph">{ pastedFileError }</p>\
-  </div>\
-</div>\
-';
-var jb3PasteFileStyles = '\
-';
 var jb3PasteFileConstructor = function () {
     var self = this;
     self.clear = function () {
@@ -30,7 +7,7 @@ var jb3PasteFileConstructor = function () {
     self.submit = function (event) {
         event.preventDefault();
         var xhr = new XMLHttpRequest();
-        xhr.onprogress = function(e) {
+        xhr.onprogress = function (e) {
             var percentComplete = (e.loaded / e.total) * 100;
             self.fileProgress.value = percentComplete;
         };
@@ -45,6 +22,9 @@ var jb3PasteFileConstructor = function () {
                     self.pastedFileUrl = null;
                 }
                 self.update();
+                if (self.pastedResult && self.pastedResult.scrollIntoView) {
+                    self.pastedResult.scrollIntoView();
+                }
             }
         };
         xhr.open("POST", "/api/paste/file");
@@ -52,5 +32,30 @@ var jb3PasteFileConstructor = function () {
         return false;
     };
 };
+var jb3PasteFileStyles = '\
+';
+var jb3PasteFileTemplate = '\
+<form name="pasteFileForm" class="c-fieldset" onsubmit="{ submit }">\
+        <div class="o-form-element">\
+                <input name="pfile" class="c-field c-field--label" type="file"></input>\
+        </div>\
+        <input type="submit" class="c-button c-button--info" >\
+        <progress name="fileProgress" value="0" max="100"></progress>\
+</form>\
+<div name="pastedResult">\
+    <div if="{ pastedFileUrl }" class="c-card">\
+      <div class="c-card__item c-card__item--divider c-card__item--success">Pasted!</div>\
+      <div class="c-card__item">\
+        <p class="c-paragraph"><a class="c-link  jb3-pasted-url" href="{ pastedFileUrl }" target="_blank">{ pastedFileUrl }</a></p>\
+      </div>\
+    </div>\
+    <div if="{ pastedFileError }" class="c-card">\
+      <div class="c-card__item c-card__item--divider c-card__item--error">Error :-(</div>\
+      <div class="c-card__item">\
+        <p class="c-paragraph">{ pastedFileError }</p>\
+      </div>\
+    </div>\
+</div>\
+';
 
 riot.tag('jb3-paste-file', jb3PasteFileTemplate, jb3PasteFileStyles, jb3PasteFileConstructor);
