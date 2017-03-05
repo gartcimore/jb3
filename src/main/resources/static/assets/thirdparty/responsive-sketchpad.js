@@ -50,7 +50,7 @@
         /**
          * Set the size of canvas
          */
-        function setCanvasSize (width, height) {
+        function setCanvasSize(width, height) {
             canvas.setAttribute('width', width);
             canvas.setAttribute('height', height);
             canvas.style.width = width + 'px';
@@ -60,7 +60,7 @@
         /**
          * Get the size of the canvas
          */
-        function getCanvasSize () {
+        function getCanvasSize() {
             return {
                 width: canvas.width,
                 height: canvas.height
@@ -74,7 +74,7 @@
         /**
          * Returns a points x,y locations relative to the size of the canvase
          */
-        function getPointRelativeToCanvas (point) {
+        function getPointRelativeToCanvas(point) {
             var canvasSize = getCanvasSize();
             return {
                 x: point.x / canvasSize.width,
@@ -85,14 +85,14 @@
         /**
          * Returns true if is a touch event, false otherwise
          */
-        function isTouchEvent (e) {
+        function isTouchEvent(e) {
             return e.type.indexOf('touch') !== -1;
         }
 
         /**
          * Get location of the cursor in the canvas
          */
-        function getCursorRelativeToCanvas (e) {
+        function getCursorRelativeToCanvas(e) {
             var cur = {};
 
             if (isTouchEvent(e)) {
@@ -111,7 +111,7 @@
          * Get the line size relative to the size of the canvas
          * @return {[type]} [description]
          */
-        function getLineSizeRelativeToCanvas (size) {
+        function getLineSizeRelativeToCanvas(size) {
             var canvasSize = getCanvasSize();
             return size / canvasSize.width;
         }
@@ -119,16 +119,20 @@
         /**
          * Erase everything in the canvase
          */
-        function clearCanvas () {
+        function clearCanvas() {
             var canvasSize = getCanvasSize();
-            context.clearRect(0, 0, canvasSize.width, canvasSize.height);
+            if (that.background) {
+                context.drawImage(that.background, 0, 0, canvasSize.width, canvasSize.height);
+            } else {
+                context.clearRect(0, 0, canvasSize.width, canvasSize.height);
+            }
         }
 
         /**
          * Since points are stored relative to the size of the canvas
          * this takes a point and converts it to actual x, y distances in the canvas
          */
-        function normalizePoint (point) {
+        function normalizePoint(point) {
             var canvasSize = getCanvasSize();
             return {
                 x: point.x * canvasSize.width,
@@ -141,7 +145,7 @@
          * this takes a line size and converts it to a line size
          * appropriate to the size of the canvas
          */
-        function normalizeLineSize (size) {
+        function normalizeLineSize(size) {
             var canvasSize = getCanvasSize();
             return size * canvasSize.width;
         }
@@ -149,7 +153,7 @@
         /**
          * Draw a stroke on the canvas
          */
-        function drawStroke (stroke) {
+        function drawStroke(stroke) {
             context.beginPath();
             for (var j = 0; j < stroke.points.length - 1; j++) {
                 var start = normalizePoint(stroke.points[j]);
@@ -172,7 +176,7 @@
         /**
          * Redraw the canvas
          */
-        function redraw () {
+        function redraw() {
             clearCanvas();
 
             for (var i = 0; i < that.strokes.length; i++) {
@@ -181,7 +185,7 @@
         }
 
         // On mouse down, create a new stroke with a start location
-        function startLine (e) {
+        function startLine(e) {
             e.preventDefault();
 
             strokes = that.strokes;
@@ -199,7 +203,7 @@
             });
         }
 
-        function drawLine (e) {
+        function drawLine(e) {
             if (!sketching) {
                 return;
             }
@@ -215,7 +219,7 @@
             that.redraw();
         }
 
-        function endLine (e) {
+        function endLine(e) {
             if (!sketching) {
                 return;
             }
@@ -265,7 +269,7 @@
      * Undo the last action
      */
     Sketchpad.prototype.undo = function () {
-        if (this.strokes.length === 0){
+        if (this.strokes.length === 0) {
             return;
         }
 
@@ -273,6 +277,10 @@
         this.redraw();
     };
 
+    Sketchpad.prototype.setBackground = function (img) {
+        this.background = img;
+        this.redraw();
+    };
 
     /**
      * Redo the last undo action
@@ -291,6 +299,7 @@
      * Clear the sketchpad
      */
     Sketchpad.prototype.clear = function () {
+        this.setBackground(null);
         this.undos = [];  // TODO: Add clear action to undo
         this.strokes = [];
         this.redraw();

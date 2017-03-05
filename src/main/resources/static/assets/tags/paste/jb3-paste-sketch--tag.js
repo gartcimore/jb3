@@ -2,6 +2,7 @@
 var jb3PasteSketchConstructor = function () {
     var self = this;
     self.clear = function () {
+        self.sketchpad.clear();
         self.pastedSketchError = null;
         self.pastedSketchUrl = null;
     };
@@ -13,6 +14,37 @@ var jb3PasteSketchConstructor = function () {
             size: 5
         }
     });
+    document.addEventListener('paste', function (event) {
+        var items = (event.clipboardData || event.originalEvent.clipboardData).items || [];
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].type.indexOf("image") === 0) {
+                var file = items[i].getAsFile();
+                if (file) {
+                    var img = new Image();
+                    img.addEventListener('load', function () {
+                        self.sketchpad.setBackground(img);
+                    });
+                    img.src = window.URL.createObjectURL(file);
+                }
+            }
+        }
+        event.preventDefault();
+    });
+    this.changeBackgroundFromFile = function (e) {
+        var files = e.target.files || [];
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            var img = new Image();
+            img.addEventListener('load', function () {
+                self.sketchpad.setBackground(img);
+            });
+            img.src = window.URL.createObjectURL(file);
+        }
+        event.preventDefault();
+    };
+    this.pasteBackground = function () {
+        document.execCommand('paste');
+    };
     this.undoSketch = function () {
         this.sketchpad.undo();
     };
@@ -27,6 +59,9 @@ var jb3PasteSketchConstructor = function () {
     };
     this.uploadSketch = function () {
         this.sketchpad.canvas.toBlob(function (blob) {
+            if(self.pasteSketchProgress.scrollIntoView) {
+                self.pasteSketchProgress.scrollIntoView();
+            }
             var formData = new FormData();
             formData.append("pimage", blob, "sketch.png");
             var xhr = new XMLHttpRequest;
@@ -73,16 +108,18 @@ var jb3PasteSketchStyles = '\
 
 var jb3PasteSketchTemplate = '\
 <div name="pasteSketchForm" class="c-fieldset">\
+            <input class="c-field" type="file" onchange="{ changeBackgroundFromFile }"></input>\
     <div class="o-form-element">\
         <div class="jb3-paste-sketch-tools">\
             <input type="color" value="#000" onchange="{ changeSketchColor }"></input>\
             <input min="0" max="32" value="5" type="range" onchange="{ changeSketchPenSize }"></input>\
             <button class="c-button" onclick="{ undoSketch }">&cularr;</button>\
             <button class="c-button" onclick="{ redoSketch }">&curarr;</button>\
+            <button class="c-button" onclick="{ clear }">Clear</button>\
+            <button class="c-button c-button--info" onclick="{ uploadSketch }" >Upload</button>\
         </div>\
         <div name="sketchCanvasContainer" class="jb3-paste-sketch-container" width="512" height="384"></div>\
     </div>\
-    <button class="c-button c-button--info" onclick="{ uploadSketch }" >Upload</button>\
     <progress name="pasteSketchProgress" value="0" max="100"></progress>\
 </div>\
 <div name="pastedResult">\

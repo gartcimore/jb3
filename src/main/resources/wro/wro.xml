@@ -20,11 +20,9 @@
 		<js>classpath:META-INF/resources/webjars/riot/2.4.1/riot.js</js>
 		<js>classpath:META-INF/resources/webjars/chart.js/2.2.2/dist/Chart.js
 		</js>
-		<js>/assets/thirdparty/picedit/picedit.js</js>
 		<js>/assets/thirdparty/responsive-sketchpad.js</js>
 		<js>/assets/tags/jb3-moules-roster--tag.js</js>
 		<js>/assets/tags/jb3-raw--tag.js</js>
-		<js>/assets/tags/paste/jb3-paste-image--tag.js</js>
                 <js>/assets/tags/paste/jb3-paste-emoji--tag.js</js>
 		<js>/assets/tags/paste/jb3-paste-file--tag.js</js>
 		<js>/assets/tags/paste/jb3-paste-record--tag.js</js>
@@ -42,7 +40,6 @@
 		<css>classpath:META-INF/resources/webjars/blaze/3.2.0/dist/blaze.min.css
 		</css>
 		<css>/assets/common/reset.css</css>
-		<css>/assets/thirdparty/picedit/picedit.css</css>
 		<css>/assets/common/posts.css</css>
 		<css>/assets/coincoin/coincoin.css</css>
 	</group>
@@ -64,9 +61,7 @@
 	<group name="paste">
 		<js>classpath:META-INF/resources/webjars/jquery/3.0.0/jquery.js</js>
 		<js>classpath:META-INF/resources/webjars/riot/2.4.1/riot.js</js>
-		<js>/assets/thirdparty/picedit/picedit.js</js>
 		<js>/assets/thirdparty/responsive-sketchpad.js</js>
-		<js>/assets/tags/paste/jb3-paste-image--tag.js</js>
                 <js>/assets/tags/paste/jb3-paste-emoji--tag.js</js>
 		<js>/assets/tags/paste/jb3-paste-file--tag.js</js>
 		<js>/assets/tags/paste/jb3-paste-record--tag.js</js>
@@ -76,7 +71,6 @@
 		<js>/assets/tags/paste/jb3-paste-form--tag.js</js>
 		<js>/assets/paste/paste.js</js>
 		<css>/assets/common/reset.css</css>
-		<css>/assets/thirdparty/picedit/picedit.css</css>
 		<css>classpath:META-INF/resources/webjars/blaze/3.2.0/dist/blaze.min.css
 		</css>
 	</group>
