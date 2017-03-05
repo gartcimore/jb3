@@ -83,7 +83,7 @@ var jb3PasteSketchConstructor = function () {
                 self.pasteSketchProgress.scrollIntoView();
             }
             var formData = new FormData();
-            formData.append("pimage", blob, "sketch.png");
+            formData.append("pimage", blob, "sketch.jpg");
             var xhr = new XMLHttpRequest;
             xhr.onprogress = function (e) {
                 var percentComplete = (e.loaded / e.total) * 100;
@@ -107,7 +107,7 @@ var jb3PasteSketchConstructor = function () {
             };
             xhr.open("POST", "/api/paste/image");
             xhr.send(formData);
-        }, "image/png");
+        }, "image/jpeg", 0.9);
     };
 };
 
