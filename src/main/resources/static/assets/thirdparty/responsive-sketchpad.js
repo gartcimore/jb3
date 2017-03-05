@@ -281,6 +281,10 @@
         this.background = img;
         this.redraw();
     };
+    
+    Sketchpad.prototype.getBackground = function () {
+        return this.background;
+    };
 
     /**
      * Redo the last undo action
@@ -383,11 +387,12 @@
      * @param  {number} width - New width of the canvas
      */
     Sketchpad.prototype.resize = function (width) {
-        var height = width * this.opts.aspectRatio;
+        width = width || (this.background && this.background.width) || this.opts.width;
+        var aspectRatio = (this.background && (this.background.width / this.background.height)) || this.opts.aspectRatio;
+        var height = width / aspectRatio;
         this.opts.lineSize = this.opts.lineSize * (width / this.opts.width);
         this.opts.width = width;
         this.opts.height = height;
-
         this.setCanvasSize(width, height);
         this.redraw();
     };
