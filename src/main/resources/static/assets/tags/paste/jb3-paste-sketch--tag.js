@@ -2,17 +2,56 @@
 var jb3PasteSketchConstructor = function () {
     var self = this;
     self.clear = function () {
+        self.sketchpad.clear();
         self.pastedSketchError = null;
         self.pastedSketchUrl = null;
     };
     this.sketchpad = new Sketchpad(this.sketchCanvasContainer, {
         width: 512,
         height: 384,
+        aspectRatio: 512/384,
         line: {
             color: '#000',
             size: 5
         }
     });
+    document.addEventListener('paste', function (event) {
+        var items = (event.clipboardData || event.originalEvent.clipboardData).items || [];
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].type.indexOf("image") === 0) {
+                var file = items[i].getAsFile();
+                if (file) {
+                    var img = new Image();
+                    img.addEventListener('load', function () {
+                        self.sketchpad.setBackground(img);
+                        self.sketchpad.resize();
+                        self.update();
+                        self.sketchSize.value = 'original';
+                    });
+                    img.src = window.URL.createObjectURL(file);
+                }
+            }
+        }
+        event.preventDefault();
+    });
+    this.changeBackgroundFromFile = function (e) {
+        var files = e.target.files || [];
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            var img = new Image();
+            img.addEventListener('load', function () {
+                self.sketchpad.setBackground(img);
+                self.sketchpad.resize();
+                self.update();
+                self.sketchSize.value = 'original';
+            });
+            img.src = window.URL.createObjectURL(file);
+        }
+        e.preventDefault();
+    };
+    this.pasteBackground = function () {
+        document.execCommand('paste');
+    };
     this.undoSketch = function () {
         this.sketchpad.undo();
     };
@@ -25,10 +64,26 @@ var jb3PasteSketchConstructor = function () {
     this.changeSketchPenSize = function (e) {
         this.sketchpad.setLineSize(e.target.value);
     };
+    this.changeSketchSize = function(e) {
+        switch(e.target.value) {
+            case 'small':
+                self.sketchpad.resize(512);
+                break;
+            case 'big':
+                self.sketchpad.resize(1024);
+                break;
+            case 'original':
+                self.sketchpad.resize();
+                break;
+        }
+    };
     this.uploadSketch = function () {
         this.sketchpad.canvas.toBlob(function (blob) {
+            if(self.pasteSketchProgress.scrollIntoView) {
+                self.pasteSketchProgress.scrollIntoView();
+            }
             var formData = new FormData();
-            formData.append("pimage", blob, "sketch.png");
+            formData.append("pimage", blob, "sketch.jpg");
             var xhr = new XMLHttpRequest;
             xhr.onprogress = function (e) {
                 var percentComplete = (e.loaded / e.total) * 100;
@@ -52,13 +107,17 @@ var jb3PasteSketchConstructor = function () {
             };
             xhr.open("POST", "/api/paste/image");
             xhr.send(formData);
-        }, "image/png");
+        }, "image/jpeg", 0.9);
     };
 };
 
 var jb3PasteSketchStyles = '\
 .jb3-paste-sketch-tools {\
     margin-bottom: 10px;\
+}\
+.jb3-paste-sketch-tools .c-field {\
+    display: inline;\
+    width: auto;\
 }\
 .jb3-paste-sketch-container {\
     margin:auto;\
@@ -73,16 +132,23 @@ var jb3PasteSketchStyles = '\
 
 var jb3PasteSketchTemplate = '\
 <div name="pasteSketchForm" class="c-fieldset">\
+            <input class="c-field" type="file" onchange="{ changeBackgroundFromFile }"></input>\
     <div class="o-form-element">\
         <div class="jb3-paste-sketch-tools">\
             <input type="color" value="#000" onchange="{ changeSketchColor }"></input>\
             <input min="0" max="32" value="5" type="range" onchange="{ changeSketchPenSize }"></input>\
             <button class="c-button" onclick="{ undoSketch }">&cularr;</button>\
             <button class="c-button" onclick="{ redoSketch }">&curarr;</button>\
+            <select name="sketchSize" class="c-field" onchange="{ changeSketchSize }">\
+                <option value="small">small</option>\
+                <option value="big">big</option>\
+                <option value="original" if="{ sketchpad.getBackground() }">original</option>\
+            </select>\
+            <button class="c-button" onclick="{ clear }">Clear</button>\
+            <button class="c-button c-button--info" onclick="{ uploadSketch }" >Upload</button>\
         </div>\
         <div name="sketchCanvasContainer" class="jb3-paste-sketch-container" width="512" height="384"></div>\
     </div>\
-    <button class="c-button c-button--info" onclick="{ uploadSketch }" >Upload</button>\
     <progress name="pasteSketchProgress" value="0" max="100"></progress>\
 </div>\
 <div name="pastedResult">\
