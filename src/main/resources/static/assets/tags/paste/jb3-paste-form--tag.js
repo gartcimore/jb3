@@ -1,33 +1,32 @@
-var jb3PasteFormConstructor = function (opts) {
-    var self = this;
-    self.selectedTab = null;
-    self.pasteEmoji = self.tags['jb3-paste-emoji'];
-    self.pasteFile = self.tags['jb3-paste-file'];
-    self.pasteRecord = self.tags['jb3-paste-record'];
-    self.pasteText = self.tags['jb3-paste-text'];
-    self.pasteTotoz = self.tags['jb3-paste-totoz'];
-    self.pasteSketch = self.tags['jb3-paste-sketch'];
-    self.selectTab = function (e) {
-        self.selectedTab = e.target.dataset.tab;
-    };
-    self.getPasted = function () {
-        return self.pasteEmoji.pastedEmoji
-                || self.pasteFile.pastedFileUrl
-                || self.pasteRecord.pastedRecordUrl
-                || self.pasteText.pastedTextUrl
-                || self.pasteTotoz.pastedTotoz
-                || self.pasteSketch.pastedSketchUrl;
-    };
-    self.clear = function () {
-        self.selectedTab = null;
-        self.pasteText.clear();
-        self.pasteTotoz.clear();
-        self.pasteEmoji.clear();
-        self.pasteFile.clear();
-        self.pasteRecord.clear();
-        self.pasteSketch.clear();
-        this.update();
-    };
+var jb3PasteFormConstructor = function(opts) {
+	var self = this;
+	self.selectedTab = null;
+	self.pasterList = [ self.tags['jb3-paste-emoji'],
+			self.tags['jb3-paste-file'], self.tags['jb3-paste-record'],
+			self.tags['jb3-paste-text'], self.tags['jb3-paste-totoz'],
+			self.tags['jb3-paste-sketch'] ];
+	self.pasterList.forEach(function(paster) {
+		paster.on('paste-content-changed', function() {
+			self.trigger('paste-content-changed');
+		});
+	});
+
+	self.selectTab = function(e) {
+		self.selectedTab = e.target.dataset.tab;
+	};
+	self.getPasted = function() {
+		var paster = self.pasterList.find(function(paster) {
+			return !!paster.pasted;
+		});
+		return paster && paster.pasted;
+	};
+	self.clear = function() {
+		self.selectedTab = null;
+		self.pasterList.forEach(function(paster) {
+			paster.clear();
+		});
+		this.update();
+	};
 };
 
 var jb3PasteFormTemplate = '\
@@ -53,4 +52,5 @@ var jb3PasteFormStyles = '\
 	}\
 ';
 
-riot.tag('jb3-paste-form', jb3PasteFormTemplate, jb3PasteFormStyles, jb3PasteFormConstructor);
+riot.tag('jb3-paste-form', jb3PasteFormTemplate, jb3PasteFormStyles,
+		jb3PasteFormConstructor);

@@ -2,7 +2,7 @@ var jb3PasteFileConstructor = function () {
     var self = this;
     self.clear = function () {
         self.pastedFileError = null;
-        self.pastedFileUrl = null;
+        self.pasted = null;
     };
     self.submit = function (event) {
         event.preventDefault();
@@ -16,11 +16,12 @@ var jb3PasteFileConstructor = function () {
                 if (xhr.status === 200) {
                     var data = JSON.parse(xhr.response);
                     self.pastedFileError = null;
-                    self.pastedFileUrl = data.url;
+                    self.pasted = data.url;
                 } else {
                     self.pastedFileError = 'Error during file upload';
-                    self.pastedFileUrl = null;
+                    self.pasted = null;
                 }
+                self.trigger('paste-content-changed');
                 self.update();
                 if (self.pastedResult && self.pastedResult.scrollIntoView) {
                     self.pastedResult.scrollIntoView();
@@ -43,10 +44,10 @@ var jb3PasteFileTemplate = '\
         <progress name="fileProgress" value="0" max="100"></progress>\
 </form>\
 <div name="pastedResult">\
-    <div if="{ pastedFileUrl }" class="c-card">\
+    <div if="{ pasted }" class="c-card">\
       <div class="c-card__item c-card__item--divider c-card__item--success">Pasted!</div>\
       <div class="c-card__item">\
-        <p class="c-paragraph"><a class="c-link  jb3-pasted-url" href="{ pastedFileUrl }" target="_blank">{ pastedFileUrl }</a></p>\
+        <p class="c-paragraph"><a class="c-link  jb3-pasted-url" href="{ pasted }" target="_blank">{ pasted }</a></p>\
       </div>\
     </div>\
     <div if="{ pastedFileError }" class="c-card">\

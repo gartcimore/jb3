@@ -3,19 +3,21 @@ var jb3PasteEmojiConstructor = function () {
     self.clear = function () {
         self.emojiError = null;
         self.emojiList = null;
-        self.pastedEmoji = null;
+        self.pasted = null;
     };
     self.submit = function (event) {
         event.preventDefault();
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function (event) {
             if (xhr.readyState === 4) {
+            	self.pasted = "";
                 if (xhr.status === 200) {
                     self.emojiList = JSON.parse(xhr.response);
                 } else {
                     self.emojiError = 'Error during emoji search';
                     self.emojiList = null;
                 }
+                self.trigger('paste-content-changed');
                 self.update();
             }
         };
@@ -24,15 +26,16 @@ var jb3PasteEmojiConstructor = function () {
         return false;
     };
     self.selectEmoji = function (event) {
-        self.pastedEmoji = "";
+        self.pasted = "";
         self.emojiList.forEach(function (emoji) {
             if (emoji.name === event.currentTarget.dataset.name) {
                 emoji.selected = !emoji.selected;
             }
             if (emoji.selected) {
-                self.pastedEmoji = self.pastedEmoji.concat(emoji.character);
+                self.pasted = self.pasted.concat(emoji.character);
             }
         });
+        self.trigger('paste-content-changed');
         self.update();
     };
 };

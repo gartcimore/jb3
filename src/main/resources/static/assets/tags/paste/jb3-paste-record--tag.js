@@ -2,7 +2,7 @@ var jb3PasteRecordConstructor = function () {
     var self = this;
     self.clear = function () {
         self.pastedRecordError = null;
-        self.pastedRecordUrl = null;
+        self.pasted = null;
     };
     this.toggleMic = function () {
         if (self.mediaRecorder) {
@@ -60,11 +60,12 @@ var jb3PasteRecordConstructor = function () {
                     if (xhr.status === 200) {
                         var data = JSON.parse(xhr.response);
                         self.pastedRecordError = null;
-                        self.pastedRecordUrl = data.url;
+                        self.pasted = data.url;
                     } else {
                         self.pastedRecordError = 'Error during record upload';
-                        self.pastedRecordUrl = null;
+                        self.pasted = null;
                     }
+                    self.trigger('paste-content-changed');
                     self.update();
                     if (self.pastedResult && self.pastedResult.scrollIntoView) {
                         self.pastedResult.scrollIntoView();
@@ -96,10 +97,10 @@ var jb3PasteRecordTemplate = '\
     <progress name="recordProgress" value="0" max="100"></progress>\
 </div>\
 <div name="pastedResult">\
-    <div if="{ pastedRecordUrl }" class="c-card">\
+    <div if="{ pasted }" class="c-card">\
           <div class="c-card__item c-card__item--divider c-card__item--success">Pasted!</div>\
           <div class="c-card__item">\
-            <p class="c-paragraph"><a class="c-link  jb3-pasted-url" href="{ pastedRecordUrl }">{ pastedRecordUrl }</a></p>\
+            <p class="c-paragraph"><a class="c-link  jb3-pasted-url" href="{ pasted }">{ pasted }</a></p>\
           </div>\
     </div>\
     <div if="{ pastedRecordError }" class="c-card">\

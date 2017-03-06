@@ -2,7 +2,7 @@ var jb3PasteTextConstructor = function () {
     var self = this;
     self.clear = function () {
         self.pastedTextError = null;
-        self.pastedTextUrl = null;
+        self.pasted = null;
     };
     self.submit = function (event) {
         event.preventDefault();
@@ -12,11 +12,12 @@ var jb3PasteTextConstructor = function () {
                 if (xhr.status === 200) {
                     var data = JSON.parse(xhr.response);
                     self.pastedTextError = null;
-                    self.pastedTextUrl = data.url;
+                    self.pasted = data.url;
                 } else {
                     self.pastedTextError = 'Error during text upload';
-                    self.pastedTextUrl = null;
+                    self.pasted = null;
                 }
+                self.trigger('paste-content-changed');
                 self.update();
                 if (self.pastedResult && self.pastedResult.scrollIntoView) {
                     self.pastedResult.scrollIntoView();
@@ -41,10 +42,10 @@ var jb3PasteTextTemplate = '\
         <input type="submit" class="c-button c-button--info" >\
 </form>\
 <div name="pastedResult">\
-    <div if="{ pastedTextUrl }" class="c-card">\
+    <div if="{ pasted }" class="c-card">\
       <div class="c-card__item c-card__item--divider c-card__item--success">Pasted!</div>\
       <div class="c-card__item">\
-        <p class="c-paragraph"><a class="c-link jb3-pasted-url" href="{ pastedTextUrl }" target="_blank">{ pastedTextUrl }</a></p>\
+        <p class="c-paragraph"><a class="c-link jb3-pasted-url" href="{ pasted }" target="_blank">{ pasted }</a></p>\
       </div>\
     </div>\
     <div if="{ pastedTextError }" class="c-card">\

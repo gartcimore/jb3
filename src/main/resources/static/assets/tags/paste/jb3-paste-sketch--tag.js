@@ -4,7 +4,7 @@ var jb3PasteSketchConstructor = function () {
     self.clear = function () {
         self.sketchpad.clear();
         self.pastedSketchError = null;
-        self.pastedSketchUrl = null;
+        self.pasted = null;
     };
     this.sketchpad = new Sketchpad(this.sketchCanvasContainer, {
         width: 512,
@@ -97,11 +97,12 @@ var jb3PasteSketchConstructor = function () {
                     if (xhr.status === 200) {
                         var data = JSON.parse(xhr.response);
                         self.pastedSketchError = null;
-                        self.pastedSketchUrl = data.url;
+                        self.pasted = data.url;
                     } else {
                         self.pastedSketchError = 'Error during image upload';
-                        self.pastedSketchUrl = null;
+                        self.pasted = null;
                     }
+                    self.trigger('paste-content-changed');
                     self.update();
                     if (self.pastedResult && self.pastedResult.scrollIntoView) {
                         self.pastedResult.scrollIntoView();
@@ -155,10 +156,10 @@ var jb3PasteSketchTemplate = '\
     <progress name="pasteSketchProgress" value="0" max="100"></progress>\
 </div>\
 <div name="pastedResult">\
-    <div if="{ pastedSketchUrl }" class="c-card">\
+    <div if="{ pasted }" class="c-card">\
       <div class="c-card__item c-card__item--divider c-card__item--success">Pasted!</div>\
       <div class="c-card__item">\
-        <p class="c-paragraph"><a class="c-link  jb3-pasted-url" href="{ pastedSketchUrl }" target="_blank">{ pastedSketchUrl }</a></p>\
+        <p class="c-paragraph"><a class="c-link  jb3-pasted-url" href="{ pasted }" target="_blank">{ pasted }</a></p>\
       </div>\
     </div>\
     <div if="{ pastedSketchError }" class="c-card">\

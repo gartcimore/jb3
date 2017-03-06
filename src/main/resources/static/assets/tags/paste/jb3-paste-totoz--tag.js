@@ -3,19 +3,21 @@ var jb3PasteTotozConstructor = function () {
     self.clear = function () {
         self.totozError = null;
         self.totozList = null;
-        self.pastedTotoz = null;
+        self.pasted = null;
     };
     self.submit = function (event) {
         event.preventDefault();
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function (event) {
             if (xhr.readyState === 4) {
+            	self.pasted = "";
                 if (xhr.status === 200) {
                     self.totozList = JSON.parse(xhr.response);
                 } else {
                     self.totozError = 'Error during totoz search';
                     self.totozList = null;
                 }
+                self.trigger('paste-content-changed');
                 self.update();
             }
         };
@@ -24,15 +26,16 @@ var jb3PasteTotozConstructor = function () {
         return false;
     };
     self.selectTotoz = function (event) {
-        self.pastedTotoz = "";
+        self.pasted = "";
         self.totozList.forEach(function (totoz) {
             if (totoz.name === event.currentTarget.dataset.name) {
                 totoz.selected = !totoz.selected;
             }
             if (totoz.selected) {
-                self.pastedTotoz = self.pastedTotoz.concat('[:' + totoz.name + '] ');
+                self.pasted = self.pasted.concat('[:' + totoz.name + '] ');
             }
         });
+        self.trigger('paste-content-changed');
         self.update();
     };
 };

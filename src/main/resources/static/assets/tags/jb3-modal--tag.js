@@ -19,14 +19,10 @@ var jb3ModalTemplate = '\
             <h3 class="c-heading c-heading--small">{ opts.title }</h3>\
         </header>\
         <div class="{\'jb3-modal-headerless-body\':!opts.showHeader, \'c-card__body\':true, \'o-panel\':true }">\
-              <yield/>\
+              <yield from="body"/>\
         </div>\
         <footer class="c-card__footer  c-card__footer--block">\
-            <div class="c-input-group">\
-                <button each="{ opts.buttons }" type="button" class="c-button c-button--block { \'c-button--\' + type }" onclick="{ action }" style="{ style }">\
-                    { text }\
-                </button>\
-            </div>\
+            <yield from="footer"/>\
         </footer>\
     </div>\
 </div>\
