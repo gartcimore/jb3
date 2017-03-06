@@ -1,6 +1,5 @@
 package im.bci.jb3.bot.sara;
 
-import im.bci.jb3.bot.Bot;
 import im.bci.jb3.bouchot.data.Post;
 import im.bci.jb3.bouchot.logic.Norloge;
 import im.bci.jb3.bouchot.logic.Tribune;

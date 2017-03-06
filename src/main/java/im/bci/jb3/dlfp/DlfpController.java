@@ -67,7 +67,7 @@ public class DlfpController {
         requestBody.add("code", code);
         requestBody.add("grant_type", "authorization_code");
         requestBody.add("redirect_uri", buildRedirectURI());
-        HttpEntity formEntity = new HttpEntity<>(requestBody, headers);
+        HttpEntity<MultiValueMap<String, String>> formEntity = new HttpEntity<>(requestBody, headers);
         ResponseEntity<DlfpOauthToken> response
                 = restTemplate.exchange("https://linuxfr.org/api/oauth/token", HttpMethod.POST,
                         formEntity, DlfpOauthToken.class);
@@ -96,7 +96,7 @@ public class DlfpController {
             requestBody.add("refresh_token", token);
             requestBody.add("grant_type", "refresh_token");
 
-            HttpEntity formEntity = new HttpEntity<>(requestBody, headers);
+            HttpEntity<MultiValueMap<String, String>> formEntity = new HttpEntity<>(requestBody, headers);
 
             ResponseEntity<DlfpOauthToken> response
                     = restTemplate.exchange("https://linuxfr.org/api/oauth/token", HttpMethod.POST,
