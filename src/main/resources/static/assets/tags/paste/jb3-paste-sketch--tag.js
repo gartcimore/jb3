@@ -16,6 +16,9 @@ var jb3PasteSketchConstructor = function () {
         }
     });
     document.addEventListener('paste', function (event) {
+        if(!( self.pasteSketchForm.offsetWidth || self.pasteSketchForm.offsetHeight || self.pasteSketchForm.getClientRects().length ) ) {
+           return; 
+        }
         var items = (event.clipboardData || event.originalEvent.clipboardData).items || [];
         for (var i = 0; i < items.length; i++) {
             if (items[i].type.indexOf("image") === 0) {
