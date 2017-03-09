@@ -124,7 +124,8 @@
             if (that.background) {
                 context.drawImage(that.background, 0, 0, canvasSize.width, canvasSize.height);
             } else {
-                context.clearRect(0, 0, canvasSize.width, canvasSize.height);
+                context.fillStyle = "#ffffff";
+                context.fillRect(0, 0, canvasSize.width, canvasSize.height);
             }
         }
 
@@ -281,7 +282,7 @@
         this.background = img;
         this.redraw();
     };
-    
+
     Sketchpad.prototype.getBackground = function () {
         return this.background;
     };
