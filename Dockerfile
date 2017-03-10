@@ -10,6 +10,9 @@ RUN service mongodb start
 # Install maven
 RUN apt-get install -y maven
 
+# Set correct java version
+RUN update-java-alternatives -s java-1.8.0-openjdk-amd64
+
 WORKDIR /code
 
 # Prepare by downloading dependencies
