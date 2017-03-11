@@ -169,6 +169,11 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+            </plugin>
             <!-- <plugin>
                 <groupId>ro.isdc.wro4j</groupId>
                 <artifactId>wro4j-maven-plugin</artifactId>
@@ -193,4 +198,7 @@
             </plugin> -->
         </plugins>
     </build>
+    <scm>
+        <developerConnection>scm:git:https://github.com/devnewton/jb3</developerConnection>
+    </scm>
 </project>
