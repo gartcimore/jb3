@@ -38,6 +38,9 @@ var jb3PasteEmojiConstructor = function () {
         self.trigger('paste-content-changed');
         self.update();
     };
+    self.on('updated', function () {
+        self.terms.focus();
+    });
 };
 
 var jb3PasteEmojiStyles = '\

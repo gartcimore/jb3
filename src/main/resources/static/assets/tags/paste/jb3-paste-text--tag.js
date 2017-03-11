@@ -29,6 +29,9 @@ var jb3PasteTextConstructor = function () {
         xhr.send(self.ptext.value);
         return false;
     };
+    self.on('updated', function () {
+        self.ptext.focus();
+    });
 };
 
 var jb3PasteTextStyles = '\

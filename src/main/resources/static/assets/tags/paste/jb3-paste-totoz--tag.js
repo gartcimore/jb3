@@ -10,7 +10,7 @@ var jb3PasteTotozConstructor = function () {
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function (event) {
             if (xhr.readyState === 4) {
-            	self.pasted = "";
+                self.pasted = "";
                 if (xhr.status === 200) {
                     self.totozList = JSON.parse(xhr.response);
                 } else {
@@ -38,6 +38,9 @@ var jb3PasteTotozConstructor = function () {
         self.trigger('paste-content-changed');
         self.update();
     };
+    self.on('updated', function () {
+        self.terms.focus();
+    });
 };
 
 var jb3PasteTotozStyles = '\
