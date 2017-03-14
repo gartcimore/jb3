@@ -67,7 +67,7 @@ public class LegacyController {
     }
 
     @RequestMapping(value = "/post", method = RequestMethod.POST)
-    public String post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room, @RequestParam(value = "last", required = false) Long last, @RequestHeader(value = "User-Agent", required = false) String userAgent, WebRequest webRequest, @RequestParam(value = "auth", required = false) String auth, Model model, HttpServletResponse response, ServerHttpRequest httpRequest) {
+    public String post(@RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "message") String message, @RequestParam(value = "room", required = false) String room, @RequestParam(value = "last", required = false) Long last, @RequestHeader(value = "User-Agent", required = false) String userAgent, WebRequest webRequest, @RequestParam(value = "auth", required = false) String auth, Model model, HttpServletResponse response) {
         if (StringUtils.isBlank(nickname)) {
             nickname = userAgent;
         }
