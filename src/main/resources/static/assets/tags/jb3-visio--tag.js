@@ -1,12 +1,30 @@
 var jb3VisioTemplate = '\
-<form class="c-input-group" if="{ nextRTCReady && !localVideoStream }" onsubmit="{ joinConversation }" >\
-    <div class="o-field">\
-        <input name="conversationId" placeholder="Type room name" list="rooms" class="c-field" oninput="{ changeConversationId }">\
+<form class=""o-fieldset" if="{ nextRTCReady && !localVideoStream }" onsubmit="{ joinConversation }" >\
+    <label class="c-label o-form-element">\
+        Room:\
+        <input name="conversationId" placeholder="Type room name" list="rooms" class="c-field o-form-element" oninput="{ changeConversationId }">\
         <datalist id="rooms">\
             <option each="{ rooms }" value="{ rname }">\
         </datalist>\
+    </label>\
+    <label class="c-label o-form-element">\
+        Share:\
+        <select name="mediaType" class="c-field o-form-element" onchange="{ changeMediaType }">\
+            <optgroup>\
+                <option value="audio-and-video">Audio and Video</option>\
+                <option value="audio-only">Audio only</option>\
+                <option value="video-only">Video only</option>\
+            </optgroup>\
+            <optgroup>\
+                <option value="application">Application</option>\
+                <option value="screen">Screen</option>\
+                <option value="window">Window</option>\
+            <optgroup>\
+        </select>\
+    </label>\
+    <div class="c-label o-form-element">\
+        <input if="{ conversationId.value }" type="submit" class="c-button c-button--info" value="Join">\
     </div>\
-    <input if="{ conversationId.value }" type="submit" class="c-button c-button--info" value="Join">\
 </form>\
 <div class="o-grid  o-grid--wrap" >\
     <div class="o-grid__cell">\
@@ -25,7 +43,27 @@ var jb3VisioTemplate = '\
 </div>\
 ';
 function jb3VisioConstructor(opts) {
-    var self = this;    
+    var self = this;
+    self.getMediaConfig = function() {
+        switch(self.mediaType.value) {
+            case "audio-only":
+                return { audio: true };
+            case "video-only":
+                return { video: true };
+            case "application":
+                return {video: {mediaSource: 'application'}};
+            case "screen":
+                return {video: {mediaSource: 'screen'}};
+            case "window":
+                return {video: {mediaSource: 'window'}};
+            default:
+            case "audio-and-video":
+                return { video: true, audio: true };
+        }  
+    };
+    self.changeMediaType = function(event) {
+        self.nextRTC.mediaConfig = self.getMediaConfig();
+    }
     self.reset = function() {
         self.rooms = jb3_common.getRooms();
         self.conversationId.value = URI(window.location).search(true).room || '';
@@ -36,10 +74,7 @@ function jb3VisioConstructor(opts) {
         rtcCoinURL = rtcCoinURL.protocol(rtcCoinURL.protocol() === "https" ? "wss" : "ws").path("/rtcoin");
         self.nextRTC = new NextRTC({
             wsURL: rtcCoinURL,
-            mediaConfig: {
-                video: true,
-                audio: true
-            },
+            mediaConfig: self.getMediaConfig(),
             peerConfig: {
                 iceServers: [
                     {urls: "stun:turn.bci.im"},
