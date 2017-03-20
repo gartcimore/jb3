@@ -18,6 +18,9 @@ public class HandlebarsConfiguration {
 
 	@Autowired
 	private RawIncludeHelper rawIncludeHelper;
+	
+	@Autowired
+	private FormatDateHelper formatDateHelper;
 
 	@Autowired
 	private FormatDateTimeHelper formatDateTimeHelper;
@@ -28,6 +31,7 @@ public class HandlebarsConfiguration {
 	@PostConstruct
 	public void configure() throws Exception {
 		handlebarsViewResolver.registerHelper("raw-include", rawIncludeHelper);
+		handlebarsViewResolver.registerHelper("format-date", formatDateHelper);
 		handlebarsViewResolver.registerHelper("format-datetime", formatDateTimeHelper);
 		handlebarsViewResolver.registerHelper("format-post-message", formatMessageHelper);
 	}

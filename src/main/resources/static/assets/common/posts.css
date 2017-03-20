@@ -2,8 +2,9 @@
 	border-spacing: 2px 1px;
 }
 
-.jb3-post {
-	
+.jb3-post:target {
+	border: 1px solid #FFD202;
+	border-radius: 8px;
 }
 
 .jb3-revisions {

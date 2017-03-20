@@ -15,7 +15,7 @@ public class PostSearchRQ {
     private String messageFilter;
     private String roomFilter;
     private int page = 0;
-    private int pageSize = 200;
+    private int pageSize = 3600 * 24;//TODO antiflood system to limit number of post per day/hour/min
 
     public String getDate() {
         return date;

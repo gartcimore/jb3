@@ -18,9 +18,9 @@ import org.springframework.stereotype.Component;
  * @author devnewton
  */
 @Component
-public class FormatDateTimeHelper implements Helper<DateTime> {
+public class FormatDateHelper implements Helper<DateTime> {
 
-    private static final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
+    private static final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd").withZone(LegacyUtils.legacyTimeZone);
 
     @Override
     public CharSequence apply(DateTime dateTime, Options options) throws IOException {
