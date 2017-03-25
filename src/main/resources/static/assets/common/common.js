@@ -55,9 +55,12 @@ jb3_common = {
             },
             click: function (event) {
                 var postContainer = $('#jb3-posts-container');
-                var quoted = $('#' + $(event.target).data('ref'));
+                var postId = $(event.target).data('ref');
+                var quoted = $('#' + postId);
                 if (quoted.length > 0) {
                     postContainer.scrollTop(quoted[0].offsetTop - event.clientY + postContainer.offset().top + 10);
+                } else {
+                    window.open("/archives/post/" + postId, "_blank");
                 }
             }
         }, ".jb3-cite");

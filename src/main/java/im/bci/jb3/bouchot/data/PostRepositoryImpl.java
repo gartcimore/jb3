@@ -77,7 +77,7 @@ public class PostRepositoryImpl implements PostRepository {
         if (StringUtils.isNotBlank(rq.getRoomFilter())) {
             query = query.addCriteria(Criteria.where("room").regex(rq.getRoomFilter()));
         }
-        query = query.with(new PageRequest(rq.getPage(), rq.getPageSize(), Sort.Direction.DESC, "time"));
+        query = query.with(new PageRequest(rq.getPage(), rq.getPageSize(), Sort.Direction.ASC, "time"));
         return mongoTemplate.find(query, Post.class, COLLECTION_NAME);
     }
 

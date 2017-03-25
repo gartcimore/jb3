@@ -343,7 +343,7 @@ jb3 = {
     updateCite: function(norloge) {
     	var self = this;
     	$(".jb3-cite-raw[data-ref='" + norloge.messageId + "']").each(function(){
-    		var cite = $(this);
+            var cite = $(this);
             cite.text(moment(norloge.time).format(self.norlogeFullFormat));
             cite.removeClass('jb3-cite-raw');
     	} );
