@@ -1,4 +1,3 @@
-
 (function () {
 
     function mergeObjects(obj1, obj2) {
@@ -26,10 +25,17 @@
         }
 
         opts = opts || {};
+        var strokes = [];
+        var undos = [];
+
+        if (opts.data) {
+      	    opts.aspectRatio = opts.data.aspectRatio;
+      	    strokes = opts.data.strokes;
+      	}
+
         opts.aspectRatio = opts.aspectRatio || 1;
         opts.width = opts.width || el.clientWidth;
         opts.height = opts.height || opts.width * opts.aspectRatio;
-        opts.data = opts.data || [];
         opts.line = mergeObjects({
             color: '#000',
             size: 5,
@@ -37,9 +43,6 @@
             join: 'round',
             miterLimit: 10
         }, opts.line);
-
-        var strokes = opts.data;
-        var undos = [];
 
         // Boolean indicating if currently drawing
         var sketching = false;
@@ -50,7 +53,7 @@
         /**
          * Set the size of canvas
          */
-        function setCanvasSize(width, height) {
+        function setCanvasSize (width, height) {
             canvas.setAttribute('width', width);
             canvas.setAttribute('height', height);
             canvas.style.width = width + 'px';
@@ -60,7 +63,7 @@
         /**
          * Get the size of the canvas
          */
-        function getCanvasSize() {
+        function getCanvasSize () {
             return {
                 width: canvas.width,
                 height: canvas.height
@@ -74,25 +77,24 @@
         /**
          * Returns a points x,y locations relative to the size of the canvase
          */
-        function getPointRelativeToCanvas(point) {
-            var canvasSize = getCanvasSize();
+        function getPointRelativeToCanvas (point) {
             return {
-                x: point.x / canvasSize.width,
-                y: point.y / canvasSize.height
+                x: point.x / canvas.width,
+                y: point.y / canvas.height
             };
         }
 
         /**
          * Returns true if is a touch event, false otherwise
          */
-        function isTouchEvent(e) {
+        function isTouchEvent (e) {
             return e.type.indexOf('touch') !== -1;
         }
 
         /**
          * Get location of the cursor in the canvas
          */
-        function getCursorRelativeToCanvas(e) {
+        function getCursorRelativeToCanvas (e) {
             var cur = {};
 
             if (isTouchEvent(e)) {
@@ -111,21 +113,21 @@
          * Get the line size relative to the size of the canvas
          * @return {[type]} [description]
          */
-        function getLineSizeRelativeToCanvas(size) {
-            var canvasSize = getCanvasSize();
-            return size / canvasSize.width;
+        function getLineSizeRelativeToCanvas (size) {
+            return size / canvas.width;
         }
 
         /**
          * Erase everything in the canvase
          */
-        function clearCanvas() {
-            var canvasSize = getCanvasSize();
-            if (that.background) {
-                context.drawImage(that.background, 0, 0, canvasSize.width, canvasSize.height);
-            } else {
-                context.fillStyle = "#ffffff";
-                context.fillRect(0, 0, canvasSize.width, canvasSize.height);
+        function clearCanvas () {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            if (opts.backgroundColor) {
+                context.fillStyle = opts.backgroundColor;
+                context.fillRect(0, 0, canvas.width, canvas.height);
+            }
+            if (that.backgroundImage) {
+                context.drawImage(that.backgroundImage, 0, 0, canvas.width, canvas.height);
             }
         }
 
@@ -133,11 +135,10 @@
          * Since points are stored relative to the size of the canvas
          * this takes a point and converts it to actual x, y distances in the canvas
          */
-        function normalizePoint(point) {
-            var canvasSize = getCanvasSize();
+        function normalizePoint (point) {
             return {
-                x: point.x * canvasSize.width,
-                y: point.y * canvasSize.height
+                x: point.x * canvas.width,
+                y: point.y * canvas.height
             };
         }
 
@@ -146,15 +147,14 @@
          * this takes a line size and converts it to a line size
          * appropriate to the size of the canvas
          */
-        function normalizeLineSize(size) {
-            var canvasSize = getCanvasSize();
-            return size * canvasSize.width;
+        function normalizeLineSize (size) {
+            return size * canvas.width;
         }
 
         /**
          * Draw a stroke on the canvas
          */
-        function drawStroke(stroke) {
+        function drawStroke (stroke) {
             context.beginPath();
             for (var j = 0; j < stroke.points.length - 1; j++) {
                 var start = normalizePoint(stroke.points[j]);
@@ -177,7 +177,7 @@
         /**
          * Redraw the canvas
          */
-        function redraw() {
+        function redraw () {
             clearCanvas();
 
             for (var i = 0; i < that.strokes.length; i++) {
@@ -186,7 +186,7 @@
         }
 
         // On mouse down, create a new stroke with a start location
-        function startLine(e) {
+        function startLine (e) {
             e.preventDefault();
 
             strokes = that.strokes;
@@ -204,7 +204,7 @@
             });
         }
 
-        function drawLine(e) {
+        function drawLine (e) {
             if (!sketching) {
                 return;
             }
@@ -220,7 +220,7 @@
             that.redraw();
         }
 
-        function endLine(e) {
+        function endLine (e) {
             if (!sketching) {
                 return;
             }
@@ -239,6 +239,8 @@
                 y: cursor.y
             });
             that.redraw();
+			
+            if (that.onDrawEnd) that.onDrawEnd();
         }
 
         // Event Listeners
@@ -251,26 +253,34 @@
         canvas.addEventListener('mouseup', endLine);
         canvas.addEventListener('mouseleave', endLine);
         canvas.addEventListener('touchend', endLine);
+		
+        if (typeof opts.onDrawEnd === 'function') {
+            this.onDrawEnd = opts.onDrawEnd;
+        }
 
         // Public variables
         this.canvas = canvas;
         this.strokes = strokes;
         this.undos = undos;
         this.opts = opts;
+        this.el = el;
 
         // Public functions
         this.redraw = redraw;
         this.setCanvasSize = setCanvasSize;
         this.getPointRelativeToCanvas = getPointRelativeToCanvas;
         this.getLineSizeRelativeToCanvas = getLineSizeRelativeToCanvas;
-    }
 
+        if (strokes) {
+            redraw();
+        }
+    }
 
     /**
      * Undo the last action
      */
     Sketchpad.prototype.undo = function () {
-        if (this.strokes.length === 0) {
+        if (this.strokes.length === 0){
             return;
         }
 
@@ -278,13 +288,13 @@
         this.redraw();
     };
 
-    Sketchpad.prototype.setBackground = function (img) {
-        this.background = img;
+    Sketchpad.prototype.setBackgroundImage = function (img) {
+        this.backgroundImage = img;
         this.redraw();
     };
 
-    Sketchpad.prototype.getBackground = function () {
-        return this.background;
+    Sketchpad.prototype.getBackgroundImage = function () {
+        return this.backgroundImage;
     };
 
     /**
@@ -299,31 +309,26 @@
         this.redraw();
     };
 
-
     /**
      * Clear the sketchpad
      */
     Sketchpad.prototype.clear = function () {
-        this.setBackground(null);
+        this.setBackgroundImage(null);
         this.undos = [];  // TODO: Add clear action to undo
         this.strokes = [];
         this.redraw();
     };
-
 
     /**
      * Convert the sketchpad to a JSON object that can be loaded into
      * other sketchpads or stored on a server
      */
     Sketchpad.prototype.toJSON = function () {
-        var canvasSize = this.getCanvasSize();
         return {
-            version: 1,
-            aspectRatio: canvasSize.width / canvasSize.height,
+            aspectRatio: this.canvas.width / this.canvas.height,
             strokes: this.strokes
         };
     };
-
 
     /**
      * Load a json object into the sketchpad
@@ -331,16 +336,8 @@
      */
     Sketchpad.prototype.loadJSON = function (data) {
         this.strokes = data.strokes;
+        this.redraw();
     };
-
-
-    /**
-     * Get a static image element of the canvas
-     */
-    Sketchpad.prototype.getImage = function () {
-        return '<img src="' + this.canvas.toDataURL('image/png') + '"/>';
-    };
-
 
     /**
      * Set the line size
@@ -350,7 +347,6 @@
         this.opts.line.size = size;
     };
 
-
     /**
      * Set the line color
      * @param {string} color - Hexadecimal color code
@@ -358,7 +354,6 @@
     Sketchpad.prototype.setLineColor = function (color) {
         this.opts.line.color = color;
     };
-
 
     /**
      * Draw a line
@@ -382,22 +377,21 @@
         this.redraw();
     };
 
-
     /**
      * Resize the canvas maintaining original aspect ratio
      * @param  {number} width - New width of the canvas
      */
     Sketchpad.prototype.resize = function (width) {
-        width = width || (this.background && this.background.width) || this.opts.width;
-        var aspectRatio = (this.background && (this.background.width / this.background.height)) || this.opts.aspectRatio;
+        width = width || (this.backgroundImage && this.backgroundImage.width) || this.opts.width;
+        var aspectRatio = (this.backgroundImage && (this.backgroundImage.width / this.backgroundImage.height)) || this.opts.aspectRatio;
         var height = width / aspectRatio;
         this.opts.lineSize = this.opts.lineSize * (width / this.opts.width);
         this.opts.width = width;
         this.opts.height = height;
+
         this.setCanvasSize(width, height);
         this.redraw();
     };
-
 
     if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
         module.exports = Sketchpad;

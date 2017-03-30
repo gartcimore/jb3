@@ -26,7 +26,7 @@ var jb3PasteSketchConstructor = function () {
                 if (file) {
                     var img = new Image();
                     img.addEventListener('load', function () {
-                        self.sketchpad.setBackground(img);
+                        self.sketchpad.setBackgroundImage(img);
                         self.sketchpad.resize();
                         self.update();
                         self.sketchSize.value = 'original';
@@ -43,7 +43,7 @@ var jb3PasteSketchConstructor = function () {
             var file = files[i];
             var img = new Image();
             img.addEventListener('load', function () {
-                self.sketchpad.setBackground(img);
+                self.sketchpad.setBackgroundImage(img);
                 self.sketchpad.resize();
                 self.update();
                 self.sketchSize.value = 'original';
@@ -77,6 +77,9 @@ var jb3PasteSketchConstructor = function () {
                 break;
             case 'original':
                 self.sketchpad.resize();
+                break;
+            case 'fit':
+                self.sketchpad.resize(self.sketchCanvasContainer.offsetWidth);
                 break;
         }
     };
@@ -125,12 +128,11 @@ var jb3PasteSketchStyles = '\
 }\
 .jb3-paste-sketch-container {\
     margin:auto;\
-    max-width: 100%;\
+    overflow:auto\
 }\
 .jb3-paste-sketch-container canvas {\
     border: 1px solid black;\
     margin:auto;\
-    max-width: 100%;\
 }\
 ';
 
@@ -146,7 +148,8 @@ var jb3PasteSketchTemplate = '\
             <select name="sketchSize" class="c-field" onchange="{ changeSketchSize }">\
                 <option value="small">small</option>\
                 <option value="big">big</option>\
-                <option value="original" if="{ sketchpad.getBackground() }">original</option>\
+                <option value="original" if="{ sketchpad.getBackgroundImage() }">original</option>\
+                <option value="fit">fit</option>\
             </select>\
             <button class="c-button" onclick="{ clear }">Clear</button>\
             <button class="c-button c-button--info" onclick="{ uploadSketch }" >Upload</button>\
