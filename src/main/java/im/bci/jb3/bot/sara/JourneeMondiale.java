@@ -5,6 +5,7 @@ import im.bci.jb3.bouchot.logic.Tribune;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,10 +22,12 @@ public class JourneeMondiale implements SaraAction {
 
     @Autowired
     private Tribune tribune;
+    
+    private static final Pattern JOURNEE = Pattern.compile("\\b(journées?|jours?|aujourd)\\b", Pattern.CASE_INSENSITIVE);
 
     @Override
     public MatchLevel match(Post post) {
-        return MatchLevel.CAN;
+        return JOURNEE.matcher(post.getMessage()).find() ? MatchLevel.MUST : MatchLevel.CAN;
     }
 
     @Override
