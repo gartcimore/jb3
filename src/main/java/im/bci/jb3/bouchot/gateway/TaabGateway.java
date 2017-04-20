@@ -7,20 +7,21 @@ import org.springframework.stereotype.Component;
  * @author devnewton <devnewton@bci.im>
  */
 @Component
-public class EuromusselsGateway extends AbstractXmlBouchotGateway {
+public class TaabGateway extends AbstractTsvBouchotGateway {
 
     private static BouchotConfig createConf() {
         BouchotConfig conf = new BouchotConfig();
-        conf.setRoom("euromussels");
-        conf.setGetUrl("https://faab.euromussels.eu/data/backend.xml");
-        conf.setPostUrl("https://faab.euromussels.eu/add.php");
-        conf.setTagsEncoded(false);
+        conf.setRoom("taab");
+        conf.setGetUrl("https://taab.bci.im/get.php");
+        conf.setPostUrl("https://taab.bci.im/post.php");
         conf.setMessageContentParameterName("message");
-        conf.setUsingCrapCertificate(true);
+        conf.setTagsEncoded(false);
+        conf.setUsingXPost(true);
+        conf.setLastIdParameterName("lastId");
         return conf;
     }
 
-    public EuromusselsGateway() {
+    public TaabGateway() {
         super(createConf());
     }
 

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * @author devnewton <devnewton@bci.im>
  */
 @Component
-public class DlfpGateway extends AbstractBouchotGateway {
+public class DlfpGateway extends AbstractXmlBouchotGateway {
 
     @Autowired
     private ObjectMapper objectMapper;

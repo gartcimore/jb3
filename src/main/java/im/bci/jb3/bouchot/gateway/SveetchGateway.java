@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
  * @author devnewton <devnewton@bci.im>
  */
 @Component
-public class SveetchGateway extends AbstractBouchotGateway {
+public class SveetchGateway extends AbstractXmlBouchotGateway {
 
     private static BouchotConfig createConf() {
         BouchotConfig conf = new BouchotConfig();

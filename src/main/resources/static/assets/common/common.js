@@ -29,7 +29,7 @@ jb3_common = {
         return rooms;
     },
     getDefaultRooms: function () {
-        return [{rname: "batavie"}, {rname: "dlfp"}, {rname: "euromussels"}, {rname: "moules"}, {rname: "sveetch"}, {rname: "libregamesinitiatives"}];
+        return [{rname: "batavie"}, {rname: "dlfp"}, {rname: "euromussels"}, {rname: "moules"}, {rname: "sveetch"}, {rname: "taab"}, {rname: "libregamesinitiatives"}];
     },
     initTotozLazyLoading: function () {
         $('.jb3-posts').on({

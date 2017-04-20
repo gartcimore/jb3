@@ -10,7 +10,6 @@ import im.bci.jb3.bouchot.websocket.WebDirectCoinConnectedMoules;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -18,22 +17,23 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
-import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.TriggerContext;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.TreeMap;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
 
 /**
  *
  * @author devnewton <devnewton@bci.im>
  */
-public abstract class AbstractBouchotGateway implements Gateway, SchedulableGateway {
+public abstract class AbstractTsvBouchotGateway implements Gateway, SchedulableGateway {
 
     @Autowired
     private WebDirectCoinConnectedMoules connectedMoules;
@@ -49,7 +49,7 @@ public abstract class AbstractBouchotGateway implements Gateway, SchedulableGate
     private final BouchotConfig config;
     private final BouchotAdaptiveRefreshComputer adaptativeRefreshComputer = new BouchotAdaptiveRefreshComputer();
 
-    protected AbstractBouchotGateway(BouchotConfig config) {
+    protected AbstractTsvBouchotGateway(BouchotConfig config) {
         this.config = config;
     }
 
@@ -60,8 +60,8 @@ public abstract class AbstractBouchotGateway implements Gateway, SchedulableGate
             if (null != config.getLastIdParameterName()) {
                 connect = connect.data(config.getLastIdParameterName(), String.valueOf(lastPostId));
             }
-            Document doc = connect.parser(Parser.xmlParser()).get();
-            parsePosts(doc);
+            Connection.Response response = connect.parser(Parser.xmlParser()).method(Connection.Method.GET).execute();
+            parsePosts(response);
         } catch (org.jsoup.HttpStatusException ex) {
             if (ex.getStatusCode() != HttpStatus.NOT_MODIFIED.value()) {
                 Logger.getLogger(getClass().getName()).log(Level.WARNING, null, ex);
@@ -71,34 +71,37 @@ public abstract class AbstractBouchotGateway implements Gateway, SchedulableGate
         }
     }
 
-    private synchronized void parsePosts(Document doc) throws JsonProcessingException {
-    	Logger.getLogger(getClass().getName()).log(Level.FINE, "import bouchot backend");
-        Elements postsToImport = doc.select("post");
-        ArrayList<Post> newPosts = new ArrayList<Post>();
-        for (ListIterator<Element> iterator = postsToImport.listIterator(postsToImport.size()); iterator
-                .hasPrevious();) {
-            Element postToImport = iterator.previous();
-            GatewayPostId gatewayPostId = new GatewayPostId();
-            gatewayPostId.setGateway(config.getRoom());
-            long postId = Long.parseLong(postToImport.attr("id"));
-            gatewayPostId.setPostId(String.valueOf(postId));
-            if (!postPepository.existsByGatewayPostId(gatewayPostId)) {
-                Post post = new Post();
-                post.setGatewayPostId(gatewayPostId);
-                post.setMessage(legacyUtils.convertFromLegacyNorloges(config.getRoom(),
-                        CleanUtils.cleanMessage(CleanUtils.truncateMessage(decodeTags(postToImport.select("message").first())))));
-                String nickname = decodeTags(postToImport.select("login").first());
-                if (StringUtils.isBlank(nickname)) {
-                    nickname = CleanUtils.truncateNickname(decodeTags(postToImport.select("info").first()));
-                }
-                post.setNickname(CleanUtils.cleanNickname(nickname));
-                post.setRoom(config.getRoom());
-                post.setTime(LegacyUtils.legacyPostTimeFormatter.parseDateTime(postToImport.attr("time")));
-                postPepository.save(post);
-                newPosts.add(post);
+    private synchronized void parsePosts(Connection.Response response) throws IOException {
+        Logger.getLogger(getClass().getName()).log(Level.FINE, "import bouchot backend");
+        ArrayList<Post> newPosts = new ArrayList<>();
+        try (Reader in = new StringReader(response.body())) {
+            TreeMap<Long, CSVRecord> postsToImport = new TreeMap<>();
+            for (CSVRecord postToImport : CSVFormat.TDF.parse(in)) {
+                postsToImport.put(Long.parseLong(postToImport.get(0)), postToImport);
             }
-            if (postId > lastPostId) {
-                lastPostId = postId;
+            for (CSVRecord postToImport : postsToImport.values()) {
+                GatewayPostId gatewayPostId = new GatewayPostId();
+                gatewayPostId.setGateway(config.getRoom());
+                long postId = Long.parseLong(postToImport.get(0));
+                gatewayPostId.setPostId(String.valueOf(postId));
+                if (!postPepository.existsByGatewayPostId(gatewayPostId)) {
+                    Post post = new Post();
+                    post.setGatewayPostId(gatewayPostId);
+                    post.setMessage(legacyUtils.convertFromLegacyNorloges(config.getRoom(),
+                            CleanUtils.cleanMessage(CleanUtils.truncateMessage(decodeTags(postToImport.get(4))))));
+                    String nickname = decodeTags(postToImport.get(3));
+                    if (StringUtils.isBlank(nickname)) {
+                        nickname = CleanUtils.truncateNickname(decodeTags(postToImport.get(2)));
+                    }
+                    post.setNickname(CleanUtils.cleanNickname(nickname));
+                    post.setRoom(config.getRoom());
+                    post.setTime(LegacyUtils.legacyPostTimeFormatter.parseDateTime(postToImport.get(1)));
+                    postPepository.save(post);
+                    newPosts.add(post);
+                }
+                if (postId > lastPostId) {
+                    lastPostId = postId;
+                }
             }
         }
         adaptativeRefreshComputer.analyseBouchotPostsResponse(newPosts);
@@ -126,9 +129,9 @@ public abstract class AbstractBouchotGateway implements Gateway, SchedulableGate
             if (null != config.getLastIdParameterName()) {
                 connect = connect.data(config.getLastIdParameterName(), String.valueOf(lastPostId));
             }
-            Document doc = connect.parser(Parser.xmlParser()).post();
+            Connection.Response response = connect.parser(Parser.xmlParser()).method(Connection.Method.POST).execute();
             if (config.isUsingXPost()) {
-                parsePosts(doc);
+                parsePosts(response);
             } else {
                 importPosts();
             }
@@ -142,11 +145,11 @@ public abstract class AbstractBouchotGateway implements Gateway, SchedulableGate
         return config.getRoom();
     }
 
-    private String decodeTags(Element message) {
+    private String decodeTags(String message) {
         if (config.isTagsEncoded()) {
-            return StringEscapeUtils.unescapeXml(message.text());
+            return StringEscapeUtils.unescapeXml(message);
         } else {
-            return message.html();
+            return message;
         }
     }
 
