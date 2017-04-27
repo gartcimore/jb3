@@ -3,9 +3,8 @@ package im.bci.jb3.bot.sara;
 import im.bci.jb3.bouchot.data.Post;
 import im.bci.jb3.bouchot.logic.Tribune;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import org.apache.commons.logging.LogFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Document.OutputSettings;
@@ -45,7 +44,7 @@ public class Blague implements SaraAction {
             }
             return linePosted > 0;
         } catch (Exception ex) {
-            Logger.getLogger(Blague.class.getName()).log(Level.SEVERE, null, ex);
+            LogFactory.getLog(this.getClass()).error("blague error", ex);
         }
         return false;
     }

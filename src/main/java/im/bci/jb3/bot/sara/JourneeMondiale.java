@@ -3,10 +3,9 @@ package im.bci.jb3.bot.sara;
 import im.bci.jb3.bouchot.data.Post;
 import im.bci.jb3.bouchot.logic.Tribune;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.LogFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +40,7 @@ public class JourneeMondiale implements SaraAction {
                 return true;
             }
         } catch (IOException ex) {
-            Logger.getLogger(JourneeMondiale.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            LogFactory.getLog(this.getClass()).error("journee mondiale error", ex);        }
         return false;
     }
 

@@ -2,8 +2,6 @@ package im.bci.jb3.handlebars;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.script.Invocable;
@@ -21,6 +19,7 @@ import com.github.jknack.handlebars.Options;
 import im.bci.jb3.bouchot.data.Post;
 import im.bci.jb3.bouchot.data.PostRepository;
 import im.bci.jb3.bouchot.logic.Norloge;
+import org.apache.commons.logging.LogFactory;
 
 @Component
 public class FormatMessageHelper implements Helper<Post> {
@@ -29,18 +28,21 @@ public class FormatMessageHelper implements Helper<Post> {
     private PostRepository postRepository;
 
     public static class Console {
+
         public void log(String text) {
-            Logger.getLogger(getClass().getName()).log(Level.INFO, text);
+            LogFactory.getLog(this.getClass()).info(text);
         }
     }
 
     public static class NorlogeFormatter {
+
         public String format(Post post) {
             return Norloge.norlogePrintFormatter.print(post.getTime());
         }
     }
 
     public static class ParseOptions {
+
         private PostRepository postStore;
         private NorlogeFormatter norlogeFormatter;
 
@@ -89,8 +91,8 @@ public class FormatMessageHelper implements Helper<Post> {
         String formattedMessage = post.getCleanedMessage();
         try {
             formattedMessage = invocable.invokeMethod(postToHtml, "parse", formattedMessage, parseOptions).toString();
-        } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, e);
+        } catch (Exception ex) {
+            LogFactory.getLog(this.getClass()).fatal("pegjs error", ex);
         }
         return new Handlebars.SafeString(formattedMessage);
     }

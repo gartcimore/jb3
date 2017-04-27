@@ -18,7 +18,12 @@ public class BouchotAdaptiveRefreshComputer {
     private DateTime lastPostTime;
     private DateTime lastRefreshTime = DateTime.now();
     private boolean firstRefresh = true;
-
+    private int nbErrors = 0;
+    
+    public void error() {
+        ++nbErrors;
+    }
+    
     public void analyseBouchotPostsResponse(List<Post> newPosts) {
         lastRefreshTime = DateTime.now();
         for (Post post : newPosts) {
@@ -31,6 +36,10 @@ public class BouchotAdaptiveRefreshComputer {
     }
 
     public Date nextRefreshDate() {
+        if(nbErrors > 0) {
+            --nbErrors;
+            return DateTime.now().plusMinutes(1).toDate();
+        }
         if (firstRefresh) {
             firstRefresh = false;
             return new Date();

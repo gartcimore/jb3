@@ -5,8 +5,7 @@ import im.bci.jb3.bouchot.data.Post;
 import im.bci.jb3.bouchot.logic.Norloge;
 import im.bci.jb3.bouchot.logic.Tribune;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -29,7 +28,7 @@ public class FortuneBot implements Bot {
                 }
             }
         } catch (Exception ex) {
-            Logger.getLogger(FortuneBot.class.getName()).log(Level.SEVERE, null, ex);
+            LogFactory.getLog(this.getClass()).error("fortune bot error", ex);
         }
     }
 }

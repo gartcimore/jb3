@@ -5,10 +5,8 @@ import im.bci.jb3.bouchot.data.PostRevisor;
 import im.bci.jb3.bouchot.logic.Norloge;
 import im.bci.jb3.bouchot.logic.Tribune;
 import im.bci.jb3.bouchot.logic.Norloge.ParsedNorloges;
-
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,7 +32,7 @@ public class SedBot implements Bot {
                 }
             }
         } catch (Exception ex) {
-            Logger.getLogger(SedBot.class.getName()).log(Level.SEVERE, null, ex);
+            LogFactory.getLog(this.getClass()).error("sed bot error", ex);
         }
     }
 

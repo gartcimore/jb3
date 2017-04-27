@@ -1,8 +1,6 @@
 package im.bci.jb3.dlfp;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -50,7 +48,7 @@ public class DlfpController {
             model.addAttribute("token", token);
             model.addAttribute("login", retrieveLogin(token));
         } catch (Exception ex) {
-            Logger.getLogger(DlfpController.class.getName()).log(Level.WARNING, null, ex);
+            LogFactory.getLog(this.getClass()).error("dlfp oauth error", ex);
         }
         model.addAttribute("wro-group", "dlfp");
         return "dlfp/connected";
@@ -103,7 +101,7 @@ public class DlfpController {
                             formEntity, DlfpOauthToken.class);
             return response.getBody();
         } catch (Exception ex) {
-            Logger.getLogger(DlfpController.class.getName()).log(Level.WARNING, null, ex);
+            LogFactory.getLog(this.getClass()).error("dlfp oauth error", ex);
             throw ex;
         }
 

@@ -3,8 +3,7 @@ package im.bci.jb3.bouchot.gateway;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import im.bci.jb3.bouchot.legacy.LegacyUtils;
 import im.bci.jb3.dlfp.DlfpOauthToken;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -51,7 +50,7 @@ public class DlfpGateway extends AbstractXmlBouchotGateway {
                     .execute();
             importPosts();
         } catch (Exception ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
+            LogFactory.getLog(this.getClass()).error("post error", ex);
         }
     }
 

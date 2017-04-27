@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.ListIterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -28,6 +26,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.TriggerContext;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *
@@ -64,15 +63,16 @@ public abstract class AbstractXmlBouchotGateway implements Gateway, SchedulableG
             parsePosts(doc);
         } catch (org.jsoup.HttpStatusException ex) {
             if (ex.getStatusCode() != HttpStatus.NOT_MODIFIED.value()) {
-                Logger.getLogger(getClass().getName()).log(Level.WARNING, null, ex);
+                adaptativeRefreshComputer.error();
+                LogFactory.getLog(this.getClass()).error("http get error", ex);
             }
         } catch (IOException ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
+            adaptativeRefreshComputer.error();
+            LogFactory.getLog(this.getClass()).error("get error", ex);
         }
     }
 
     private synchronized void parsePosts(Document doc) throws JsonProcessingException {
-    	Logger.getLogger(getClass().getName()).log(Level.FINE, "import bouchot backend");
         Elements postsToImport = doc.select("post");
         ArrayList<Post> newPosts = new ArrayList<>();
         for (ListIterator<Element> iterator = postsToImport.listIterator(postsToImport.size()); iterator
@@ -133,7 +133,7 @@ public abstract class AbstractXmlBouchotGateway implements Gateway, SchedulableG
                 importPosts();
             }
         } catch (IOException ex) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
+            LogFactory.getLog(this.getClass()).error("post error", ex);
         }
     }
 
