@@ -7,7 +7,6 @@ import im.bci.jb3.bouchot.logic.Norloge;
 import java.util.regex.Matcher;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -59,7 +58,6 @@ public class LegacyUtils {
     }
 
     private static final DateTimeFormatter toLegacyFullIsoNorlogeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
-    private static final DateTimeFormatter toLegacyNormalNorlogeFormatter = DateTimeFormat.forPattern("HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
 
     public String convertToLegacyNorloges(String message, final DateTime postTime, final String room) {
         final StringBuffer sb = new StringBuffer();
@@ -71,8 +69,7 @@ public class LegacyUtils {
                     Post post = postPepository.findOne(norloge.getId());
                     if (null != post) {
                         final DateTime referencedPostTime = new DateTime(post.getTime());
-                        DateTimeFormatter formatter = findLegacyNorlogeFormatter(postTime, referencedPostTime);
-                        String legacyNorloge = formatter.print(referencedPostTime);
+                        String legacyNorloge = toLegacyFullIsoNorlogeFormatter.print(referencedPostTime);
                         if(!StringUtils.equals(post.getRoom(), room)) {
                             legacyNorloge += "@" + post.getRoom();
                         }
@@ -90,16 +87,6 @@ public class LegacyUtils {
 
         });
         return sb.toString();
-    }
-
-    private static final DateTimeComparator dayComparator = DateTimeComparator.getDateOnlyInstance();
-
-    private DateTimeFormatter findLegacyNorlogeFormatter(DateTime postTime, DateTime referencedPostTime) {
-        if (dayComparator.compare(referencedPostTime, postTime) == 0) {
-            return toLegacyNormalNorlogeFormatter;
-        } else {
-            return toLegacyFullIsoNorlogeFormatter;
-        }
     }
 
 }
