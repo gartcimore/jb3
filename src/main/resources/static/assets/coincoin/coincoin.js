@@ -168,7 +168,7 @@ jb3 = {
         }
     },
     norlogeFormat: "HH:mm:ss",
-    norlogeFullFormat: "YYYY/MM/DD#HH:mm:ss",
+    norlogeFullFormat: "YYYY-MM-DD HH:mm:ss",
     initNickname: function () {
     	var self = this;
         self.controlsNickname.val(jb3_common.getNickname());
