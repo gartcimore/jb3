@@ -74,7 +74,7 @@ public class FormatMessageHelper implements Helper<Post> {
         parseOptions.setNorlogeFormatter(new NorlogeFormatter());
 
         ScriptEngineManager factory = new ScriptEngineManager();
-        ScriptEngine engine = factory.getEngineByName("JavaScript");
+        ScriptEngine engine = factory.getEngineByName("nashorn");
         engine.put("console", new Console());
         InputStreamReader postToHtmlSource = new InputStreamReader(getClass().getResourceAsStream("/static/assets/common/post-to-html.js"));
         try {
