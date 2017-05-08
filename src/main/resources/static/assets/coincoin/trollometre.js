@@ -88,7 +88,7 @@ Trollometre.prototype.getMetricsForRoom = function (room) {
         new TrollMetric(
                 "coincoin",
                 {
-                    message: /\b(b3|backend|bouchots?|c2|coincoins?|dlfp|euromussels|gaycoincoin|gcc|gcoincoin|jb3|miaoli|olcc|wmcc)\b/i
+                    message: /\b(b[3³]|backends?|bouchots?|c[2²]|coincoins?|dlfp|batavie|euromussels|gaycoincoin|gcc|gcoincoin|jb3|miaoli|olcc|wmcc|quteqoin|taab|BML)\b/i
                 }),
         new TrollMetric(
                 "windows",
