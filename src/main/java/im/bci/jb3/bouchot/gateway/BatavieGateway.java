@@ -16,7 +16,6 @@ public class BatavieGateway extends AbstractXmlBouchotGateway {
         conf.setPostUrl("https://batavie.leguyader.eu/index.php/add");
         conf.setMessageContentParameterName("message");
         conf.setTagsEncoded(false);
-        conf.setUsingCrapCertificate(true);
         return conf;
     }
 
