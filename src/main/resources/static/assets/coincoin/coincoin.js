@@ -128,13 +128,30 @@ jb3 = {
     },
     postCurrentMessage: function() {
         var selectedRoom = this.controlsRoom.val();
-        var auth = localStorage.getItem(selectedRoom + "-auth");
-        if(selectedRoom === 'dlfp' && !auth) {
-            window.location.href = "/dlfp/connect";
-        } else {
+        var auth = localStorage.getItem("dlfp-auth")
+        if(this.checkAuth(auth, selectedRoom)) {
             this.postMessage(this.controlsNickname.val(), this.controlsMessage.val(), selectedRoom, auth);
             this.controlsMessage.val('');
         }
+    },
+    checkAuth: function(auth, selectedRoom) {
+        if(selectedRoom === 'dlfp') {
+            if(this.checkIfDlfpTokenIsExpired(auth)) {
+                window.location.href = "/dlfp/connect";
+                return false;
+            }
+        }
+        return true;
+    },
+    checkIfDlfpTokenIsExpired: function(authStr) {
+        if(!authStr) {
+            return true;
+        }
+        var auth = JSON.parse(authStr);
+        if(!auth.expires_timestamp) {
+            return true;
+        }
+        return auth.expires_timestamp < Date.now();
     },
     updateMessages: function () {
         var self = this;

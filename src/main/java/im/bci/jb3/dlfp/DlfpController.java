@@ -44,7 +44,7 @@ public class DlfpController {
     @RequestMapping(path = "/connected", method = RequestMethod.GET)
     public String connected(Model model, @RequestParam String code) {
         try {
-            DlfpOauthToken token = retrieveToken(code);
+            OauthToken token = retrieveToken(code);
             model.addAttribute("token", token);
             model.addAttribute("login", retrieveLogin(token));
         } catch (Exception ex) {
@@ -54,7 +54,7 @@ public class DlfpController {
         return "dlfp/connected";
     }
 
-    private DlfpOauthToken retrieveToken(String code) throws RestClientException {
+    private OauthToken retrieveToken(String code) throws RestClientException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE);
@@ -69,10 +69,10 @@ public class DlfpController {
         ResponseEntity<DlfpOauthToken> response
                 = restTemplate.exchange("https://linuxfr.org/api/oauth/token", HttpMethod.POST,
                         formEntity, DlfpOauthToken.class);
-        return response.getBody();
+        return new OauthToken(response.getBody());
     }
 
-    private String retrieveLogin(DlfpOauthToken token) {
+    private String retrieveLogin(OauthToken token) {
         RestTemplate restTemplate = new RestTemplate();
         String uri = UriComponentsBuilder.fromHttpUrl("https://linuxfr.org/api/v1/me").queryParam("bearer_token", token.getAccess_token()).build().toString();
         DlfpMe me = restTemplate.getForObject(uri, DlfpMe.class);
@@ -81,7 +81,7 @@ public class DlfpController {
 
     @ResponseBody
     @RequestMapping(path = "/refresh-token", method = RequestMethod.POST)
-    public DlfpOauthToken refreshToken(@RequestParam String token) {
+    public OauthToken refreshToken(@RequestParam String token) {
         try {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
@@ -99,7 +99,7 @@ public class DlfpController {
             ResponseEntity<DlfpOauthToken> response
                     = restTemplate.exchange("https://linuxfr.org/api/oauth/token", HttpMethod.POST,
                             formEntity, DlfpOauthToken.class);
-            return response.getBody();
+            return new OauthToken(response.getBody());
         } catch (Exception ex) {
             LogFactory.getLog(this.getClass()).error("dlfp oauth error", ex);
             throw ex;
