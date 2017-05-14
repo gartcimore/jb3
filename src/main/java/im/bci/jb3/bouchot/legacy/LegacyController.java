@@ -165,7 +165,7 @@ public class LegacyController {
 
     private static final Pattern urlPattern = Pattern.compile("(https?|ftp|gopher)://[^\\s]+");
 
-    private final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s", "u", "tt", "a").addAttributes("a", "href", "rel", "target");
+    private final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s", "u", "tt", "a", "code").addAttributes("a", "href", "rel", "target");
 
     private String convertUrls(String message) {
         Matcher matcher = urlPattern.matcher(message);

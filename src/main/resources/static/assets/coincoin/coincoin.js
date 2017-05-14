@@ -330,6 +330,9 @@ jb3 = {
             case 't':
                 this.insertTextInMessageControl('<tt>' + this.getSelectedText() + '</tt>', 4);
                 return true;
+            case 'c':
+                this.insertTextInMessageControl('<code>' + this.getSelectedText() + '</code>', 6);
+                return true;
             case 'p':
                 this.insertTextInMessageControl('_o/* <b>paf!</b> ');
                 return true;

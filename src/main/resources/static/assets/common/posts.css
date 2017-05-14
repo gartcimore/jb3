@@ -112,6 +112,16 @@
 	color: #0b78d0;
 }
 
+.jb3-post-message code {
+    font-family: monospace;
+    font-weight: inherit;
+    color: #282921;
+    background-color: #f0f3f7;
+    border: 1px solid #dfe5ee;
+    border-width: 0 0 1px 0;
+    padding: 2px;
+}
+
 .jb3-cite {
 	color: #5F7FBF;
         cursor: pointer; 
