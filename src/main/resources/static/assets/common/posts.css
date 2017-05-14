@@ -122,6 +122,20 @@
     padding: 2px;
 }
 
+.jb3-spoiler {
+    background-color: black;
+    color: black;
+}
+
+.jb3-spoiler:hover {
+    background-color: inherit;
+}
+
+.jb3-revealed-spoiler {
+    background-color: inherit;
+    color: red;
+}
+
 .jb3-cite {
 	color: #5F7FBF;
         cursor: pointer; 

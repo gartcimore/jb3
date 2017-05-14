@@ -8,6 +8,7 @@ postItem
  / canard
  / bigorno
  / norloge
+ / spoiler
  / .
 
 url
@@ -47,6 +48,17 @@ norloge
 bigorno
  = spaces:$(inputStart / whitespaces) s2:whitespaces? bigorno:$[a-zA-Z0-9-_]+ "&lt;" &(whitespaces / [<[] / !.)
  { return spaces + '<span class="jb3-bigorno">' + bigorno + '&lt;</span>';}
+
+spoiler
+ = openSpoiler / closeSpoiler
+
+openSpoiler
+ = "<spoiler>"
+{ return '<mark class="jb3-spoiler">'; }
+
+closeSpoiler
+ = "</spoiler>"
+{ return '</mark>'; }
 
 totoz
   = first:"[:" totoz:$[^\]]+ third:"]"

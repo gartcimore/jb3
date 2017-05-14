@@ -106,6 +106,12 @@ jb3 = {
                 self.insertTextInMessageControl('/revise #' + post.attr('id') + ' ');
             }
         }, ".jb3-revise-button");
+        $('#jb3-posts').on({
+            click: function (event) {
+                var spoiler = $(event.target);
+                spoiler.toggleClass('jb3-revealed-spoiler');
+            }
+        }, ".jb3-spoiler");
         jb3_common.initHighlight();
         jb3_common.initTotozLazyLoading();
         self.initNickname();
@@ -332,6 +338,9 @@ jb3 = {
                 return true;
             case 'c':
                 this.insertTextInMessageControl('<code>' + this.getSelectedText() + '</code>', 6);
+                return true;
+            case 'd':
+                this.insertTextInMessageControl('<spoiler>' + this.getSelectedText() + '</spoiler>', 9);
                 return true;
             case 'p':
                 this.insertTextInMessageControl('_o/* <b>paf!</b> ');

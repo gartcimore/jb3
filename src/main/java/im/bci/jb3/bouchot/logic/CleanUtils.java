@@ -20,7 +20,7 @@ public class CleanUtils {
 	private static final int MAX_NICKNAME_LENGTH = 32;
 	private static final int MAX_ROOM_LENGTH = 32;
 	private static final int MAX_FORTUNE_TITLE_LENGTH = 256;
-	private static final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s", "u", "tt", "code");
+	private static final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s", "u", "tt", "code", "spoiler");
 
 	public static String truncateMessage(String message) {
 		return StringUtils.abbreviate(message, MAX_POST_LENGTH);
@@ -40,7 +40,7 @@ public class CleanUtils {
 
 	public static String cleanMessage(String message) {
 		Document doc = Jsoup.parseBodyFragment(message);
-		for (Element element : doc.body().children().select(":not(a,b,i,s,u,tt,code)")) {
+		for (Element element : doc.body().children().select(":not(a,b,i,s,u,tt,code,spoiler)")) {
 			element.replaceWith(TextNode.createFromEncoded(element.toString(), null));
 		}
 		for (Element element : doc.body().children().select("a")) {
