@@ -90,7 +90,7 @@ public abstract class AbstractXmlBouchotGateway implements Gateway, SchedulableG
                     nickname = CleanUtils.truncateNickname(decodeTags(postToImport.select("info").first()));
                 }
                 post.setMessage(legacyUtils.convertFromLegacyNorloges(config.getRoom(),
-                        CleanUtils.cleanMessage(CleanUtils.truncateMessage(belgify(nickname, decodeTags(postToImport.select("message").first()))))));
+                        CleanUtils.cleanMessage(CleanUtils.truncateMessage(decodeTags(postToImport.select("message").first())))));
                 post.setNickname(CleanUtils.cleanNickname(nickname));
                 post.setRoom(config.getRoom());
                 post.setTime(LegacyUtils.legacyPostTimeFormatter.parseDateTime(postToImport.attr("time")));
@@ -158,14 +158,6 @@ public abstract class AbstractXmlBouchotGateway implements Gateway, SchedulableG
     @Override
     public void run() {
         importPosts();
-    }
-
-    private String belgify(String nickname, String message) {
-        if (StringUtils.containsIgnoreCase(nickname, "fork") || StringUtils.containsIgnoreCase(nickname, "claudex")) {
-            return message + " [:ipnoz:3]";
-        } else {
-            return message;
-        }
     }
 
 }
