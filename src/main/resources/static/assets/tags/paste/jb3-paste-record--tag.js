@@ -51,9 +51,11 @@ var jb3PasteRecordConstructor = function () {
             var formData = new FormData();
             formData.append("pfile", self.recordedBlob, "record.ogg");
             var xhr = new XMLHttpRequest();
-            xhr.onprogress = function (e) {
-                var percentComplete = (e.loaded / e.total) * 100;
-                self.recordProgress.value = percentComplete;
+            xhr.upload.onprogress = function (e) {
+                if(e.lengthComputable) {
+                    var percentComplete = (e.loaded / e.total) * 100;
+                    self.recordProgress.value = percentComplete;
+                }
             };
             xhr.onreadystatechange = function (event) {
                 if (xhr.readyState === 4) {

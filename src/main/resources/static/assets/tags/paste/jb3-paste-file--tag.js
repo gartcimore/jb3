@@ -7,9 +7,11 @@ var jb3PasteFileConstructor = function () {
     self.submit = function (event) {
         event.preventDefault();
         var xhr = new XMLHttpRequest();
-        xhr.onprogress = function (e) {
-            var percentComplete = (e.loaded / e.total) * 100;
-            self.fileProgress.value = percentComplete;
+        xhr.upload.onprogress = function (e) {
+            if(e.lengthComputable) {
+                var percentComplete = (e.loaded / e.total) * 100;
+                self.fileProgress.value = percentComplete;
+            }
         };
         xhr.onreadystatechange = function (event) {
             if (xhr.readyState === 4) {

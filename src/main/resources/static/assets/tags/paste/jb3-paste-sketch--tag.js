@@ -91,9 +91,11 @@ var jb3PasteSketchConstructor = function () {
             var formData = new FormData();
             formData.append("pimage", blob, "sketch.jpg");
             var xhr = new XMLHttpRequest;
-            xhr.onprogress = function (e) {
-                var percentComplete = (e.loaded / e.total) * 100;
-                self.pasteSketchProgress.value = percentComplete;
+            xhr.upload.onprogress = function (e) {
+                if(e.lengthComputable) {
+                    var percentComplete = (e.loaded / e.total) * 100;
+                    self.pasteSketchProgress.value = percentComplete;
+                }
             };
             xhr.onreadystatechange = function (event) {
                 if (xhr.readyState === 4) {
