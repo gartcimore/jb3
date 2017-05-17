@@ -60,7 +60,7 @@ var jb3PasteTotozTemplate = '\
 <div if="{ totozList }"class="o-grid  o-grid--wrap" >\
     <virtual each="{ totozList }" >\
         <figure data-name="{ name }" class="{ o-grid__cell: true, jb3-paste-totoz-selected: selected}" onclick="{ selectTotoz }">\
-            <img src="/totoz/img/{ name }" />\
+            <img riot-src="/totoz/img/{ name }" />\
              <figcaption>{ name }</figcaption>\
         </figure>\
     </virtual>\
