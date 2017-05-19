@@ -28,7 +28,7 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Value("${jb3.room.history.size}")
     private int roomHistorySize;
-   
+
     private String roomOrDefault(String room) {
         return StringUtils.isNotBlank(room) ? room : defaultRoom;
     }
@@ -65,8 +65,8 @@ public class PostRepositoryImpl implements PostRepository {
     public List<Post> search(PostSearchRQ rq) {
         Query query = new Query();
         Interval interval = rq.getDateInterval();
-        if(null != interval) {
-        	query = query.addCriteria(Criteria.where("time").gte(interval.getStart().toDate()).lt(interval.getEnd().toDate()));
+        if (null != interval) {
+            query = query.addCriteria(Criteria.where("time").gte(interval.getStart().toDate()).lt(interval.getEnd().toDate()));
         }
         if (StringUtils.isNotBlank(rq.getMessageFilter())) {
             query = query.addCriteria(Criteria.where("message").regex(rq.getMessageFilter()));
@@ -108,6 +108,12 @@ public class PostRepositoryImpl implements PostRepository {
     public boolean existsByGatewayPostId(GatewayPostId gpid) {
         Query query = new Query().addCriteria(Criteria.where("gatewayPostId.gateway").is(gpid.getGateway()).and("gatewayPostId.postId").is(gpid.getPostId()));
         return mongoTemplate.exists(query, COLLECTION_NAME);
+    }
+
+    @Override
+    public Post findOneByGatewayId(GatewayPostId gpid) {
+        Query query = new Query().addCriteria(Criteria.where("gatewayPostId.gateway").is(gpid.getGateway()).and("gatewayPostId.postId").is(gpid.getPostId()));
+        return mongoTemplate.findOne(query, Post.class, COLLECTION_NAME);
     }
 
 }
