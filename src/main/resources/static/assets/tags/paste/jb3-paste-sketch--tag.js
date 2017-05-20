@@ -10,6 +10,7 @@ var jb3PasteSketchConstructor = function () {
         width: 512,
         height: 384,
         aspectRatio: 512/384,
+        backgroundColor: '#FFFFFF',
         line: {
             color: '#000',
             size: 5
