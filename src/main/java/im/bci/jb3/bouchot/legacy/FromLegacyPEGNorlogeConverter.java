@@ -17,45 +17,45 @@ import im.bci.jb3.bouchot.data.PostRepository;
 import im.bci.jb3.bouchot.logic.Norloge;
 import org.joda.time.DateTime;
 import org.joda.time.MutableDateTime;
-import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.annotation.Scope;
 
 @Component
-public class LegacyNorlogeConverter {
+@Scope("thread")
+public class FromLegacyPEGNorlogeConverter {
 
-    public static class NorlogeFormatter {
-
-        public String format(Post post) {
-            return Norloge.norlogePrintFormatter.print(post.getTime());
-        }
-    }
+    @Autowired
+    private PostRepository postRepository;
 
     private Invocable invocable;
     private Object convertLegacyNorloge;
 
     @PostConstruct
     public void setup() {
-
         ScriptEngineManager factory = new ScriptEngineManager();
         ScriptEngine engine = factory.getEngineByName("nashorn");
-        InputStreamReader postToHtmlSource = new InputStreamReader(getClass().getResourceAsStream("/peg/convert-legacy-norloge.js"));
+        InputStreamReader postToHtmlSource = new InputStreamReader(getClass().getResourceAsStream("/peg/from-legacy-norloge.js"));
         try {
             engine.eval(postToHtmlSource);
-            convertLegacyNorloge = engine.eval("jb3_convert_legacy_norloge");
+            convertLegacyNorloge = engine.eval("jb3_from_legacy_norloge");
             invocable = (Invocable) engine;
         } catch (ScriptException e) {
             throw new RuntimeException(e);
         }
     }
 
-    @Component
-    @Scope("prototype")
-    public static class NorlogeConverter {
-
-        @Autowired
-        private PostRepository postRepository;
+    public class NorlogeConverter {
 
         private String room;
+
+        private DateTime postTime;
+
+        public void setRoom(String room) {
+            this.room = room;
+        }
+
+        public void setPostTime(DateTime postTime) {
+            this.postTime = postTime;
+        }
 
         public String convertFullNorloge(int y, int m, int d, int h, int mi, int s, String bouchot) {
             MutableDateTime norlogeTime = new MutableDateTime();
@@ -78,6 +78,7 @@ public class LegacyNorlogeConverter {
             MutableDateTime norlogeTime = new MutableDateTime();
             norlogeTime.setZone(LegacyUtils.legacyTimeZone);
             norlogeTime.setRounding(norlogeTime.getChronology().secondOfMinute());
+            norlogeTime.setYear(postTime.getYear());
             norlogeTime.setSecondOfMinute(0);
             norlogeTime.setMonthOfYear(m);
             norlogeTime.setDayOfMonth(d);
@@ -99,6 +100,7 @@ public class LegacyNorlogeConverter {
             MutableDateTime norlogeTime = new MutableDateTime();
             norlogeTime.setZone(LegacyUtils.legacyTimeZone);
             norlogeTime.setRounding(norlogeTime.getChronology().secondOfMinute());
+            norlogeTime.setDate(postTime);
             norlogeTime.setSecondOfMinute(0);
             norlogeTime.setTime(h, mi, s, 0);
             Norloge norloge = new Norloge().withTime(norlogeTime.toDateTime()).withHasYear(false).withHasMonth(false).withHasDay(false).withHasSeconds(true).withBouchot(bouchot);
@@ -116,6 +118,7 @@ public class LegacyNorlogeConverter {
             MutableDateTime norlogeTime = new MutableDateTime();
             norlogeTime.setZone(LegacyUtils.legacyTimeZone);
             norlogeTime.setRounding(norlogeTime.getChronology().secondOfMinute());
+            norlogeTime.setDate(postTime);
             norlogeTime.setSecondOfMinute(0);
             norlogeTime.setTime(h, mi, 0, 0);
             Norloge norloge = new Norloge().withTime(norlogeTime.toDateTime()).withHasYear(false).withHasMonth(false).withHasDay(false).withHasSeconds(false).withBouchot(bouchot);
@@ -131,21 +134,18 @@ public class LegacyNorlogeConverter {
 
         public String convertIdNorloge(String id, String bouchot) {
             Post post = postRepository.findOne(id);
-            if(null == post) {
+            if (null == post) {
                 GatewayPostId gpid = new GatewayPostId();
                 gpid.setPostId(id);
                 gpid.setGateway(null != bouchot ? bouchot : room);
                 post = postRepository.findOneByGatewayId(gpid);
             }
-            if(null != post) {
+            if (null != post) {
                 return Norloge.format(post);
             }
             return null;
         }
     }
-
-    @Autowired
-    private FactoryBean<NorlogeConverter> norlogeConverterFactory;
 
     public static class ParseOptions {
 
@@ -160,10 +160,17 @@ public class LegacyNorlogeConverter {
         }
     }
 
-    public String convertFromLegacyNorloge(String message, String room) throws Exception {
-        ParseOptions options = new ParseOptions();
-        options.setNorlogeConverter(norlogeConverterFactory.getObject());
-        return invocable.invokeMethod(convertLegacyNorloge, "parse", message, options).toString();
+    public String convertFromLegacyNorloge(String message, DateTime postTime, String room) {
+        try {
+            ParseOptions options = new ParseOptions();
+            NorlogeConverter converter = new NorlogeConverter();
+            converter.setPostTime(postTime);
+            converter.setRoom(room);
+            options.setNorlogeConverter(converter);
+            return invocable.invokeMethod(convertLegacyNorloge, "parse", message, options).toString();
+        } catch (Exception ex) {
+            return message;
+        }
     }
 
 }

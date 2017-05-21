@@ -87,15 +87,14 @@ public abstract class AbstractTsvBouchotGateway implements Gateway, SchedulableG
                 if (!postPepository.existsByGatewayPostId(gatewayPostId)) {
                     Post post = new Post();
                     post.setGatewayPostId(gatewayPostId);
-                    post.setMessage(legacyUtils.convertFromLegacyNorloges(config.getRoom(),
-                            CleanUtils.cleanMessage(CleanUtils.truncateMessage(decodeTags(postToImport.get(4))))));
+                    post.setRoom(config.getRoom());
+                    post.setTime(LegacyUtils.legacyPostTimeFormatter.parseDateTime(postToImport.get(1)));
                     String nickname = decodeTags(postToImport.get(3));
                     if (StringUtils.isBlank(nickname)) {
                         nickname = CleanUtils.truncateNickname(decodeTags(postToImport.get(2)));
                     }
                     post.setNickname(CleanUtils.cleanNickname(nickname));
-                    post.setRoom(config.getRoom());
-                    post.setTime(LegacyUtils.legacyPostTimeFormatter.parseDateTime(postToImport.get(1)));
+                    post.setMessage(legacyUtils.convertFromLegacyNorloges(CleanUtils.cleanMessage(CleanUtils.truncateMessage(decodeTags(postToImport.get(4)))), post.getTime(), config.getRoom()));
                     postPepository.save(post);
                     newPosts.add(post);
                 }

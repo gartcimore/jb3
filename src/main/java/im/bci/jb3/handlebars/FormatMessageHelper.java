@@ -20,8 +20,10 @@ import im.bci.jb3.bouchot.data.Post;
 import im.bci.jb3.bouchot.data.PostRepository;
 import im.bci.jb3.bouchot.logic.Norloge;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.context.annotation.Scope;
 
 @Component
+@Scope("thread")
 public class FormatMessageHelper implements Helper<Post> {
 
     @Autowired

@@ -7,7 +7,7 @@
                 return converted;
             }
         }
-        return y + "-" + m + "-" + d + h + ':' + mi  + ':' + s + (bouchot ? "@" + bouchot : "");
+        return y + "-" + m + "-" + d + 'T' + h + ':' + mi  + ':' + s + (bouchot ? "@" + bouchot : "");
     };
     norlogeConverter.convertLongNorloge = function(m, d, h, mi, s, bouchot) {
         if(options.norlogeConverter) {
@@ -58,8 +58,7 @@ postItem
  / .
 
 url
- = protocol:$((("http" "s"?) / "ftp") "://") url:$([^< \t\r\n])+
- { return protocol.concat(url); }
+ = $(protocol:$((("http" "s"?) / "ftp") "://") url:$([^< \t\r\n])+)
 
 norloge
  = idNorloge / fullNorloge / longNorloge / normalNorloge / shortNorloge
@@ -85,16 +84,13 @@ longNorloge
  }
  
 norlogeYear
- = digits: [0-9]+
- { return digits.join(""); }
+ = $( [0-9]+ )
  
 norlogeMonth
- = first: [0-1] last: [0-9]
- { return first + last; }
+ = $( [0-1] [0-9] )
 
 norlogeDay
- = first: [0-3] last: [0-9]
- { return first + last; }
+ = $( [0-3] [0-9] )
 
 normalNorloge
  = h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds b:bouchot?
@@ -109,20 +105,16 @@ shortNorloge
  }
 
 norlogeHours
- = first: [0-2] last: [0-9]
- { return first + last; }
+ = $( [0-2] [0-9] )
  
 norlogeMinutes
- = first: [0-5] last: [0-9]
- { return first + last; }
+ = $( [0-5] [0-9] )
  
 norlogeSeconds
- = first: [0-5] last: [0-9]
- { return first + last; }
+ = $([0-5] [0-9])
 
 totoz
-  = "[:" totoz:$[^\]]+ "]"
-  { return "[:".concat(totoz).concat("]");}
+  = $( "[:" totoz:$[^\]]+ "]" )
  
 whitespaces
  = [ \t\r\n]

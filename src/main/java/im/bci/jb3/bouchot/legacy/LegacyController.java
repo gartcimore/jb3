@@ -70,7 +70,7 @@ public class LegacyController {
         if (StringUtils.isBlank(nickname)) {
             nickname = userAgent;
         }
-        Post post = tribune.post(nickname, legacyUtils.convertFromLegacyNorloges(room, message), room, auth, ServletUriComponentsBuilder.fromCurrentRequest());
+        Post post = tribune.post(nickname, legacyUtils.convertFromLegacyNorloges(message, DateTime.now(), room), room, auth, ServletUriComponentsBuilder.fromCurrentRequest());
         if (null != post) {
             response.addHeader("X-Post-Id", Long.toString(post.getTime().getMillis()));
         }
