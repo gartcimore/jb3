@@ -19,15 +19,18 @@ jb3 = {
                     return new Option(v.rname, v.rname);
                 })
                 );
-        var roomInURI = URI(window.location).search(true).room;
+        var uri = URI(window.location);
+        var roomInURI = uri.search(true).room;
         if(roomInURI) {
             if(self.controlsRoom.find("option[value='" +roomInURI + "']").length === 0 ) {
                 self.controlsRoom.append(new Option(roomInURI, roomInURI));
-                self.rooms[roomInURI] = {};
+                sself.rooms[roomInURI] = {};
             }
         }
+        var roomInDomain = uri.domain().slice(0, -uri.tld().length - 1);
+        roomInDomain = self.controlsRoom.find("option[value='" +roomInURI + "']").length && roomInDomain;
         self.controlsRoom.attr("size", self.controlsRoom.find('option').length);
-        self.controlsRoom.val(roomInURI || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
+        self.controlsRoom.val(roomInURI || roomInDomain || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
         $('#jb3-visio-link').attr('href', "/visio?room=" + self.controlsRoom.val());
         if (roomInURI === self.controlsRoom.val()) {
             $('#jb3-roster').hide();
