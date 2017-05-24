@@ -24,7 +24,7 @@ jb3 = {
         if(roomInURI) {
             if(self.controlsRoom.find("option[value='" +roomInURI + "']").length === 0 ) {
                 self.controlsRoom.append(new Option(roomInURI, roomInURI));
-                sself.rooms[roomInURI] = {};
+                self.rooms[roomInURI] = {};
             }
         }
         var roomInDomain = uri.domain().slice(0, -uri.tld().length - 1);
