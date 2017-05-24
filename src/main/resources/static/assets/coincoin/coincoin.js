@@ -57,18 +57,26 @@ jb3 = {
             	self.postCurrentMessage();
             }
         });
+        if($('header').css('display') === 'block') {
+            $('#jb3-show-controls').html("&slarr;");
+        } else {
+            $('#jb3-show-controls').html("&equiv;");
+        }
         $('#jb3-show-controls').click(function() {
         	var header = $('header');
         	var layout = $('#jb3-layout');
-        	if(header.css('display') == 'block') {
-        		header.css('display', 'none');
-        		layout.css('top', '0px');
+                var button = $('#jb3-show-controls');
+        	if(header.css('display') === 'block') {
+                    header.css('display', 'none');
+                    layout.css('top', '0px');
+                    button.html("&equiv;");
         	} else {
-        		header.css('display', 'block');
-        		layout.css('top', '57px');
+                    header.css('display', 'block');
+                    layout.css('top', '57px');
+                    button.html("&slarr;");
         	}
         	var roster = $('#jb3-roster');
-        	if(roster.css('display') == 'flex') {
+        	if(roster.css('display') === 'flex') {
         		roster.css('display', 'none');
         	} else {
         		roster.css('display', 'flex');
