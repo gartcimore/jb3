@@ -15,6 +15,7 @@ import im.bci.jb3.bouchot.data.Post;
 import im.bci.jb3.bouchot.data.PostRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.context.annotation.Scope;
@@ -43,6 +44,8 @@ public class ToLegacyPEGNorlogeConverter {
         }
     }
     private static final DateTimeFormatter TO_ISO_NORLOGE_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
+    private static final DateTimeFormatter TO_NORMAL_NORLOGE_FORMATTER = DateTimeFormat.forPattern("HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
+    private static final DateTimeComparator DATE_COMPARATOR = DateTimeComparator.getDateOnlyInstance();
 
     public class NorlogeConverter {
 
@@ -61,7 +64,12 @@ public class ToLegacyPEGNorlogeConverter {
         public String convertIdNorloge(String id) {
             Post post = postRepository.findOne(id);
             if (null != post) {
-                String legacyNorloge = TO_ISO_NORLOGE_FORMATTER.print(post.getTime());
+                String legacyNorloge;
+                if (DATE_COMPARATOR.compare(post.getTime(), postTime) == 0) {
+                    legacyNorloge = TO_NORMAL_NORLOGE_FORMATTER.print(post.getTime());
+                } else {
+                    legacyNorloge = TO_ISO_NORLOGE_FORMATTER.print(post.getTime());
+                }
                 if (!StringUtils.equals(post.getRoom(), room)) {
                     legacyNorloge += "@" + post.getRoom();
                 }
