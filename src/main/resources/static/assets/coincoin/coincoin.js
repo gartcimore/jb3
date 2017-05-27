@@ -22,13 +22,13 @@ jb3 = {
         var uri = URI(window.location);
         var roomInURI = uri.search(true).room;
         if(roomInURI) {
-            if(self.controlsRoom.find("option[value='" +roomInURI + "']").length === 0 ) {
+            if(self.controlsRoom.find("option[value='" + roomInURI + "']").length === 0 ) {
                 self.controlsRoom.append(new Option(roomInURI, roomInURI));
                 self.rooms[roomInURI] = {};
             }
         }
         var roomInDomain = uri.domain().slice(0, -uri.tld().length - 1);
-        roomInDomain = self.controlsRoom.find("option[value='" +roomInURI + "']").length && roomInDomain;
+        roomInDomain = self.controlsRoom.find("option[value='" + roomInDomain + "']").length && roomInDomain;
         self.controlsRoom.attr("size", self.controlsRoom.find('option').length);
         self.controlsRoom.val(roomInURI || roomInDomain || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
         $('#jb3-visio-link').attr('href', "/visio?room=" + self.controlsRoom.val());
