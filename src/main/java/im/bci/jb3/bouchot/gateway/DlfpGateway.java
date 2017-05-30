@@ -39,7 +39,7 @@ public class DlfpGateway extends AbstractXmlBouchotGateway {
     public void post(String nickname, String message, String auth) {
         try {
             DlfpOauthToken token = objectMapper.readValue(auth, DlfpOauthToken.class);
-            Jsoup.connect("https://linuxfr.org/api/v1/board")
+            Jsoup.connect("https://linuxfr.org/api/v1/board").userAgent("jb3")
                     .data("bearer_token", token.getAccess_token())
                     .data("message",
                             legacyUtils.convertToLegacyNorloges(message,

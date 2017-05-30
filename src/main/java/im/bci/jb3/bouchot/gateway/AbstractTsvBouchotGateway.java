@@ -54,7 +54,7 @@ public abstract class AbstractTsvBouchotGateway implements Gateway, SchedulableG
 
     protected void importPosts() {
         try {
-            Connection connect = Jsoup.connect(config.getGetUrl())
+            Connection connect = Jsoup.connect(config.getGetUrl()).userAgent("jb3")
                     .validateTLSCertificates(validateCrapCertificate || !config.isUsingCrapCertificate());
             if (null != config.getLastIdParameterName()) {
                 connect = connect.data(config.getLastIdParameterName(), String.valueOf(lastPostId));
@@ -112,7 +112,7 @@ public abstract class AbstractTsvBouchotGateway implements Gateway, SchedulableG
     @Override
     public void post(String nickname, String message, String auth) {
         try {
-            Connection connect = Jsoup.connect(config.getPostUrl())
+            Connection connect = Jsoup.connect(config.getPostUrl()).userAgent("jb3")
                     .data(config.getMessageContentParameterName(),
                             legacyUtils.convertToLegacyNorloges(message,
                                     DateTime.now().withZone(LegacyUtils.legacyTimeZone).secondOfMinute()
