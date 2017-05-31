@@ -1,34 +1,26 @@
 package im.bci.jb3.b2b;
 
-import im.bci.jb3.bouchot.gateway.Gateway;
-import javax.annotation.PostConstruct;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import im.bci.jb3.bouchot.gateway.AbstractTsvBouchotGateway;
+import im.bci.jb3.bouchot.gateway.BouchotConfig;
 
 /**
  *
  * @author devnewton
  */
-//TODO @Component
-public class B2BGateway implements Gateway {
+public class B2BGateway extends AbstractTsvBouchotGateway{
 
-    @Autowired
-    private B2BConfig peers;
-
-    @PostConstruct
-    public void plop() {
-        System.out.println(peers);
+    public B2BGateway(B2BPeer peer, B2BPeerRoom room) {
+        super(createConfig(peer, room));
     }
-
-    @Override
-    public void post(String nickname, String message, String auth) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    
+    static private BouchotConfig createConfig(B2BPeer peer, B2BPeerRoom room) {
+        BouchotConfig config = new BouchotConfig();
+        config.setRoom(room.getLocalName());
+        config.setGetUrl(peer.getUrl() + "/legacy/tsv?room=" + room.getRemoteName());
+        config.setPostUrl(peer.getUrl() + "/legacy/post?room=" + room.getRemoteName());
+        config.setLastIdParameterName("last");
+        config.setMessageContentParameterName("message");
+        return config;
     }
-
-    @Override
-    public String getRoom() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
 }
