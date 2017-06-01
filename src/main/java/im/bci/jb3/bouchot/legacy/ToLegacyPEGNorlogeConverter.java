@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import im.bci.jb3.bouchot.data.Post;
 import im.bci.jb3.bouchot.data.PostRepository;
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
@@ -69,6 +70,18 @@ public class ToLegacyPEGNorlogeConverter {
                     legacyNorloge = TO_NORMAL_NORLOGE_FORMATTER.print(post.getTime());
                 } else {
                     legacyNorloge = TO_ISO_NORLOGE_FORMATTER.print(post.getTime());
+                }
+                DateTime postTimeRounded = post.getTime().secondOfMinute().roundFloorCopy();
+                List<Post> siblings = postRepository.findPosts(postTimeRounded, postTimeRounded.plusSeconds(1), room);
+                if(siblings.size() > 1) {
+                    int indice = 1;
+                    for(Post sibling:  siblings) {
+                        if(post.getId().equals(sibling.getId())) {
+                            break;
+                        }
+                        ++indice;
+                    }
+                    legacyNorloge += "^" + indice;
                 }
                 if (!StringUtils.equals(post.getRoom(), room)) {
                     legacyNorloge += "@" + post.getRoom();

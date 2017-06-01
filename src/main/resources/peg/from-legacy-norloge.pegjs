@@ -1,31 +1,31 @@
 {
     var norlogeConverter = {};
-    norlogeConverter.convertFullNorloge = function(y, m, d, h, mi, s, bouchot) {
+    norlogeConverter.convertFullNorloge = function(y, m, d, h, mi, s, i, bouchot) {
         if(options.norlogeConverter) {
-            var converted = options.norlogeConverter.convertFullNorloge(y, m, d, h, mi, s, bouchot);
+            var converted = options.norlogeConverter.convertFullNorloge(y, m, d, h, mi, s, i, bouchot);
             if(converted) {
                 return converted;
             }
         }
-        return y + "-" + m + "-" + d + 'T' + h + ':' + mi  + ':' + s + (bouchot ? "@" + bouchot : "");
+        return y + "-" + m + "-" + d + 'T' + h + ':' + mi  + ':' + s + (i ? '^' + i : "") + (bouchot ? "@" + bouchot : "");
     };
-    norlogeConverter.convertLongNorloge = function(m, d, h, mi, s, bouchot) {
+    norlogeConverter.convertLongNorloge = function(m, d, h, mi, s, i, bouchot) {
         if(options.norlogeConverter) {
-            var converted = options.norlogeConverter.convertLongNorloge(m, d, h, mi, s, bouchot);
+            var converted = options.norlogeConverter.convertLongNorloge(m, d, h, mi, s, i, bouchot);
             if(converted) {
                 return converted;
             }
         }
-        return m + "/" + d + "#" + h + ':' + mi  + ':' + s + (bouchot ? "@" + bouchot : "");
+        return m + "/" + d + "#" + h + ':' + mi  + ':' + s+ (i ? '^' + i : "") + (bouchot ? "@" + bouchot : "");
     };
-    norlogeConverter.convertNormalNorloge = function(h, mi, s, bouchot) {
+    norlogeConverter.convertNormalNorloge = function(h, mi, s, i, bouchot) {
         if(options.norlogeConverter) {
-            var converted = options.norlogeConverter.convertNormalNorloge(h, mi, s, bouchot);
+            var converted = options.norlogeConverter.convertNormalNorloge(h, mi, s, i, bouchot);
             if(converted) {
                 return converted;
             }
         }
-        return h + ':' + mi  + ':' + s + (bouchot ? "@" + bouchot : "");
+        return h + ':' + mi  + ':' + s+ (i ? '^' + i : "") + (bouchot ? "@" + bouchot : "");
     };
     norlogeConverter.convertShortNorloge = function(h, mi, bouchot) {
         if(options.norlogeConverter) {
@@ -72,15 +72,15 @@ idNorloge
  { return norlogeConverter.convertIdNorloge(id, b); }
 
 fullNorloge
- = y: norlogeYear "-" m: norlogeMonth "-" d:norlogeDay "T" h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds b:bouchot?
+ = y: norlogeYear "-" m: norlogeMonth "-" d:norlogeDay "T" h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds i:indice? b:bouchot?
  {
- return norlogeConverter.convertFullNorloge(y, m, d, h, mi, s, b);
+ return norlogeConverter.convertFullNorloge(y, m, d, h, mi, s, i, b);
  }
  
 longNorloge
- = m: norlogeMonth "/" d:norlogeDay "#" h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds b:bouchot?
+ = m: norlogeMonth "/" d:norlogeDay "#" h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds i:indice? b:bouchot?
  {
- return norlogeConverter.convertLongNorloge(m, d, h, mi, s, b);
+ return norlogeConverter.convertLongNorloge(m, d, h, mi, s, i, b);
  }
  
 norlogeYear
@@ -93,9 +93,9 @@ norlogeDay
  = $( [0-3] [0-9] )
 
 normalNorloge
- = h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds b:bouchot?
+ = h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds i:indice? b:bouchot?
  {
- return norlogeConverter.convertNormalNorloge(h, mi, s, b);
+ return norlogeConverter.convertNormalNorloge(h, mi, s, i, b);
  }
  
 shortNorloge
@@ -112,6 +112,32 @@ norlogeMinutes
  
 norlogeSeconds
  = $([0-5] [0-9])
+ 
+indice
+ = asciiIndice / unicodeIndice
+
+asciiIndice
+ = "^" i:[0-9]
+ { return i; }
+ 
+unicodeIndice
+ = unicodeIndice1 / unicodeIndice2 / unicodeIndice3 / unicodeIndice3456789
+ 
+unicodeIndice1
+ = [¹]
+ { return 1; }
+ 
+unicodeIndice2
+ = [²]
+ { return 2; }
+ 
+unicodeIndice3
+ = [³]
+ { return 3; }
+ 
+unicodeIndice3456789
+ = i:[⁴⁵⁶⁷⁸⁹]
+ { return i.charCodeAt(0) - 8304; }
 
 totoz
   = $( "[:" totoz:$[^\]]+ "]" )

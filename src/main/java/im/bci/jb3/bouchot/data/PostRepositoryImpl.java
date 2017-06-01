@@ -42,6 +42,13 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
+    public long countPosts(DateTime start, DateTime end, String room) {
+        Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate()).and("room").is(roomOrDefault(room));
+        Query query = new Query().addCriteria(criteria).with(new PageRequest(0, roomHistorySize, Sort.Direction.DESC, "time"));
+        return mongoTemplate.count(query, COLLECTION_NAME);
+    }
+
+    @Override
     public void save(Post post) {
         post.setRoom(roomOrDefault(post.getRoom()));
         mongoTemplate.save(post, COLLECTION_NAME);
@@ -55,10 +62,15 @@ public class PostRepositoryImpl implements PostRepository {
     private static final String COLLECTION_NAME = "post";
 
     @Override
-    public Post findOne(String room, DateTime start, DateTime end) {
+    public Post findOne(String room, DateTime start, DateTime end, int indice) {
         Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate()).and("room").is(roomOrDefault(room));
-        Query query = new Query().addCriteria(criteria).with(new PageRequest(0, 1, Sort.Direction.DESC, "time"));
-        return mongoTemplate.findOne(query, Post.class, COLLECTION_NAME);
+        Query query = new Query().addCriteria(criteria).with(new PageRequest(0, 10, Sort.Direction.DESC, "time"));
+        List<Post> posts = mongoTemplate.find(query, Post.class, COLLECTION_NAME);
+        if (posts.isEmpty()) {
+            return null;
+        }
+        int clampedIndice = Math.max(posts.size(), Math.min(1, indice));
+        return posts.get(clampedIndice - 1);
     }
 
     @Override
