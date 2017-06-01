@@ -65,30 +65,64 @@ public class ToLegacyPEGNorlogeConverter {
         public String convertIdNorloge(String id) {
             Post post = postRepository.findOne(id);
             if (null != post) {
-                String legacyNorloge;
+                StringBuilder legacyNorloge = new StringBuilder();
                 if (DATE_COMPARATOR.compare(post.getTime(), postTime) == 0) {
-                    legacyNorloge = TO_NORMAL_NORLOGE_FORMATTER.print(post.getTime());
+                    legacyNorloge.append(TO_NORMAL_NORLOGE_FORMATTER.print(post.getTime()));
                 } else {
-                    legacyNorloge = TO_ISO_NORLOGE_FORMATTER.print(post.getTime());
+                    legacyNorloge.append(TO_ISO_NORLOGE_FORMATTER.print(post.getTime()));
                 }
-                DateTime postTimeRounded = post.getTime().secondOfMinute().roundFloorCopy();
-                List<Post> siblings = postRepository.findPosts(postTimeRounded, postTimeRounded.plusSeconds(1), room);
-                if(siblings.size() > 1) {
-                    int indice = 1;
-                    for(Post sibling:  siblings) {
-                        if(post.getId().equals(sibling.getId())) {
-                            break;
-                        }
-                        ++indice;
-                    }
-                    legacyNorloge += "^" + indice;
-                }
+                addIndice(post, legacyNorloge);
                 if (!StringUtils.equals(post.getRoom(), room)) {
-                    legacyNorloge += "@" + post.getRoom();
+                    legacyNorloge.append("@").append(post.getRoom());
                 }
-                return legacyNorloge;
+                return legacyNorloge.toString();
             }
             return null;
+        }
+
+        private void addIndice(Post post, StringBuilder legacyNorloge) {
+            DateTime postTimeRounded = post.getTime().secondOfMinute().roundFloorCopy();
+            List<Post> siblings = postRepository.findPostsReverse(postTimeRounded, postTimeRounded.plusSeconds(1), room);
+            if (siblings.size() > 1) {
+                int indice = 1;
+                for (Post sibling : siblings) {
+                    if (post.getId().equals(sibling.getId())) {
+                        break;
+                    }
+                    ++indice;
+                }
+                switch (indice) {
+                    case 1:
+                        legacyNorloge.append('¹');
+                        break;
+                    case 2:
+                        legacyNorloge.append('²');
+                        break;
+                    case 3:
+                        legacyNorloge.append('³');
+                        break;
+                    case 4:
+                        legacyNorloge.append('⁴');
+                        break;
+                    case 5:
+                        legacyNorloge.append('⁵');
+                        break;
+                    case 6:
+                        legacyNorloge.append('⁶');
+                        break;
+                    case 7:
+                        legacyNorloge.append('⁷');
+                        break;
+                    case 8:
+                        legacyNorloge.append('⁸');
+                        break;
+                    case 9:
+                        legacyNorloge.append('⁹');
+                        break;
+                    default:
+                        legacyNorloge.append("^").append(indice);
+                }
+            }
         }
     }
 

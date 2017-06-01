@@ -36,7 +36,15 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public List<Post> findPosts(DateTime start, DateTime end, String room) {
         Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate()).and("room").is(roomOrDefault(room));
-        Query query = new Query().addCriteria(criteria).with(new PageRequest(0, roomHistorySize, Sort.Direction.DESC, "time"));
+        Query query = new Query().addCriteria(criteria).with(new PageRequest(0, roomHistorySize, Sort.Direction.DESC, "time", "gatewayPostId.postId"));
+        List<Post> result = mongoTemplate.find(query, Post.class, COLLECTION_NAME);
+        return result;
+    }
+
+    @Override
+    public List<Post> findPostsReverse(DateTime start, DateTime end, String room) {
+        Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate()).and("room").is(roomOrDefault(room));
+        Query query = new Query().addCriteria(criteria).with(new PageRequest(0, roomHistorySize, Sort.Direction.ASC, "time", "gatewayPostId.postId" ));
         List<Post> result = mongoTemplate.find(query, Post.class, COLLECTION_NAME);
         return result;
     }
@@ -44,7 +52,7 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public long countPosts(DateTime start, DateTime end, String room) {
         Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate()).and("room").is(roomOrDefault(room));
-        Query query = new Query().addCriteria(criteria).with(new PageRequest(0, roomHistorySize, Sort.Direction.DESC, "time"));
+        Query query = new Query().addCriteria(criteria).with(new PageRequest(0, roomHistorySize, Sort.Direction.ASC, "time", "gatewayPostId.postId"));
         return mongoTemplate.count(query, COLLECTION_NAME);
     }
 
@@ -64,12 +72,12 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public Post findOne(String room, DateTime start, DateTime end, int indice) {
         Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate()).and("room").is(roomOrDefault(room));
-        Query query = new Query().addCriteria(criteria).with(new PageRequest(0, 10, Sort.Direction.DESC, "time"));
+        Query query = new Query().addCriteria(criteria).with(new PageRequest(0, 9, Sort.Direction.ASC, "time", "gatewayPostId.postId"));
         List<Post> posts = mongoTemplate.find(query, Post.class, COLLECTION_NAME);
         if (posts.isEmpty()) {
             return null;
         }
-        int clampedIndice = Math.max(posts.size(), Math.min(1, indice));
+        int clampedIndice = Math.min(posts.size(), Math.max(1, indice));
         return posts.get(clampedIndice - 1);
     }
 

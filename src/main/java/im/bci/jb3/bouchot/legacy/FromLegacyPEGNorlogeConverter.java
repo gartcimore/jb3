@@ -57,7 +57,7 @@ public class FromLegacyPEGNorlogeConverter {
             this.postTime = postTime;
         }
 
-        public String convertFullNorloge(int y, int m, int d, int h, int mi, int s, int indice, String bouchot) {
+        public String convertFullNorloge(int y, int m, int d, int h, int mi, int s, int indice,  String bouchot) {
             MutableDateTime norlogeTime = new MutableDateTime();
             norlogeTime.setZone(LegacyUtils.legacyTimeZone);
             norlogeTime.setRounding(norlogeTime.getChronology().secondOfMinute());
@@ -114,7 +114,7 @@ public class FromLegacyPEGNorlogeConverter {
             return null;
         }
 
-        public String convertShortNorloge(int h, int mi, String bouchot) {
+        public String convertShortNorloge(int h, int mi, int indice, String bouchot) {
             MutableDateTime norlogeTime = new MutableDateTime();
             norlogeTime.setZone(LegacyUtils.legacyTimeZone);
             norlogeTime.setRounding(norlogeTime.getChronology().secondOfMinute());
@@ -124,7 +124,7 @@ public class FromLegacyPEGNorlogeConverter {
             Norloge norloge = new Norloge().withTime(norlogeTime.toDateTime()).withHasYear(false).withHasMonth(false).withHasDay(false).withHasSeconds(false).withBouchot(bouchot);
             for (int day = 0; day <= MAX_DAY_BEFORE; ++day) {
                 DateTime tryTime = norloge.getTime().minusDays(day);
-                Post post = postRepository.findOne(null != norloge.getBouchot() ? norloge.getBouchot() : room, tryTime, tryTime.plusSeconds(norloge.getPrecisionInSeconds()), 1);
+                Post post = postRepository.findOne(null != norloge.getBouchot() ? norloge.getBouchot() : room, tryTime, tryTime.plusSeconds(norloge.getPrecisionInSeconds()), indice);
                 if (null != post) {
                     return Norloge.format(post);
                 }
