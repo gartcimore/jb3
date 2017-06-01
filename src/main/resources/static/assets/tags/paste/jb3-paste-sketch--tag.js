@@ -38,21 +38,6 @@ var jb3PasteSketchConstructor = function () {
         }
         event.preventDefault();
     });
-    this.changeBackgroundFromFile = function (e) {
-        var files = e.target.files || [];
-        for (var i = 0; i < files.length; i++) {
-            var file = files[i];
-            var img = new Image();
-            img.addEventListener('load', function () {
-                self.sketchpad.setBackgroundImage(img);
-                self.sketchpad.resize();
-                self.update();
-                self.sketchSize.value = 'original';
-            });
-            img.src = window.URL.createObjectURL(file);
-        }
-        e.preventDefault();
-    };
     this.pasteBackground = function () {
         document.execCommand('paste');
     };
@@ -141,7 +126,6 @@ var jb3PasteSketchStyles = '\
 
 var jb3PasteSketchTemplate = '\
 <div name="pasteSketchForm" class="c-fieldset">\
-            <input class="c-field" type="file" onchange="{ changeBackgroundFromFile }"></input>\
     <div class="o-form-element">\
         <div class="jb3-paste-sketch-tools">\
             <input type="color" value="#000" onchange="{ changeSketchColor }"></input>\
