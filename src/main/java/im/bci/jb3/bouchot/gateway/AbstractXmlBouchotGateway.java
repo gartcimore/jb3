@@ -91,7 +91,9 @@ public abstract class AbstractXmlBouchotGateway implements Gateway, SchedulableG
                 }
                 post.setNickname(CleanUtils.cleanNickname(nickname));
                 post.setRoom(config.getRoom());
-                post.setTime(LegacyUtils.legacyPostTimeFormatter.parseDateTime(postToImport.attr("time")));
+                DateTime postTimeRounded = LegacyUtils.legacyPostTimeFormatter.parseDateTime(postToImport.attr("time")).secondOfMinute().roundFloorCopy();
+                long nbPostsAtSameSecond = postPepository.countPosts(postTimeRounded, postTimeRounded.plusSeconds(1), config.getRoom());
+                post.setTime(postTimeRounded.withMillisOfSecond((int) nbPostsAtSameSecond));
                 post.setMessage(legacyUtils.convertFromLegacyNorloges(CleanUtils.cleanMessage(CleanUtils.truncateMessage(decodeTags(postToImport.select("message").first()))), post.getTime(), config.getRoom()));
                 postPepository.save(post);
                 newPosts.add(post);
