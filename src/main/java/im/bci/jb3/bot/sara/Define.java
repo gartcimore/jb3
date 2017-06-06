@@ -63,7 +63,7 @@ public class Define implements SaraAction {
         Element definition = definitions.get(random.nextInt(definitions.size()));
         String text = definition.select(".word").text() + " " + definition.select(".meaning").text();
         String cleanedText = Jsoup.clean(text, Whitelist.none().addTags("a").addAttributes("a", "href"));
-        tribune.post(NAME, cleanedText, post.getRoom());
+        tribune.post(Sara.NAME, cleanedText, post.getRoom());
         return true;
     }
 }

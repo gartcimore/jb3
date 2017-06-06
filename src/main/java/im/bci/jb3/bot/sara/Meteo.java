@@ -57,7 +57,7 @@ public class Meteo implements SaraAction {
             meteo = openWeatherMap(lieu);
         }
         if (StringUtils.isNotBlank(meteo)) {
-            tribune.post(NAME, meteo, post.getRoom());
+            tribune.post(Sara.NAME, meteo, post.getRoom());
             return true;
         } else {
             return false;
