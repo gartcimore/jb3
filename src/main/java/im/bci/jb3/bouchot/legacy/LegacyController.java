@@ -2,6 +2,8 @@ package im.bci.jb3.bouchot.legacy;
 
 import im.bci.jb3.bouchot.data.Post;
 import im.bci.jb3.bouchot.data.PostRepository;
+import im.bci.jb3.bouchot.data.Subscription;
+import im.bci.jb3.bouchot.data.SubscriptionRepository;
 import im.bci.jb3.bouchot.logic.UserPostHandler;
 
 import java.util.ArrayList;
@@ -21,12 +23,15 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -46,17 +51,17 @@ public class LegacyController {
 
     @Autowired
     private LegacyUtils legacyUtils;
-    
+
     @Value("${jb3.room.default}")
     private String defaultRoom;
 
     private Period postsGetPeriod;
-    
+
     @Value("${jb3.posts.get.period}")
     public void setPostsGetPeriod(String p) {
         postsGetPeriod = ISOPeriodFormat.standard().parsePeriod(p);
     }
-    
+
     @RequestMapping(path = "/discovery", method = RequestMethod.GET)
     public String discovery(@RequestParam(value = "room", required = false) String room, Model model, HttpServletResponse response) {
         model.addAttribute("room", StringUtils.isNotBlank(room) ? room : defaultRoom);
@@ -98,6 +103,20 @@ public class LegacyController {
         }
     }
 
+    @Autowired
+    private SubscriptionRepository subscriptionRepository;
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/subscribe")
+    public Subscription subscribe(@RequestParam(value = "callback", required = false) String callback, @RequestParam(value = "room", required = false) String room) {
+        Subscription subscription = new Subscription();
+        subscription.setCallback(callback);
+        subscription.setRoom(room);
+        subscriptionRepository.save(subscription);
+        return subscription;
+    }
+
     private boolean get(Long lastId, String room, WebRequest webRequest, Model model, Escaper escaper) {
         DateTime end = DateTime.now(DateTimeZone.UTC).plusHours(1);
         DateTime start = computeStartTime(lastId, end);
@@ -105,10 +124,10 @@ public class LegacyController {
         if (posts.isEmpty() || webRequest.checkNotModified(posts.get(0).getTime().getMillis())) {
             return false;
         } else {
-            LegacyBoard board = new LegacyBoard();            
+            LegacyBoard board = new LegacyBoard();
             board.setSite(ServletUriComponentsBuilder.fromCurrentRequest().replacePath("").build().toString());
             board.setTimezone(LegacyUtils.legacyTimezoneId);
-            List<LegacyPost> legacyPosts = new ArrayList<LegacyPost>(posts.size());
+            List<LegacyPost> legacyPosts = new ArrayList<>(posts.size());
             for (Post post : posts) {
                 LegacyPost legacyPost = new LegacyPost();
                 legacyPost.setId(post.getTime().getMillis());
