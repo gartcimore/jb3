@@ -5,7 +5,7 @@ import im.bci.jb3.bouchot.data.Post;
 import im.bci.jb3.bouchot.data.PostRepository;
 import im.bci.jb3.bouchot.legacy.LegacyUtils;
 import im.bci.jb3.bouchot.logic.CleanUtils;
-import im.bci.jb3.bouchot.websocket.WebDirectCoinConnectedMoules;
+import im.bci.jb3.event.NewPostsEvent;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +27,7 @@ import java.util.TreeMap;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.context.ApplicationEventPublisher;
 
 /**
  *
@@ -35,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
 public abstract class AbstractTsvBouchotGateway implements Gateway, SchedulableGateway {
 
     @Autowired
-    private WebDirectCoinConnectedMoules connectedMoules;
+    private ApplicationEventPublisher publisher;
     @Autowired
     private PostRepository postPepository;
     @Autowired
@@ -107,7 +108,7 @@ public abstract class AbstractTsvBouchotGateway implements Gateway, SchedulableG
         }
         adaptativeRefreshComputer.analyseBouchotPostsResponse(newPosts);
         if (!newPosts.isEmpty()) {
-            connectedMoules.send(newPosts);
+            publisher.publishEvent(new NewPostsEvent(newPosts));
         }
     }
 

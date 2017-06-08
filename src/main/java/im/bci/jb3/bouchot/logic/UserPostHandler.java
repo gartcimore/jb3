@@ -27,7 +27,7 @@ public class UserPostHandler {
     public Post post(String nickname, String message, String room, String auth, UriComponentsBuilder uriBuilder) {
         if (!gateways.handlePost(nickname, message, room, auth)) {
             Post post = tribune.post(nickname, message, room);
-            if (null != post) {
+            if (null != post && null != uriBuilder) {//TODO better way to retrieve uriBuilder
                 bots.handle(post, uriBuilder);
             }
             return post;

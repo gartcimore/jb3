@@ -6,7 +6,6 @@ import im.bci.jb3.bouchot.data.Post;
 import im.bci.jb3.bouchot.data.PostRepository;
 import im.bci.jb3.bouchot.data.PostRevisor;
 import im.bci.jb3.bouchot.logic.Norloge.ParsedNorloges;
-import im.bci.jb3.bouchot.websocket.WebDirectCoinConnectedMoules;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,12 +22,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import im.bci.jb3.event.NewPostsEvent;
+import org.springframework.context.ApplicationEventPublisher;
 
 @Component
 public class Tribune {
 
     @Autowired
-    private WebDirectCoinConnectedMoules connectedMoules;
+    private ApplicationEventPublisher publisher;
 
     @Autowired
     private PostRepository postPepository;
@@ -47,7 +48,7 @@ public class Tribune {
             post.setRoom(room);
             post.setTime(DateTime.now(DateTimeZone.UTC));
             postPepository.save(post);
-            connectedMoules.send(Arrays.asList(post));
+            publisher.publishEvent(new NewPostsEvent(post));
             return post;
         }
         return null;
@@ -137,7 +138,7 @@ public class Tribune {
         if (revisor.canRevise(post) && StringUtils.isNotBlank(newMessage)) {
             post.revise(CleanUtils.truncateMessage(newMessage));
             postPepository.save(post);
-            connectedMoules.send(Arrays.asList(post));
+            publisher.publishEvent(new NewPostsEvent(post));
         }
     }
 

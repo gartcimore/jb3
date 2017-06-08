@@ -12,6 +12,7 @@ import im.bci.jb3.bouchot.websocket.messages.MessageS2C;
 import im.bci.jb3.bouchot.websocket.messages.data.Presence;
 import im.bci.jb3.bouchot.websocket.messages.s2c.NorlogeS2C;
 import im.bci.jb3.bouchot.websocket.messages.s2c.PresenceS2C;
+import im.bci.jb3.event.NewPostsEvent;
 
 import java.io.IOException;
 
@@ -19,6 +20,7 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -40,10 +42,11 @@ public class WebDirectCoinConnectedMoules {
 
     private final CopyOnWriteArrayList<WebSocketSession> moules = new CopyOnWriteArrayList<>();
 
-    public void send(List<Post> posts) {
+    @EventListener
+    public void notify(NewPostsEvent event) {
         try {
             MessageS2C messageS2C = new MessageS2C();
-            messageS2C.setPosts(posts);
+            messageS2C.setPosts(event.getPosts());
             String payload = objectMapper.writeValueAsString(messageS2C);
             TextMessage message = new TextMessage(payload);
             for (WebSocketSession moule : moules) {
