@@ -22,7 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.common.util.concurrent.RateLimiter;
 import im.bci.jb3.event.NewPostsEvent;
+import java.util.concurrent.TimeUnit;
 import org.springframework.context.ApplicationEventPublisher;
 
 @Component
@@ -36,20 +38,24 @@ public class Tribune {
 
     @Autowired
     private FortuneRepository fortunePepository;
+    
+    private RateLimiter rateLimiter = RateLimiter.create(1.0);
 
     public Post post(String nickname, String message, String room) {
-        nickname = CleanUtils.truncateNickname(nickname);
-        room = CleanUtils.truncateRoom(room);
-        message = CleanUtils.truncateMessage(message);
-        if (StringUtils.isNotBlank(message)) {
-            Post post = new Post();
-            post.setNickname(StringUtils.isNotBlank(nickname) ? nickname : "AnonymousCoward");
-            post.setMessage(message);
-            post.setRoom(room);
-            post.setTime(DateTime.now(DateTimeZone.UTC));
-            postPepository.save(post);
-            publisher.publishEvent(new NewPostsEvent(post));
-            return post;
+        if(rateLimiter.tryAcquire(10, TimeUnit.SECONDS)) {
+            nickname = CleanUtils.truncateNickname(nickname);
+            room = CleanUtils.truncateRoom(room);
+            message = CleanUtils.truncateMessage(message);
+            if (StringUtils.isNotBlank(message)) {
+                Post post = new Post();
+                post.setNickname(StringUtils.isNotBlank(nickname) ? nickname : "AnonymousCoward");
+                post.setMessage(message);
+                post.setRoom(room);
+                post.setTime(DateTime.now(DateTimeZone.UTC));
+                postPepository.save(post);
+                publisher.publishEvent(new NewPostsEvent(post));
+                return post;
+            }
         }
         return null;
     }
