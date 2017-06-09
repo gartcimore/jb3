@@ -186,8 +186,8 @@ jb3_from_legacy_norloge = /*
         peg$c38 = function(h, mi, s, i, b) {
          return norlogeConverter.convertNormalNorloge(h, mi, s, i, b);
          },
-        peg$c39 = function(h, mi, b) {
-         return norlogeConverter.convertShortNorloge(h, mi, b);
+        peg$c39 = function(h, mi, i, b) {
+         return norlogeConverter.convertShortNorloge(h, mi, i, b);
          },
         peg$c40 = /^[0-2]/,
         peg$c41 = peg$classExpectation([["0", "2"]], false, false),
@@ -1074,7 +1074,7 @@ jb3_from_legacy_norloge = /*
     }
 
     function peg$parseshortNorloge() {
-      var s0, s1, s2, s3, s4;
+      var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
       s1 = peg$parsenorlogeHours();
@@ -1089,14 +1089,23 @@ jb3_from_legacy_norloge = /*
         if (s2 !== peg$FAILED) {
           s3 = peg$parsenorlogeMinutes();
           if (s3 !== peg$FAILED) {
-            s4 = peg$parsebouchot();
+            s4 = peg$parseindice();
             if (s4 === peg$FAILED) {
               s4 = null;
             }
             if (s4 !== peg$FAILED) {
-              peg$savedPos = s0;
-              s1 = peg$c39(s1, s3, s4);
-              s0 = s1;
+              s5 = peg$parsebouchot();
+              if (s5 === peg$FAILED) {
+                s5 = null;
+              }
+              if (s5 !== peg$FAILED) {
+                peg$savedPos = s0;
+                s1 = peg$c39(s1, s3, s4, s5);
+                s0 = s1;
+              } else {
+                peg$currPos = s0;
+                s0 = peg$FAILED;
+              }
             } else {
               peg$currPos = s0;
               s0 = peg$FAILED;
@@ -1496,14 +1505,14 @@ jb3_from_legacy_norloge = /*
             }
             return h + ':' + mi  + ':' + s+ (i ? '^' + i : "") + (bouchot ? "@" + bouchot : "");
         };
-        norlogeConverter.convertShortNorloge = function(h, mi, bouchot) {
+        norlogeConverter.convertShortNorloge = function(h, mi, i, bouchot) {
             if(options.norlogeConverter) {
-                var converted = options.norlogeConverter.convertShortNorloge(h, mi, bouchot);
+                var converted = options.norlogeConverter.convertShortNorloge(h, mi, i, bouchot);
                 if(converted) {
                     return converted;
                 }
             }
-            return h + ':' + mi  + ':' + (bouchot ? "@" + bouchot : "");
+            return h + ':' + mi  + (bouchot ? "@" + bouchot : "");
         };
         norlogeConverter.convertIdNorloge = function(id, bouchot) {
             if(options.norlogeConverter) {

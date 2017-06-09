@@ -119,7 +119,6 @@ public class FromLegacyPEGNorlogeConverter {
             norlogeTime.setZone(LegacyUtils.legacyTimeZone);
             norlogeTime.setRounding(norlogeTime.getChronology().secondOfMinute());
             norlogeTime.setDate(postTime);
-            norlogeTime.setSecondOfMinute(0);
             norlogeTime.setTime(h, mi, 0, 0);
             Norloge norloge = new Norloge().withTime(norlogeTime.toDateTime()).withHasYear(false).withHasMonth(false).withHasDay(false).withHasSeconds(false).withBouchot(bouchot);
             for (int day = 0; day <= MAX_DAY_BEFORE; ++day) {

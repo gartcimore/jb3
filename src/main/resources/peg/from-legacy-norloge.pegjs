@@ -27,14 +27,14 @@
         }
         return h + ':' + mi  + ':' + s+ (i ? '^' + i : "") + (bouchot ? "@" + bouchot : "");
     };
-    norlogeConverter.convertShortNorloge = function(h, mi, bouchot) {
+    norlogeConverter.convertShortNorloge = function(h, mi, i, bouchot) {
         if(options.norlogeConverter) {
-            var converted = options.norlogeConverter.convertShortNorloge(h, mi, bouchot);
+            var converted = options.norlogeConverter.convertShortNorloge(h, mi, i, bouchot);
             if(converted) {
                 return converted;
             }
         }
-        return h + ':' + mi  + ':' + (bouchot ? "@" + bouchot : "");
+        return h + ':' + mi  + (bouchot ? "@" + bouchot : "");
     };
     norlogeConverter.convertIdNorloge = function(id, bouchot) {
         if(options.norlogeConverter) {
@@ -99,9 +99,9 @@ normalNorloge
  }
  
 shortNorloge
- = h:norlogeHours ":" mi:norlogeMinutes b:bouchot?
+ = h:norlogeHours ":" mi:norlogeMinutes i:indice? b:bouchot?
  {
- return norlogeConverter.convertShortNorloge(h, mi, b);
+ return norlogeConverter.convertShortNorloge(h, mi, i, b);
  }
 
 norlogeHours
