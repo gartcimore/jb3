@@ -7,10 +7,11 @@ import im.bci.jb3.bouchot.logic.UserPostHandler;
 import im.bci.jb3.event.NewPostsEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.LogFactory;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 /**
  *
@@ -53,8 +54,12 @@ public class LegacyNotifier {
 
     private void notify(Subscription subscription, LegacyPost post) {
         try {
-            RestTemplate r = new RestTemplate();
-            String reply = r.postForObject(subscription.getCallback(), post, String.class);
+            String reply = Jsoup.connect(subscription.getCallback())
+                    .data("id", "" + post.getId())
+                    .data("time", post.getTime())
+                    .data("info", post.getInfo())
+                    .data("message", post.getMessage())
+                    .method(Connection.Method.POST).execute().body();
             if (StringUtils.isNotBlank(reply) && StringUtils.isNotBlank(subscription.getBot())) {
                 tribune.post(subscription.getBot(), reply, subscription.getRoom(), null, null);
             }
