@@ -92,8 +92,8 @@ public class WebDirectCoinHandler extends TextWebSocketHandler {
 		return;
 	}
 
-	private void post(WebSocketSession session, PostC2S rq) {
-		UriComponentsBuilder uriBuilder = (UriComponentsBuilder) session.getAttributes()
+	private void post(WebSocketSession moule, PostC2S rq) {
+		UriComponentsBuilder uriBuilder = (UriComponentsBuilder) moule.getAttributes()
 				.get(WebDirectCoinSessionAttributes.URI_BUILDER);
 		tribune.post(rq.getNickname(), rq.getMessage(), rq.getRoom(), rq.getAuth(), uriBuilder);
 	}

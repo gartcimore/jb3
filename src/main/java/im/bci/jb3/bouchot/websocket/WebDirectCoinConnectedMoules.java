@@ -52,7 +52,9 @@ public class WebDirectCoinConnectedMoules {
             for (WebSocketSession moule : moules) {
                 try {
                     if (null != moule && moule.isOpen()) {
-                        moule.sendMessage(message);
+                        synchronized (moule) {
+                            moule.sendMessage(message);
+                        }
                     }
                 } catch (Exception ex) {
                     LogFactory.getLog(this.getClass()).error("send to moules error", ex);
@@ -86,13 +88,17 @@ public class WebDirectCoinConnectedMoules {
         MessageS2C message = new MessageS2C();
         message.setPosts(posts);
         String payload = objectMapper.writeValueAsString(message);
-        moule.sendMessage(new TextMessage(payload));
+        synchronized (moule) {
+            moule.sendMessage(new TextMessage(payload));
+        }
     }
 
     public void ackMoulePresence(WebSocketSession moule, Presence presence) throws IOException {
         moule.getAttributes().put("moule-presence", presence);
         notifyPresence(moule, presence);
-        moule.sendMessage(ackMessage);
+        synchronized (moule) {
+            moule.sendMessage(ackMessage);
+        }
     }
 
     private void notifyPresence(WebSocketSession moule, Presence presence) throws JsonProcessingException {
@@ -107,7 +113,9 @@ public class WebDirectCoinConnectedMoules {
             try {
                 if (null != m && m.isOpen()) {
                     if (!m.getId().equals(moule.getId())) {
-                        m.sendMessage(message);
+                        synchronized (moule) {
+                            m.sendMessage(message);
+                        }
                     }
                 } else {
                     disconnectedMoules.add(m);
@@ -126,6 +134,8 @@ public class WebDirectCoinConnectedMoules {
         norloge.setTime(post.getTime());
         message.setNorloge(norloge);
         String payload = objectMapper.writeValueAsString(message);
-        moule.sendMessage(new TextMessage(payload));
+        synchronized (moule) {
+            moule.sendMessage(new TextMessage(payload));
+        }
     }
 }
