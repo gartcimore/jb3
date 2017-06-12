@@ -17,10 +17,12 @@ import im.bci.jb3.event.NewPostsEvent;
 import java.io.IOException;
 
 import javax.annotation.PostConstruct;
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -33,6 +35,8 @@ public class WebDirectCoinConnectedMoules {
 
     private TextMessage ackMessage;
 
+    private final Log LOGGER = LogFactory.getLog(this.getClass());
+
     @PostConstruct
     public void setup() throws JsonProcessingException {
         MessageS2C message = new MessageS2C();
@@ -42,8 +46,8 @@ public class WebDirectCoinConnectedMoules {
 
     private final CopyOnWriteArrayList<WebSocketSession> moules = new CopyOnWriteArrayList<>();
 
-    @EventListener
-    public void notify(NewPostsEvent event) {
+    @Async("mouleExecutor")
+    public void dispatch(NewPostsEvent event) {
         try {
             MessageS2C messageS2C = new MessageS2C();
             messageS2C.setPosts(event.getPosts());
@@ -52,20 +56,18 @@ public class WebDirectCoinConnectedMoules {
             for (WebSocketSession moule : moules) {
                 try {
                     if (null != moule && moule.isOpen()) {
-                        synchronized (moule) {
-                            moule.sendMessage(message);
-                        }
+                        moule.sendMessage(message);
                     }
                 } catch (Exception ex) {
-                    LogFactory.getLog(this.getClass()).error("send to moules error", ex);
+                    LOGGER.error("send to moules error", ex);
                 }
             }
         } catch (Exception ex) {
-            LogFactory.getLog(this.getClass()).error("send to moules error", ex);
+            LOGGER.error("send to moules error", ex);
         }
     }
 
-    String printableMouleId(WebSocketSession moule) {
+    private String printableMouleId(WebSocketSession moule) {
         StringBuilder sb = new StringBuilder().append('#').append(moule.getId());
         Presence presence = (Presence) moule.getAttributes().get("moule-presence");
         if (null != presence) {
@@ -74,31 +76,33 @@ public class WebDirectCoinConnectedMoules {
         return sb.toString();
     }
 
-    void add(WebSocketSession session) {
-        moules.add(session);
+    @Async("mouleExecutor")
+    public void add(WebSocketSession moule) {
+        moules.add(moule);
+        LOGGER.info("moule " + printableMouleId(moule) + " connected");
     }
 
-    void remove(WebSocketSession moule) throws JsonProcessingException {
+    @Async("mouleExecutor")
+    public void remove(WebSocketSession moule) throws JsonProcessingException {
         Presence presence = new Presence();
         notifyPresence(moule, presence);
         moules.remove(moule);
+        LOGGER.info("moule " + printableMouleId(moule) + " disconnected");
     }
 
-    void sendPostsToMoule(WebSocketSession moule, List<Post> posts) throws JsonProcessingException, IOException {
+    @Async("mouleExecutor")
+    public void sendPostsToMoule(WebSocketSession moule, List<Post> posts) throws JsonProcessingException, IOException {
         MessageS2C message = new MessageS2C();
         message.setPosts(posts);
         String payload = objectMapper.writeValueAsString(message);
-        synchronized (moule) {
-            moule.sendMessage(new TextMessage(payload));
-        }
+        moule.sendMessage(new TextMessage(payload));
     }
 
+    @Async("mouleExecutor")
     public void ackMoulePresence(WebSocketSession moule, Presence presence) throws IOException {
         moule.getAttributes().put("moule-presence", presence);
         notifyPresence(moule, presence);
-        synchronized (moule) {
-            moule.sendMessage(ackMessage);
-        }
+        moule.sendMessage(ackMessage);
     }
 
     private void notifyPresence(WebSocketSession moule, Presence presence) throws JsonProcessingException {
@@ -113,20 +117,19 @@ public class WebDirectCoinConnectedMoules {
             try {
                 if (null != m && m.isOpen()) {
                     if (!m.getId().equals(moule.getId())) {
-                        synchronized (moule) {
-                            m.sendMessage(message);
-                        }
+                        m.sendMessage(message);
                     }
                 } else {
                     disconnectedMoules.add(m);
                 }
             } catch (Exception ex) {
-                LogFactory.getLog(this.getClass()).error("notify presence error", ex);
+                LOGGER.error("notify presence error", ex);
             }
         }
         moules.removeAll(disconnectedMoules);
     }
 
+    @Async("mouleExecutor")
     public void sendNorloge(WebSocketSession moule, Post post) throws IOException {
         MessageS2C message = new MessageS2C();
         NorlogeS2C norloge = new NorlogeS2C();
@@ -134,8 +137,6 @@ public class WebDirectCoinConnectedMoules {
         norloge.setTime(post.getTime());
         message.setNorloge(norloge);
         String payload = objectMapper.writeValueAsString(message);
-        synchronized (moule) {
-            moule.sendMessage(new TextMessage(payload));
-        }
+        moule.sendMessage(new TextMessage(payload));
     }
 }

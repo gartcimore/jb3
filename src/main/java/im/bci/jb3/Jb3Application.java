@@ -30,17 +30,10 @@ public class Jb3Application implements CommandLineRunner {
         System.out.println("jb3 or not to be!");
     }
 
-    @Bean(name = "botExecutor")
+    @Bean(name = "mouleExecutor")
     public Executor botExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setMaxPoolSize(1);
-        return executor;
-    }
-
-    @Bean(name = "taskExecutor")
-    public Executor getAsyncExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setMaxPoolSize(4);
         return executor;
     }
 

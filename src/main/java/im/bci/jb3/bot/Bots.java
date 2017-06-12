@@ -13,7 +13,7 @@ public class Bots {
     @Autowired
     private Bot[] bots;
 
-    @Async("botExecutor")
+    @Async("mouleExecutor")
     public void handle(Post post, UriComponentsBuilder uriBuilder) {
         for (Bot bot : bots) {
             bot.handle(post, (UriComponentsBuilder)uriBuilder.clone());
