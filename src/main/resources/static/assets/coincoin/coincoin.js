@@ -91,15 +91,13 @@ jb3 = {
         $('#jb3-posts').on('click', '.jb3-post-time', function (e) {
             var postId = $(e.target).parent().attr('id');
             if (postId) {
-                self.controlsMessage.val(self.controlsMessage.val() + '#' + postId + ' ');
-                self.controlsMessage.focus();
+                self.insertTextWithSpacesAroundInMessageControl('#' + postId);
             }
         });
         $('#jb3-posts').on('click', '.jb3-post-nickname', function (e) {
             var nickname = $(e.target).text();
             if (nickname) {
-                self.controlsMessage.val(self.controlsMessage.val() + nickname + '< ');
-                self.controlsMessage.focus();
+                self.insertTextWithSpacesAroundInMessageControl(nickname + '<');
             }
         });
         $('#jb3-posts').on({
@@ -379,6 +377,19 @@ jb3 = {
         control.value = control.value.substring(0, control.selectionStart) + text + control.value.substr(control.selectionEnd);
         control.focus();
         control.setSelectionRange(selectionEnd, selectionEnd);
+    },
+    insertTextWithSpacesAroundInMessageControl: function (text) {
+        var control = document.getElementById("jb3-controls-message");
+        var textBefore = control.value.substring(0, control.selectionStart);
+        if(/.*\S$/.test(textBefore)) {
+            textBefore = textBefore.concat(" ");
+        }
+        var textAfter = control.value.substr(control.selectionStart);
+        var firstPart = textBefore.concat(text).concat(' ');
+        var caretPos = firstPart.length;
+        control.value = firstPart.concat(textAfter);
+        control.focus();
+        control.setSelectionRange(caretPos, caretPos);
     },
     updateCite: function(norloge) {
     	var self = this;
