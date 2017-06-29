@@ -44,7 +44,7 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public List<Post> findPostsReverse(DateTime start, DateTime end, String room) {
         Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate()).and("room").is(roomOrDefault(room));
-        Query query = new Query().addCriteria(criteria).with(new PageRequest(0, roomHistorySize, Sort.Direction.ASC, "time", "gatewayPostId.postId" ));
+        Query query = new Query().addCriteria(criteria).with(new PageRequest(0, roomHistorySize, Sort.Direction.ASC, "time", "gatewayPostId.postId"));
         List<Post> result = mongoTemplate.find(query, Post.class, COLLECTION_NAME);
         return result;
     }
@@ -65,6 +65,12 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public Post findOne(String id) {
         return mongoTemplate.findById(id, Post.class, COLLECTION_NAME);
+    }
+
+    @Override
+    public boolean existsById(String id) {
+        Query query = new Query().addCriteria(Criteria.where("id").is(id));
+        return mongoTemplate.exists(query, COLLECTION_NAME);
     }
 
     private static final String COLLECTION_NAME = "post";

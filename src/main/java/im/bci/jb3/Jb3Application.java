@@ -1,6 +1,7 @@
 package im.bci.jb3;
 
 import java.util.concurrent.Executor;
+import okhttp3.OkHttpClient;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -35,6 +36,11 @@ public class Jb3Application implements CommandLineRunner {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setMaxPoolSize(1);
         return executor;
+    }
+
+    @Bean
+    public OkHttpClient okHttpClient() {
+        return new OkHttpClient();
     }
 
     @Component

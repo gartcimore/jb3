@@ -8,9 +8,9 @@ import im.bci.jb3.coincoin.PostSearchRQ;
 public interface PostRepository {
 
     List<Post> findPosts(DateTime start, DateTime end, String room);
-    
+
     List<Post> findPostsReverse(DateTime start, DateTime end, String room);
-    
+
     long countPosts(DateTime start, DateTime end, String room);
 
     Post findOne(String room, DateTime start, DateTime end, int indice);
@@ -18,6 +18,8 @@ public interface PostRepository {
     void save(Post post);
 
     Post findOne(String id);
+
+    boolean existsById(String gpid);
 
     Post findOneByGatewayId(GatewayPostId gpid);
 
