@@ -35,7 +35,6 @@
 
 .jb3-revise-button {
 	margin-left: 4px;
-	cursor: pointer;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
@@ -48,6 +47,7 @@
 
 .jb3-post-is-mine:hover .jb3-revise-button {
 	color: initial;
+        cursor: pointer;
 }
 
 .jb3-post:nth-of-type(odd) {

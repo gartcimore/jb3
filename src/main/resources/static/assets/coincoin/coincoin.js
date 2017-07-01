@@ -114,7 +114,7 @@ jb3 = {
                 var post = button.parents('.jb3-post');
                 self.insertTextInMessageControl('/revise #' + post.attr('id') + ' ');
             }
-        }, ".jb3-revise-button");
+        }, ".jb3-post-is-mine .jb3-revise-button");
         $('#jb3-posts').on({
             click: function (event) {
                 var spoiler = $(event.target);
