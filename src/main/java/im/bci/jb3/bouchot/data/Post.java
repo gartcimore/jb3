@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 import im.bci.jb3.bouchot.logic.CleanUtils;
 
@@ -55,6 +56,7 @@ public class Post {
         return nickname;
     }
 
+    @JsonSetter("nickname")
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
@@ -68,6 +70,7 @@ public class Post {
         return message;
     }
 
+    @JsonSetter("message")
     public void setMessage(String message) {
         this.message = message;
     }
@@ -81,6 +84,7 @@ public class Post {
         return room;
     }
 
+    @JsonSetter("room")
     public void setRoom(String room) {
         this.room = room;
     }

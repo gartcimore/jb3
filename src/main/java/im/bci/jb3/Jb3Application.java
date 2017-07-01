@@ -3,23 +3,18 @@ package im.bci.jb3;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import okhttp3.OkHttpClient;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.SimpleThreadScope;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
-import org.springframework.stereotype.Component;
 
 @Configuration
 @EnableAutoConfiguration

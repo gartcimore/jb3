@@ -7,19 +7,19 @@ import org.springframework.stereotype.Component;
  *
  * @author devnewton <devnewton@bci.im>
  */
-@ConditionalOnExpression("'${jb3.room.default:}' != 'gabuzomeu'")
+@ConditionalOnExpression("'${jb3.room.default:}' != 'devnewton'")
 @Component
-public class GabuzomeuGateway extends AbstractWebdirectcoinGateway {
+public class DevnewtonGateway extends AbstractWebdirectcoinGateway {
     
     private static Jb3BouchotConfig createConf() {
         Jb3BouchotConfig config = new Jb3BouchotConfig();
-        config.setLocalRoom("gabuzomeu");
-        config.setRemoteRoom("gabuzomeu");
-        config.setWebdirectcoinURL("https://jb3.plop.cc/webdirectcoin");
+        config.setLocalRoom("devnewton");
+        config.setRemoteRoom("devnewton");
+        config.setWebdirectcoinURL("https://b3.bci.im/webdirectcoin");
         return config;
     }
 
-    public GabuzomeuGateway() {
+    public DevnewtonGateway() {
         super(createConf());
     }
 

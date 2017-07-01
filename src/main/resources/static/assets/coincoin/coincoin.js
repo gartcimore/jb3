@@ -13,7 +13,7 @@ jb3 = {
         self.controlsNickname = $('#jb3-controls-nickname');
         self.rooms = {};
         self.rooms[self.controlsRoom.val()] = {};
-        self.controlsRoom.append(
+        self.controlsRoom.empty().append(
                 $.map(jb3_common.getRooms(), function (v, k) {
                     self.rooms[v.rname] = {};
                     return new Option(v.rname, v.rname);

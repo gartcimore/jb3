@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 import im.bci.jb3.bouchot.logic.CleanUtils;
 
@@ -27,6 +28,7 @@ public class PostRevision {
 		return message;
 	}
 
+	@JsonSetter("message")
 	public void setMessage(String message) {
 		this.message = message;
 	}

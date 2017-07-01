@@ -72,6 +72,7 @@ public abstract class AbstractWebdirectcoinGateway extends WebSocketListener imp
             get.setRoom(this.getRoom());
             message.setGet(get);
             ws.send(objectMapper.writeValueAsString(message));
+            LOGGER.info("Connected to " + getRoom());
         } catch (JsonProcessingException ex) {
             LOGGER.error(ex);
         }
@@ -101,7 +102,7 @@ public abstract class AbstractWebdirectcoinGateway extends WebSocketListener imp
                 MessageC2S message = new MessageC2S();
                 PostC2S post = new PostC2S();
                 post.setAuth(auth);
-                post.setMessage(messageBody); //TODO convert norloges
+                post.setMessage(messageBody);
                 post.setNickname(nickname);
                 post.setRoom(config.getRemoteRoom());
                 message.setPost(post);
@@ -136,12 +137,14 @@ public abstract class AbstractWebdirectcoinGateway extends WebSocketListener imp
 
     @Override
     public void onClosed(WebSocket webSocket, int code, String reason) {
+        LOGGER.info("Disconnected from " + getRoom() + ": " + code + " " + reason);
         nbConnexionFailOrClose = Math.min(30, nbConnexionFailOrClose + 1);
         this.connect();
     }
 
     @Override
     public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+        LOGGER.error("Connection failure from " + getRoom(), t);
         nbConnexionFailOrClose = Math.min(30, nbConnexionFailOrClose + 1);
         this.connect();
     }
