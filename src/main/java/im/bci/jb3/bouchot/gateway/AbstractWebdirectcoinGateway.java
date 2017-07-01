@@ -117,17 +117,17 @@ public abstract class AbstractWebdirectcoinGateway extends WebSocketListener imp
         ArrayList<Post> newPosts = new ArrayList<>();
         for (Post post : posts) {
             post.setId(CleanUtils.truncateId(post.getId()));
-            if (StringUtils.equals(config.getRemoteRoom(), post.getRoom()) && !postPepository.existsById(post.getId())) {
-                post.setRoom(config.getLocalRoom());
-                post.setNickname(CleanUtils.truncateNickname(post.getNickname()));
-                post.setMessage(CleanUtils.truncateMessage(post.getMessage()));
-                if (null != post.getRevisions()) {
-                    for (PostRevision revision : post.getRevisions()) {
-                        revision.setMessage(CleanUtils.truncateMessage(revision.getMessage()));
+            if (StringUtils.equals(config.getRemoteRoom(), post.getRoom())) {
+                    post.setRoom(config.getLocalRoom());
+                    post.setNickname(CleanUtils.truncateNickname(post.getNickname()));
+                    post.setMessage(CleanUtils.truncateMessage(post.getMessage()));
+                    if (null != post.getRevisions()) {
+                        for (PostRevision revision : post.getRevisions()) {
+                            revision.setMessage(CleanUtils.truncateMessage(revision.getMessage()));
+                        }
                     }
-                }
-                postPepository.save(post);
-                newPosts.add(post);
+                    postPepository.save(post);
+                    newPosts.add(post);
             }
         }
         if (!newPosts.isEmpty()) {
