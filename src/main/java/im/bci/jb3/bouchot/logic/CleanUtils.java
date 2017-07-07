@@ -45,6 +45,8 @@ public class CleanUtils {
 
     public static String cleanMessage(String message) {
         Document doc = Jsoup.parseBodyFragment(message);
+        doc.body().children().select("span[style='text-decoration: line-through']").tagName("s");
+        doc.body().children().select("span[style='text-decoration: underline']").tagName("u");
         for (Element element : doc.body().children().select(":not(a,b,i,s,u,tt,code,spoiler)")) {
             element.replaceWith(TextNode.createFromEncoded(element.toString(), null));
         }
