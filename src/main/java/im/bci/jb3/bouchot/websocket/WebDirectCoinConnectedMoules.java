@@ -45,7 +45,7 @@ public class WebDirectCoinConnectedMoules {
 
     private final CopyOnWriteArrayList<WebSocketSession> moules = new CopyOnWriteArrayList<>();
 
-    @Async("mouleExecutor")
+    @Async("webdirectcoinExecutor")
     public void dispatch(NewPostsEvent event) {
         try {
             MessageS2C messageS2C = new MessageS2C();
@@ -78,13 +78,13 @@ public class WebDirectCoinConnectedMoules {
         return sb.toString();
     }
 
-    @Async("mouleExecutor")
+    @Async("webdirectcoinExecutor")
     public void add(WebSocketSession moule) {
         moules.add(moule);
         LOGGER.info("moule " + printableMouleId(moule) + " connected");
     }
 
-    @Async("mouleExecutor")
+    @Async("webdirectcoinExecutor")
     public void remove(WebSocketSession moule) throws JsonProcessingException {
         Presence presence = new Presence();
         notifyPresence(moule, presence);
@@ -92,7 +92,7 @@ public class WebDirectCoinConnectedMoules {
         LOGGER.info("moule " + printableMouleId(moule) + " disconnected");
     }
 
-    @Async("mouleExecutor")
+    @Async("webdirectcoinExecutor")
     public void sendPostsToMoule(WebSocketSession moule, List<Post> posts) throws JsonProcessingException, IOException {
         MessageS2C message = new MessageS2C();
         message.setPosts(posts);
@@ -100,7 +100,7 @@ public class WebDirectCoinConnectedMoules {
         moule.sendMessage(new TextMessage(payload));
     }
 
-    @Async("mouleExecutor")
+    @Async("webdirectcoinExecutor")
     public void ackMoulePresence(WebSocketSession moule, Presence presence) throws IOException {
         moule.getAttributes().put("moule-presence", presence);
         notifyPresence(moule, presence);
@@ -131,7 +131,7 @@ public class WebDirectCoinConnectedMoules {
         moules.removeAll(disconnectedMoules);
     }
 
-    @Async("mouleExecutor")
+    @Async("webdirectcoinExecutor")
     public void sendNorloge(WebSocketSession moule, Post post) throws IOException {
         MessageS2C message = new MessageS2C();
         NorlogeS2C norloge = new NorlogeS2C();

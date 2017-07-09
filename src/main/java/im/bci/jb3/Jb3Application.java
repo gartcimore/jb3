@@ -28,6 +28,11 @@ public class Jb3Application implements CommandLineRunner {
     public void run(String... args) throws Exception {
         System.out.println("jb3 or not to be!");
     }
+    
+    @Bean(name = "webdirectcoinExecutor")
+    public ScheduledExecutorService webdirectcoinExecutor() {
+        return Executors.newSingleThreadScheduledExecutor();
+    }
 
     @Bean(name = "mouleExecutor")
     public ScheduledExecutorService mouleExecutor() {
