@@ -11,25 +11,23 @@ jb3 = {
         self.controlsNickname = $('#jb3-controls-nickname');
         self.rooms = {};
         self.rooms[self.controlsRoom.val()] = {};
-        self.controlsRoom.empty().append(
-                $.map(jb3_common.getRooms(), function (v, k) {
-                    self.rooms[v.rname] = {};
-                    return new Option(v.rname, v.rname);
-                })
-                );
+        jb3_common.getRooms().forEach(function(room){
+        	self.rooms[room.rname] = {};
+        });
         var uri = URI(window.location);
         var roomInURI = uri.search(true).room;
         if(roomInURI) {
-            if(self.controlsRoom.find("option[value='" + roomInURI + "']").length === 0 ) {
-                self.controlsRoom.append(new Option(roomInURI, roomInURI));
                 self.rooms[roomInURI] = {};
-            }
         }
+        self.controlsRoom.empty().append(
+        		Object.keys(self.rooms).sort().map(function(room) {
+        			return new Option(room, room);
+        		})
+        );
         var roomInDomain = uri.domain().slice(0, -uri.tld().length - 1);
-        roomInDomain = self.controlsRoom.find("option[value='" + roomInDomain + "']").length && roomInDomain;
+        roomInDomain = self.rooms[roomInDomain] && roomInDomain;
         self.controlsRoom.attr("size", self.controlsRoom.find('option').length);
         self.controlsRoom.val(roomInURI || roomInDomain || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
-        
         var postsContainer = document.getElementById('jb3-posts-container');
         for(var room in self.rooms) {
         	var postsDivForRoom = document.createElement("div");
@@ -41,6 +39,7 @@ jb3 = {
         	postsContainer.appendChild(postsDivForRoom);
         	self.rooms[room].postsDiv = postsDivForRoom;
         }
+
         $('#jb3-visio-link').attr('href', "/visio?room=" + self.controlsRoom.val());
         if (roomInURI === self.controlsRoom.val()) {
             $('#jb3-roster').hide();
