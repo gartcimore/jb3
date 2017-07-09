@@ -1,7 +1,6 @@
 package im.bci.jb3.coincoin;
 
 import org.joda.time.DateTime;
-import org.joda.time.Interval;
 import org.joda.time.format.ISODateTimeFormat;
 
 /**
@@ -10,66 +9,84 @@ import org.joda.time.format.ISODateTimeFormat;
  */
 public class PostSearchRQ {
 
-    private String date = ISODateTimeFormat.date().print(DateTime.now());
-    private String nicknameFilter;
-    private String messageFilter;
-    private String roomFilter;
-    private int page = 0;
-    private int pageSize = 3600 * 24;//TODO antiflood system to limit number of post per day/hour/min
+	private String since;
+	private String until;
+	private String nicknameFilter;
+	private String messageFilter;
+	private String roomFilter;
+	private int page = 0;
+	private int pageSize = 3600 * 24;// TODO antiflood system to limit number of
+										// post per day/hour/min
 
-    public String getDate() {
-        return date;
-    }
+	public String getSince() {
+		return since;
+	}
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-    
-    public Interval getDateInterval() {
-    	try {
-    		return ISODateTimeFormat.date().parseDateTime(date).toLocalDate().toInterval();
-    	} catch(Exception e) {
-    		return null;
-    	}
-    }
+	public void setSince(String since) {
+		this.since = since;
+	}
 
-    public int getPageSize() {
-        return pageSize;
-    }
+	public String getUntil() {
+		return until;
+	}
 
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
+	public void setUntil(String until) {
+		this.until = until;
+	}
 
-    public String getNicknameFilter() {
-        return nicknameFilter;
-    }
+	public DateTime getSinceDate() {
+		try {
+			return ISODateTimeFormat.date().parseDateTime(since).withTimeAtStartOfDay();
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
-    public void setNicknameFilter(String nicknameFilter) {
-        this.nicknameFilter = nicknameFilter;
-    }
+	public DateTime getUntilDate() {
+		try {
+			return ISODateTimeFormat.date().parseDateTime(until).millisOfDay().withMaximumValue();
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
-    public String getMessageFilter() {
-        return messageFilter;
-    }
+	public int getPageSize() {
+		return pageSize;
+	}
 
-    public void setMessageFilter(String messageFilter) {
-        this.messageFilter = messageFilter;
-    }
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
 
-    public String getRoomFilter() {
-        return roomFilter;
-    }
+	public String getNicknameFilter() {
+		return nicknameFilter;
+	}
 
-    public void setRoomFilter(String roomFilter) {
-        this.roomFilter = roomFilter;
-    }
+	public void setNicknameFilter(String nicknameFilter) {
+		this.nicknameFilter = nicknameFilter;
+	}
 
-    public int getPage() {
-        return page;
-    }
+	public String getMessageFilter() {
+		return messageFilter;
+	}
 
-    public void setPage(int page) {
-        this.page = page;
-    }
+	public void setMessageFilter(String messageFilter) {
+		this.messageFilter = messageFilter;
+	}
+
+	public String getRoomFilter() {
+		return roomFilter;
+	}
+
+	public void setRoomFilter(String roomFilter) {
+		this.roomFilter = roomFilter;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
 }
