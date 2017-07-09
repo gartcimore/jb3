@@ -2,6 +2,8 @@ package im.bci.jb3;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
@@ -46,7 +48,7 @@ public class Jb3Application implements CommandLineRunner {
 
     @Bean
     public OkHttpClient okHttpClient() {
-        return new OkHttpClient();
+        return new OkHttpClient.Builder().pingInterval(10, TimeUnit.SECONDS).build();
 
     }
 
