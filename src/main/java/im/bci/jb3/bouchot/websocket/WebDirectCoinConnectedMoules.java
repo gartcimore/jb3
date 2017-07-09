@@ -21,7 +21,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
@@ -56,6 +55,9 @@ public class WebDirectCoinConnectedMoules {
             for (WebSocketSession moule : moules) {
                 try {
                     if (null != moule && moule.isOpen()) {
+                    	if(!event.getPosts().isEmpty()) {
+                    		LogFactory.getLog(this.getClass()).info("post request dispatch to "+ printableMouleId(moule) +": " + event.getPosts().get(0).getMessage());
+                    	}
                         moule.sendMessage(message);
                     }
                 } catch (Exception ex) {

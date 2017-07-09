@@ -3,6 +3,7 @@ package im.bci.jb3.bouchot.websocket;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Period;
@@ -58,6 +59,9 @@ public class WebDirectCoinHandler extends TextWebSocketHandler {
     
     @EventListener
     public void notify(NewPostsEvent event) {
+    	if(!event.getPosts().isEmpty()) {
+    		LogFactory.getLog(this.getClass()).info("post request notify: " + event.getPosts().get(0).getMessage());
+    	}
         moules.dispatch(event);
     }
     
@@ -98,9 +102,11 @@ public class WebDirectCoinHandler extends TextWebSocketHandler {
     }
     
     private void post(WebSocketSession moule, PostC2S rq) {
+    	LogFactory.getLog(this.getClass()).info("receive post request: " + rq.getMessage());
         UriComponentsBuilder uriBuilder = (UriComponentsBuilder) moule.getAttributes()
                 .get(WebDirectCoinSessionAttributes.URI_BUILDER);
         tribune.post(rq.getNickname(), rq.getMessage(), rq.getRoom(), rq.getAuth(), uriBuilder);
+        LogFactory.getLog(this.getClass()).info("post request stored: " + rq.getMessage());
     }
     
     @Value("${jb3.posts.get.period}")
