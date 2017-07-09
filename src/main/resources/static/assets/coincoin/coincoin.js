@@ -6,8 +6,6 @@ jb3 = {
         });
         self.messageTemplate = Handlebars.compile($("#message-template").html());
         self.newMessages = [];
-        self.messagesContainer = document.getElementById('jb3-posts');
-        self.hiddenMessagesContainer = document.getElementById('jb3-hidden-posts');
         self.controlsMessage = $('#jb3-controls-message');
         self.controlsRoom = $('#jb3-controls-room');
         self.controlsNickname = $('#jb3-controls-nickname');
@@ -31,6 +29,18 @@ jb3 = {
         roomInDomain = self.controlsRoom.find("option[value='" + roomInDomain + "']").length && roomInDomain;
         self.controlsRoom.attr("size", self.controlsRoom.find('option').length);
         self.controlsRoom.val(roomInURI || roomInDomain || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
+        
+        var postsContainer = document.getElementById('jb3-posts-container');
+        for(var room in self.rooms) {
+        	var postsDivForRoom = document.createElement("div");
+        	postsDivForRoom.dataset.room = room;
+        	postsDivForRoom.className += "jb3-posts";
+        	if(room != self.controlsRoom.val()) {
+        		postsDivForRoom.setAttribute( 'style', 'display:none' )
+        	}
+        	postsContainer.appendChild(postsDivForRoom);
+        	self.rooms[room].postsDiv = postsDivForRoom;
+        }
         $('#jb3-visio-link').attr('href', "/visio?room=" + self.controlsRoom.val());
         if (roomInURI === self.controlsRoom.val()) {
             $('#jb3-roster').hide();
@@ -38,11 +48,9 @@ jb3 = {
             $("#jb3-layout").css('top', '0px');
         }
         self.controlsRoom.change(function () {
-            var selectedRoom = localStorage.selectedRoom = self.previouslySelectedRoom = self.controlsRoom.val();
-            var selectedRoomPosts = $('.jb3-post[data-room="' + selectedRoom + '"]').detach();
-            var unselectedRoomPosts = $('.jb3-post[data-room!="' + selectedRoom + '"]').detach();
-            unselectedRoomPosts.appendTo(self.hiddenMessagesContainer);
-            selectedRoomPosts.appendTo(self.messagesContainer);
+            var selectedRoom = localStorage.selectedRoom = self.controlsRoom.val();
+            $('.jb3-posts[data-room!="' + selectedRoom + '"]').hide();
+            $('.jb3-posts[data-room="' + selectedRoom + '"]').show();
             self.scrollPostsContainerToBottom();
             self.trollometre.update(selectedRoom);
             $('#jb3-visio-link').attr('href', "/visio?room=" + selectedRoom);
@@ -88,19 +96,19 @@ jb3 = {
         $("#jb3-controls-message-attach").click(function() {
         	self.pasteModal.trigger('show');
         });
-        $('#jb3-posts').on('click', '.jb3-post-time', function (e) {
+        $('.jb3-posts').on('click', '.jb3-post-time', function (e) {
             var postId = $(e.target).parent().attr('id');
             if (postId) {
                 self.insertTextWithSpacesAroundInMessageControl('#' + postId);
             }
         });
-        $('#jb3-posts').on('click', '.jb3-post-nickname', function (e) {
+        $('.jb3-posts').on('click', '.jb3-post-nickname', function (e) {
             var nickname = $(e.target).text();
             if (nickname) {
                 self.insertTextWithSpacesAroundInMessageControl(nickname + '<');
             }
         });
-        $('#jb3-posts').on({
+        $('.jb3-posts').on({
             click: function (event) {
                 var button = $(event.target);
                 var post = button.parents('.jb3-post');
@@ -108,14 +116,14 @@ jb3 = {
                 self.revisionsModal.trigger('show', revisions.html());
             }
         }, ".jb3-revisions-button");
-        $('#jb3-posts').on({
+        $('.jb3-posts').on({
             click: function (event) {
                 var button = $(event.target);
                 var post = button.parents('.jb3-post');
                 self.insertTextInMessageControl('/revise #' + post.attr('id') + ' ');
             }
         }, ".jb3-post-is-mine .jb3-revise-button");
-        $('#jb3-posts').on({
+        $('.jb3-posts').on({
             click: function (event) {
                 var spoiler = $(event.target);
                 spoiler.toggleClass('jb3-revealed-spoiler');
@@ -275,13 +283,13 @@ jb3 = {
         message.message = jb3_post_to_html.parse(message.message);
         message.postIsMine = message.nickname === userNickname || (message.room && message.nickname === localStorage.getItem(message.room + '-login')) ? " jb3-post-is-mine" : "";
         message.postIsBigorno = message.message.search(new RegExp("(moules|" + RegExp.escape(userNickname) + ")&lt;", "i")) >= 0 ? " jb3-post-is-bigorno" : "";
-        var container = this.controlsRoom.val() === message.room ? this.messagesContainer : this.hiddenMessagesContainer;
         var messageDiv = this.messageTemplate(message);
-        this.insertMessageDiv(container, messageDiv, message);
+        this.insertMessageDiv(messageDiv, message);
     },
-    insertMessageDiv: function (container, messageDiv, message) {
+    insertMessageDiv: function (messageDiv, message) {
         var existingDiv = document.getElementById(message.id);
         if (!existingDiv) {
+        	var container = this.rooms[message.room].postsDiv;
             var t = message.time;
             var posts = container.getElementsByClassName('jb3-post');
             for (var p = 0; p < posts.length; ++p) {
