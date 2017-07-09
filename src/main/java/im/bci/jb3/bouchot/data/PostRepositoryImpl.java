@@ -1,5 +1,6 @@
 package im.bci.jb3.bouchot.data;
 
+import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -99,32 +100,43 @@ public class PostRepositoryImpl implements PostRepository {
 	@Override
 	public List<Post> search(PostSearchRQ rq) {
 		Query query;
+		int nbCriteria = 0;
 		if (StringUtils.isNotBlank(rq.getMessageFilter())) {
 			TextCriteria criteria = TextCriteria.forDefaultLanguage().matching(rq.getMessageFilter());
 			query = TextQuery.queryText(criteria).sortByScore();
+			++nbCriteria;
 		} else {
 			query = new Query();
 		}
 		if (StringUtils.isNotBlank(rq.getNicknameFilter())) {
 			query = query.addCriteria(Criteria.where("nickname").is(rq.getNicknameFilter()));
+			++nbCriteria;
 		}
 		if (StringUtils.isNotBlank(rq.getRoomFilter())) {
 			query = query.addCriteria(Criteria.where("room").is(rq.getRoomFilter()));
+			++nbCriteria;
 		}
 		DateTime sinceDate = rq.getSinceDate();
 		DateTime untilDate = rq.getUntilDate();
 		if (null != sinceDate && null != untilDate) {
 			query.addCriteria(Criteria.where("time").gte(sinceDate.toDate()).lte(untilDate.toDate()));
+			++nbCriteria;
 		} else {
 			if (null != sinceDate) {
 				query.addCriteria(Criteria.where("time").gte(sinceDate.toDate()));
+				++nbCriteria;
 			}
 			if (null != untilDate) {
 				query.addCriteria(Criteria.where("time").lte(untilDate.toDate()));
+				++nbCriteria;
 			}
 		}
-		query.with(new PageRequest(rq.getPage(), rq.getPageSize(), Sort.Direction.ASC, "time"));
-		return mongoTemplate.find(query, Post.class, COLLECTION_NAME);
+		if (nbCriteria > 0) {
+			query.with(new PageRequest(rq.getPage(), rq.getPageSize(), Sort.Direction.ASC, "time"));
+			return mongoTemplate.find(query, Post.class, COLLECTION_NAME);
+		} else {
+			return Collections.emptyList();
+		}
 	}
 
 	private Period postsTTL;
