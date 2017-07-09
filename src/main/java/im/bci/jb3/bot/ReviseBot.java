@@ -21,7 +21,7 @@ public class ReviseBot implements Bot {
     @Autowired
     private Tribune tribune;
 
-    private static final Pattern REVISE_PATTERN = Pattern.compile("^\\/revise (#(?<id>\\w+\\s+))(?<revisedMessage>.*)$");
+    private static final Pattern REVISE_PATTERN = Pattern.compile("^\\/revise (#(?<id>\\w+)\\s+)(?<revisedMessage>.*)$");
 
     @Override
     public void handle(final Post post, UriComponentsBuilder uriBuilder) {
