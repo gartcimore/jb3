@@ -25,7 +25,7 @@ public class ArchivesController {
     @Autowired
     private PostRepository postRepository;
 
-    private static final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd").withZone(LegacyUtils.legacyTimeZone);
+    private static final DateTimeFormatter FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd").withZone(LegacyUtils.legacyTimeZone);
 
     @RequestMapping(path = "", method = RequestMethod.GET)
     public String index(Model model, PostSearchRQ rq) {
@@ -40,7 +40,8 @@ public class ArchivesController {
         Post post = postRepository.findOne(postId);
         UriComponentsBuilder uri = ServletUriComponentsBuilder.fromRequest(request).replacePath("/archives");
         if (null != post) {
-            uri.queryParam("date", formatter.print(post.getTime())).fragment(postId);
+            String date = FORMATTER.print(post.getTime());
+            uri.queryParam("roomFilter", post.getCleanedRoom()).queryParam("since", date).queryParam("until", date).fragment(postId);
         }
         return "redirect:" + uri.build().encode().toString();
     }
@@ -49,9 +50,9 @@ public class ArchivesController {
         PostSearchResultMV mv = new PostSearchResultMV();
         if (null != rq) {
             mv.setPosts(postRepository.search(rq));
+            mv.setHasPrevious(rq.getPage() > 0);
+            mv.setHasNext(mv.getPosts().size() >= rq.getPageSize());
         }
-        mv.setHasPrevious(rq.getPage() > 0);
-        mv.setHasNext(mv.getPosts().size() >= rq.getPageSize());
         return mv;
     }
 }
