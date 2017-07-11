@@ -1,22 +1,29 @@
 package im.bci.jb3.coincoin;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.joda.time.format.ISODateTimeFormat;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import im.bci.jb3.bouchot.legacy.LegacyUtils;
 
 /**
  *
  * @author devnewton <devnewton@bci.im>
  */
 public class PostSearchRQ {
+	
+	public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
+	public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd").withZone(LegacyUtils.legacyTimeZone);
+	public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormat.forPattern("HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
 
-	private String since;
-	private String until;
+	private String since, sinceTime;
+	private String until, untilTime;
 	private String nicknameFilter;
 	private String messageFilter;
 	private String roomFilter;
 	private int page = 0;
-	private int pageSize = 3600 * 24;// TODO antiflood system to limit number of
-										// post per day/hour/min
+	private int pageSize = 3600 * 2;
 
 	public String getSince() {
 		return since;
@@ -34,9 +41,29 @@ public class PostSearchRQ {
 		this.until = until;
 	}
 
+	public String getSinceTime() {
+		return sinceTime;
+	}
+
+	public void setSinceTime(String sinceTime) {
+		this.sinceTime = sinceTime;
+	}
+
+	public String getUntilTime() {
+		return untilTime;
+	}
+
+	public void setUntilTime(String untilTime) {
+		this.untilTime = untilTime;
+	}
+
 	public DateTime getSinceDate() {
 		try {
-			return ISODateTimeFormat.date().parseDateTime(since).withTimeAtStartOfDay();
+			if (StringUtils.isNotBlank(sinceTime)) {
+				return DATETIME_FORMATTER.parseDateTime(since + "T" + sinceTime);
+			} else {
+				return DATE_FORMATTER.parseDateTime(since).withTimeAtStartOfDay();
+			}
 		} catch (Exception e) {
 			return null;
 		}
@@ -44,7 +71,11 @@ public class PostSearchRQ {
 
 	public DateTime getUntilDate() {
 		try {
-			return ISODateTimeFormat.date().parseDateTime(until).millisOfDay().withMaximumValue();
+			if (StringUtils.isNotBlank(untilTime)) {
+				return DATETIME_FORMATTER.parseDateTime(until + "T" + untilTime);
+			} else {
+				return DATE_FORMATTER.parseDateTime(until).millisOfDay().withMaximumValue();
+			}
 		} catch (Exception e) {
 			return null;
 		}

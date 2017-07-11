@@ -8,12 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import im.bci.jb3.bouchot.data.PostRepository;
-import im.bci.jb3.bouchot.legacy.LegacyUtils;
 import im.bci.jb3.coincoin.PostSearchRQ;
 import im.bci.jb3.coincoin.PostSearchResultMV;
 import javax.servlet.http.HttpServletRequest;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+
+import org.joda.time.DateTime;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -22,37 +21,40 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/archives")
 public class ArchivesController {
 
-    @Autowired
-    private PostRepository postRepository;
+	@Autowired
+	private PostRepository postRepository;
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd").withZone(LegacyUtils.legacyTimeZone);
+	@RequestMapping(path = "", method = RequestMethod.GET)
+	public String index(Model model, PostSearchRQ rq) {
+		model.addAttribute("wro-group", "archives");
+		model.addAttribute("rq", rq);
+		model.addAttribute("postsMV", searchPosts(rq));
+		return "archives/archives";
+	}
 
-    @RequestMapping(path = "", method = RequestMethod.GET)
-    public String index(Model model, PostSearchRQ rq) {
-        model.addAttribute("wro-group", "archives");
-        model.addAttribute("rq", rq);
-        model.addAttribute("postsMV", searchPosts(rq));
-        return "archives/archives";
-    }
+	@RequestMapping(path = "/post/{postId}", method = RequestMethod.GET)
+	public String post(Model model, HttpServletRequest request, @PathVariable String postId) {
+		Post post = postRepository.findOne(postId);
+		UriComponentsBuilder uri = ServletUriComponentsBuilder.fromRequest(request).replacePath("/archives");
+		if (null != post) {
+			DateTime time = post.getTime();
+			DateTime since = time.minusHours(1);
+			DateTime until = time.plusHours(1);
+			uri.queryParam("roomFilter", post.getCleanedRoom()).queryParam("since", PostSearchRQ.DATE_FORMATTER.print(since))
+					.queryParam("sinceTime", PostSearchRQ.TIME_FORMATTER.print(since))
+					.queryParam("until", PostSearchRQ.DATE_FORMATTER.print(until))
+					.queryParam("untilTime", PostSearchRQ.TIME_FORMATTER.print(until)).fragment(postId);
+		}
+		return "redirect:" + uri.build().encode().toString();
+	}
 
-    @RequestMapping(path = "/post/{postId}", method = RequestMethod.GET)
-    public String post(Model model, HttpServletRequest request, @PathVariable String postId) {
-        Post post = postRepository.findOne(postId);
-        UriComponentsBuilder uri = ServletUriComponentsBuilder.fromRequest(request).replacePath("/archives");
-        if (null != post) {
-            String date = FORMATTER.print(post.getTime());
-            uri.queryParam("roomFilter", post.getCleanedRoom()).queryParam("since", date).queryParam("until", date).fragment(postId);
-        }
-        return "redirect:" + uri.build().encode().toString();
-    }
-
-    private PostSearchResultMV searchPosts(PostSearchRQ rq) {
-        PostSearchResultMV mv = new PostSearchResultMV();
-        if (null != rq) {
-            mv.setPosts(postRepository.search(rq));
-            mv.setHasPrevious(rq.getPage() > 0);
-            mv.setHasNext(mv.getPosts().size() >= rq.getPageSize());
-        }
-        return mv;
-    }
+	private PostSearchResultMV searchPosts(PostSearchRQ rq) {
+		PostSearchResultMV mv = new PostSearchResultMV();
+		if (null != rq) {
+			mv.setPosts(postRepository.search(rq));
+			mv.setHasPrevious(rq.getPage() > 0);
+			mv.setHasNext(mv.getPosts().size() >= rq.getPageSize());
+		}
+		return mv;
+	}
 }

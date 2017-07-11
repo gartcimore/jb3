@@ -13,37 +13,48 @@
 	<main class="o-container o-container--large">
 	<section class="u-letter-box--medium">
 		<form id="search-form" class="c-fieldset">
-			<input type="hidden" name="page" value="{{rq.page}}"> <input
-				type="hidden" name="pageSize" value="{{rq.pageSize}}"> <input
-				class="c-field" type="text" name="messageFilter"
-				placeholder="search terms" value="{{rq.messageFilter}}"> <label
-				class="c-label"> Since: <input
-				class="c-field c-field--label" type="date" name="since"
-				value="{{rq.since}}" placeholder="2017-01-17">
-			</label> <label class="c-label"> Until: <input
-				class="c-field c-field--label" type="date" name="until"
-				value="{{rq.until}}" placeholder="2017-01-18">
-			</label> <label class="c-label"> Room: <input
-				class="c-field c-field--label" type="text" name="roomFilter"
-				value="{{rq.roomFilter}}">
-			</label> <label class="c-label"> Nickname: <input
-				class="c-field c-field--label" type="text" name="nicknameFilter"
-				value="{{rq.nicknameFilter}}">
+			<input type="hidden" name="page" value="{{rq.page}}">
+			<input type="hidden" name="pageSize" value="{{rq.pageSize}}">
+			<input class="c-field" type="text" name="messageFilter" placeholder="search terms" value="{{rq.messageFilter}}">
+			<div class="o-form-element">
+				<label for="since-group" class="c-label ">Since:</label>
+				<div id="since-group" class="c-input-group">
+					<div class="o-field">
+						<input class="c-field c-field--label" type="date" name="since" value="{{rq.since}}" placeholder="2017-01-17">
+					</div>
+					<div class="o-field">
+						<input class="c-field c-field--label" type="time" step="1" name="sinceTime" value="{{rq.sinceTime}}" placeholder="08:00:00">
+					</div>
+				</div>
+			</div>
+			<div class="o-form-element">
+				<label for="until-group" class="c-label ">until:</label>
+				<div id="until-group" class="c-input-group">
+					<div class="o-field">
+						<input class="c-field c-field--label" type="date" name="until" value="{{rq.until}}" placeholder="2017-01-18">
+					</div>
+					<div class="o-field">
+						<input class="c-field c-field--label" type="time" step="1" name="untilTime" value="{{rq.untilTime}}" placeholder="21:00:00">
+					</div>
+				</div>
+			</div>
+			<label class="c-label">
+				Room:
+				<input class="c-field c-field--label" type="text" name="roomFilter" value="{{rq.roomFilter}}">
+			</label>
+			<label class="c-label">
+				Nickname:
+				<input class="c-field c-field--label" type="text" name="nicknameFilter" value="{{rq.nicknameFilter}}">
 			</label>
 			<div class="o-form-element">
-				<input type="submit" class="c-button c-button--warning"
-					value="Search">
+				<input type="submit" class="c-button c-button--warning" value="Search">
 			</div>
 		</form>
 		{{#if postsMV.posts }}
 		<div class="jb3-posts">
 			{{#each postsMV.posts}}
 			<div id="{{this.id}}" class="jb3-post">
-				<a class="jb3-post-time"
-					href="/archives?date={{format-date this.time}}#{{this.id}}">{{format-datetime
-					this.time}}</a> <span class="jb3-post-room">{{{this.cleanedRoom}}}</span>
-				<span class="jb3-post-nickname">{{{this.cleanedNickname}}}</span> <span
-					class="jb3-post-message">{{format-post-message this}}</span>
+				<a class="jb3-post-time" href="/archives?date={{format-date this.time}}#{{this.id}}">{{format-datetime this.time}}</a> <span class="jb3-post-room">{{{this.cleanedRoom}}}</span> <span class="jb3-post-nickname">{{{this.cleanedNickname}}}</span> <span class="jb3-post-message">{{format-post-message this}}</span>
 			</div>
 			{{/each}}
 		</div>
