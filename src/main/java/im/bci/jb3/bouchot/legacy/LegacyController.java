@@ -2,8 +2,6 @@ package im.bci.jb3.bouchot.legacy;
 
 import im.bci.jb3.bouchot.data.Post;
 import im.bci.jb3.bouchot.data.PostRepository;
-import im.bci.jb3.bouchot.data.Subscription;
-import im.bci.jb3.bouchot.data.SubscriptionRepository;
 import im.bci.jb3.bouchot.logic.UserPostHandler;
 
 import java.util.ArrayList;
@@ -18,15 +16,12 @@ import org.joda.time.Period;
 import org.joda.time.format.ISOPeriodFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -96,21 +91,6 @@ public class LegacyController {
         } else {
             return null;
         }
-    }
-
-    @Autowired
-    private SubscriptionRepository subscriptionRepository;
-
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(value = "/subscribe")
-    public Subscription subscribe(@RequestParam(value = "callback", required = false) String callback, @RequestParam(value = "room", required = false) String room, @RequestParam(value = "bot", required = false) String bot) {
-        Subscription subscription = new Subscription();
-        subscription.setCallback(callback);
-        subscription.setRoom(room);
-        subscription.setBot(bot);
-        subscriptionRepository.save(subscription);
-        return subscription;
     }
 
     private boolean get(Long lastId, String room, WebRequest webRequest, Model model, LegacyUtils.Escaper escaper) {
