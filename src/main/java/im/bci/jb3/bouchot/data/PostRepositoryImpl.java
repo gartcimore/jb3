@@ -146,24 +146,6 @@ public class PostRepositoryImpl implements PostRepository {
 		postsTTL = ISOPeriodFormat.standard().parsePeriod(ttl);
 	}
 
-	private Period roomPostsTTL;
-
-	@Value("${jb3.room.posts.ttl}")
-	public void setRoomPostsTTL(String ttl) {
-		roomPostsTTL = ISOPeriodFormat.standard().parsePeriod(ttl);
-	}
-
-	@Override
-	public void deleteOldPosts() {
-		Query roomQuery = new Query().addCriteria(
-				Criteria.where("room").ne(defaultRoom).and("time").lt(DateTime.now().minus(roomPostsTTL).toDate()));
-		mongoTemplate.remove(roomQuery, Post.class, COLLECTION_NAME);
-
-		Query query = new Query().addCriteria(
-				Criteria.where("room").is(defaultRoom).and("time").lt(DateTime.now().minus(postsTTL).toDate()));
-		mongoTemplate.remove(query, Post.class, COLLECTION_NAME);
-	}
-
 	@Override
 	public boolean existsByGatewayPostId(GatewayPostId gpid) {
 		Query query = new Query().addCriteria(Criteria.where("gatewayPostId.gateway").is(gpid.getGateway())
