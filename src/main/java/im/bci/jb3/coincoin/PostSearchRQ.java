@@ -12,112 +12,128 @@ import im.bci.jb3.bouchot.legacy.LegacyUtils;
  * @author devnewton <devnewton@bci.im>
  */
 public class PostSearchRQ {
-	
-	public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
-	public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd").withZone(LegacyUtils.legacyTimeZone);
-	public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormat.forPattern("HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
 
-	private String since, sinceTime;
-	private String until, untilTime;
-	private String nicknameFilter;
-	private String messageFilter;
-	private String roomFilter;
-	private int page = 0;
-	private int pageSize = 3600 * 2;
+    public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd").withZone(LegacyUtils.legacyTimeZone);
+    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormat.forPattern("HH:mm:ss").withZone(LegacyUtils.legacyTimeZone);
 
-	public String getSince() {
-		return since;
-	}
+    private String since, sinceTime;
+    private String until, untilTime;
+    private String nicknameFilter;
+    private String messageFilter;
+    private String roomFilter;
+    private int page = 0;
+    private int pageSize = 3600 * 2;
 
-	public void setSince(String since) {
-		this.since = since;
-	}
+    public enum Sort {
+        TIME_ASC,
+        TIME_DESC,
+        RELEVANCE
+    }
 
-	public String getUntil() {
-		return until;
-	}
+    private Sort sort;
 
-	public void setUntil(String until) {
-		this.until = until;
-	}
+    public Sort getSort() {
+        return sort;
+    }
 
-	public String getSinceTime() {
-		return sinceTime;
-	}
+    public void setSort(Sort sort) {
+        this.sort = sort;
+    }
 
-	public void setSinceTime(String sinceTime) {
-		this.sinceTime = sinceTime;
-	}
+    public String getSince() {
+        return since;
+    }
 
-	public String getUntilTime() {
-		return untilTime;
-	}
+    public void setSince(String since) {
+        this.since = since;
+    }
 
-	public void setUntilTime(String untilTime) {
-		this.untilTime = untilTime;
-	}
+    public String getUntil() {
+        return until;
+    }
 
-	public DateTime getSinceDate() {
-		try {
-			if (StringUtils.isNotBlank(sinceTime)) {
-				return DATETIME_FORMATTER.parseDateTime(since + "T" + sinceTime);
-			} else {
-				return DATE_FORMATTER.parseDateTime(since).withTimeAtStartOfDay();
-			}
-		} catch (Exception e) {
-			return null;
-		}
-	}
+    public void setUntil(String until) {
+        this.until = until;
+    }
 
-	public DateTime getUntilDate() {
-		try {
-			if (StringUtils.isNotBlank(untilTime)) {
-				return DATETIME_FORMATTER.parseDateTime(until + "T" + untilTime);
-			} else {
-				return DATE_FORMATTER.parseDateTime(until).millisOfDay().withMaximumValue();
-			}
-		} catch (Exception e) {
-			return null;
-		}
-	}
+    public String getSinceTime() {
+        return sinceTime;
+    }
 
-	public int getPageSize() {
-		return pageSize;
-	}
+    public void setSinceTime(String sinceTime) {
+        this.sinceTime = sinceTime;
+    }
 
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
-	}
+    public String getUntilTime() {
+        return untilTime;
+    }
 
-	public String getNicknameFilter() {
-		return nicknameFilter;
-	}
+    public void setUntilTime(String untilTime) {
+        this.untilTime = untilTime;
+    }
 
-	public void setNicknameFilter(String nicknameFilter) {
-		this.nicknameFilter = nicknameFilter;
-	}
+    public DateTime getSinceDate() {
+        try {
+            if (StringUtils.isNotBlank(sinceTime)) {
+                return DATETIME_FORMATTER.parseDateTime(since + "T" + sinceTime);
+            } else {
+                return DATE_FORMATTER.parseDateTime(since).withTimeAtStartOfDay();
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
-	public String getMessageFilter() {
-		return messageFilter;
-	}
+    public DateTime getUntilDate() {
+        try {
+            if (StringUtils.isNotBlank(untilTime)) {
+                return DATETIME_FORMATTER.parseDateTime(until + "T" + untilTime);
+            } else {
+                return DATE_FORMATTER.parseDateTime(until).millisOfDay().withMaximumValue();
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
-	public void setMessageFilter(String messageFilter) {
-		this.messageFilter = messageFilter;
-	}
+    public int getPageSize() {
+        return pageSize;
+    }
 
-	public String getRoomFilter() {
-		return roomFilter;
-	}
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
 
-	public void setRoomFilter(String roomFilter) {
-		this.roomFilter = roomFilter;
-	}
+    public String getNicknameFilter() {
+        return nicknameFilter;
+    }
 
-	public int getPage() {
-		return page;
-	}
+    public void setNicknameFilter(String nicknameFilter) {
+        this.nicknameFilter = nicknameFilter;
+    }
 
-	public void setPage(int page) {
-		this.page = page;
-	}
+    public String getMessageFilter() {
+        return messageFilter;
+    }
+
+    public void setMessageFilter(String messageFilter) {
+        this.messageFilter = messageFilter;
+    }
+
+    public String getRoomFilter() {
+        return roomFilter;
+    }
+
+    public void setRoomFilter(String roomFilter) {
+        this.roomFilter = roomFilter;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
 }

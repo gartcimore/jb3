@@ -46,6 +46,14 @@
 				Nickname:
 				<input class="c-field c-field--label" type="text" name="nicknameFilter" value="{{rq.nicknameFilter}}">
 			</label>
+                        <label class="c-label">
+				Sort results by:
+				<select name="sort" class="c-field" >
+                                    <option value="RELEVANCE" {{selected rq.sort "RELEVANCE"}}>Relevance</option>
+                                    <option value="TIME_DESC" {{selected rq.sort "TIME_DESC"}}>Newest first</option>
+                                    <option value="TIME_ASC" {{selected rq.sort "TIME_ASC"}}>Oldest first</option>
+                                </select>
+			</label>
 			<div class="o-form-element">
 				<input type="submit" class="c-button c-button--warning" value="Search">
 			</div>

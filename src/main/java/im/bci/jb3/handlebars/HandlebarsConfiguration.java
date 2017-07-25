@@ -21,6 +21,9 @@ public class HandlebarsConfiguration {
 	
 	@Autowired
 	private FormatDateHelper formatDateHelper;
+        
+        @Autowired
+	private SelectedHelper selectedHelper;
 
 	@Autowired
 	private FormatDateTimeHelper formatDateTimeHelper;
@@ -34,5 +37,6 @@ public class HandlebarsConfiguration {
 		handlebarsViewResolver.registerHelper("format-date", formatDateHelper);
 		handlebarsViewResolver.registerHelper("format-datetime", formatDateTimeHelper);
 		handlebarsViewResolver.registerHelper("format-post-message", formatMessageHelper);
+                handlebarsViewResolver.registerHelper("selected", selectedHelper);
 	}
 }
