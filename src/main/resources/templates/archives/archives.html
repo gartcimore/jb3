@@ -62,7 +62,7 @@
 		<div class="jb3-posts">
 			{{#each postsMV.posts}}
 			<div id="{{this.id}}" class="jb3-post">
-				<a class="jb3-post-time" href="/archives?date={{format-date this.time}}#{{this.id}}">{{format-datetime this.time}}</a> <span class="jb3-post-room">{{{this.cleanedRoom}}}</span> <span class="jb3-post-nickname">{{{this.cleanedNickname}}}</span> <span class="jb3-post-message">{{format-post-message this}}</span>
+				<a class="jb3-post-time" href="/archives/post/{{this.id}}">{{format-datetime this.time}}</a> <span class="jb3-post-room">{{{this.cleanedRoom}}}</span> <span class="jb3-post-nickname">{{{this.cleanedNickname}}}</span> <span class="jb3-post-message">{{format-post-message this}}</span>
 			</div>
 			{{/each}}
 		</div>
