@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @author devnewton <devnewton@bci.im>
  */
 @Component
-public class DlfpGateway extends AbstractXmlBouchotGateway {
+public class DlfpGateway extends AbstractLegacyBouchotGateway {
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -23,11 +23,8 @@ public class DlfpGateway extends AbstractXmlBouchotGateway {
     private static BouchotConfig createConf() {
         BouchotConfig conf = new BouchotConfig();
         conf.setRoom("dlfp");
+        conf.setBackendFormat(BouchotBackendFormat.XML);
         conf.setGetUrl("https://linuxfr.org/board/index.xml");
-        conf.setPostUrl("https://linuxfr.org/board");
-        conf.setCookieName("linuxfr.org_session");
-        conf.setReferrer("https://linuxfr.org/board");
-        conf.setMessageContentParameterName("board[message]");
         return conf;
     }
 

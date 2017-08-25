@@ -7,11 +7,12 @@ import org.springframework.stereotype.Component;
  * @author devnewton <devnewton@bci.im>
  */
 @Component
-public class BatavieGateway extends AbstractXmlBouchotGateway {
+public class BatavieGateway extends AbstractLegacyBouchotGateway {
 
     private static BouchotConfig createConf() {
         BouchotConfig conf = new BouchotConfig();
         conf.setRoom("batavie");
+        conf.setBackendFormat(BouchotBackendFormat.XML);
         conf.setGetUrl("https://batavie.leguyader.eu/remote.xml");
         conf.setPostUrl("https://batavie.leguyader.eu/index.php/add");
         conf.setMessageContentParameterName("message");

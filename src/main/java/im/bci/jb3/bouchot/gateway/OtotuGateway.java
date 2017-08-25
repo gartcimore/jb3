@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
  * @author devnewton <devnewton@bci.im>
  */
 @Component
-public class OtotuGateway extends AbstractTsvBouchotGateway {
+public class OtotuGateway extends AbstractLegacyBouchotGateway {
 
     private static BouchotConfig createConf() {
         BouchotConfig conf = new BouchotConfig();

@@ -7,11 +7,12 @@ import org.springframework.stereotype.Component;
  * @author devnewton <devnewton@bci.im>
  */
 @Component
-public class SveetchGateway extends AbstractXmlBouchotGateway {
+public class SveetchGateway extends AbstractLegacyBouchotGateway {
 
     private static BouchotConfig createConf() {
         BouchotConfig conf = new BouchotConfig();
         conf.setRoom("sveetch");
+        conf.setBackendFormat(BouchotBackendFormat.XML);
         conf.setGetUrl("http://sveetch.net/tribune/remote/xml/");
         conf.setPostUrl("http://sveetch.net/tribune/post/xml/");
         conf.setLastIdParameterName("last_id");

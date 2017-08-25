@@ -95,20 +95,7 @@ There is several options to deploy and host jb3. Here is one that requires:
 
 ### Application configuration
 
-### Security
-
-In production environnement, please add
-
-    jb3.secure=true
-
-to your application.properties configuration. If you don't do it, jb3 will do
-VERY INSECURE operations like:
-
-- not verifying self signed HTTPS certificates.
-- not verifying untrusted HTTPS certificates.
-
-It is VERY RECOMMENDED, to use jb3.secure=true and add certificates to your
-keystore.
+Please change the jb3.room.default in application.properties file.
 
 ### Deployment
 
