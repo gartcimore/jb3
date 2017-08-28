@@ -17,7 +17,7 @@ import net.sf.junidecode.Junidecode;
 public class CleanUtils {
 
     private static final int MAX_ID_LENGTH = 32;
-    private static final int MAX_POST_LENGTH = 1024;
+    private static final int MAX_POST_LENGTH = 32 * 1024;
     private static final int MAX_NICKNAME_LENGTH = 32;
     private static final int MAX_ROOM_LENGTH = 32;
     private static final int MAX_FORTUNE_TITLE_LENGTH = 256;

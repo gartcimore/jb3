@@ -75,7 +75,7 @@ public class LegacyUtils {
         }
     };
 
-    private static final Pattern urlPattern = Pattern.compile("(https?|ftp|gopher)://[^\\s]+");
+    private static final Pattern urlPattern = Pattern.compile("(((https?|ftp|gopher)://)|(data:))[^\\s]+");
 
     private final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s", "u", "tt", "a", "code", "spoiler").addAttributes("a", "href", "rel", "target");
 

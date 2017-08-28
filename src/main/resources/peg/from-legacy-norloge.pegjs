@@ -58,7 +58,7 @@ postItem
  / .
 
 url
- = $(protocol:$((("http" "s"?) / "ftp") "://") url:$([^< \t\r\n])+)
+ = $(protocol:$(((("http" "s"?) / "ftp" / "gopher") "://") / "data:") url:$([^< \t\r\n])+)
 
 norloge
  = idNorloge / fullNorloge / longNorloge / normalNorloge / shortNorloge

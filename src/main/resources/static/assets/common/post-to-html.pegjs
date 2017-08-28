@@ -12,7 +12,7 @@ postItem
  / .
 
 url
- = protocol:$((("http" "s"?) / "ftp") "://") domain:$([^< \t\r\n/])+ remaining:$([^< \t\r\n])*
+ = protocol:$(((("http" "s"?) / "ftp" / "gopher") "://") / "data:") domain:$([^< \t\r\n/])+ remaining:$([^< \t\r\n])*
  { 
     var fullUrl = protocol + domain + remaining;
     if( /(ogg|mp3|wav)$/i.test(remaining) ) {
