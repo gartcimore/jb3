@@ -51,7 +51,6 @@ Implemented gateways:
 - euromussels
 - moules
 - sveetch
-- taab
 
 # Build and run demo using [docker](https://www.docker.com/)
 
