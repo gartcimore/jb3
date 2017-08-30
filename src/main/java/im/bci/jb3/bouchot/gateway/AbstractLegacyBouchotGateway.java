@@ -68,6 +68,8 @@ public abstract class AbstractLegacyBouchotGateway implements Gateway, Trigger, 
 
     private final ConcurrentTaskScheduler scheduler = new ConcurrentTaskScheduler(
             Executors.newSingleThreadScheduledExecutor());
+    private BouchotGetCallBack bouchotGetCallback;
+    private BouchotPostCallBack bouchotPostCallback;
 
     protected AbstractLegacyBouchotGateway(BouchotConfig config) {
         this.config = config;
@@ -76,6 +78,8 @@ public abstract class AbstractLegacyBouchotGateway implements Gateway, Trigger, 
     @PostConstruct
     public void setup() {
         scheduler.schedule(this, this);
+        bouchotGetCallback = new BouchotGetCallBack();
+        bouchotPostCallback = new BouchotPostCallBack();
     }
 
     protected void importPosts() {
@@ -83,21 +87,8 @@ public abstract class AbstractLegacyBouchotGateway implements Gateway, Trigger, 
         if (null != config.getLastIdParameterName()) {
             url.addQueryParameter(config.getLastIdParameterName(), String.valueOf(lastPostId));
         }
-        Request request = new Request.Builder().url(url.build()).header("User-Agent", "jb3").get().build();
-        httpClient.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                scheduler.schedule(() -> {
-                    parsePosts(response);
-                }, new Date());
-            }
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                adaptativeRefreshComputer.error();
-                LogFactory.getLog(this.getClass()).warn("get http error", e);
-            }
-        });
+        Request bouchotGetRequest = new Request.Builder().url(url.build()).header("User-Agent", "jb3").get().build();
+        httpClient.newCall(bouchotGetRequest).enqueue(bouchotGetCallback);
     }
 
     private synchronized void parsePosts(Response response) {
@@ -218,24 +209,7 @@ public abstract class AbstractLegacyBouchotGateway implements Gateway, Trigger, 
             url.addQueryParameter(config.getLastIdParameterName(), String.valueOf(lastPostId));
         }
         Builder request = new Request.Builder().url(url.build()).header("User-Agent", nickname).post(body.build());
-        httpClient.newCall(request.build()).enqueue(new Callback() {
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (config.isUsingXPost()) {
-                    scheduler.schedule(() -> {
-                        parsePosts(response);
-                    }, new Date());
-                } else {
-                    importPosts();
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                LogFactory.getLog(this.getClass()).error("post error", e);
-            }
-        });
+        httpClient.newCall(request.build()).enqueue(bouchotPostCallback);
     }
 
     @Override
@@ -269,4 +243,38 @@ public abstract class AbstractLegacyBouchotGateway implements Gateway, Trigger, 
         importPosts();
     }
 
+    private class BouchotGetCallBack implements Callback {
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            scheduler.schedule(() -> {
+                parsePosts(response);
+            }, new Date());
+        }
+
+        @Override
+        public void onFailure(Call call, IOException e) {
+            adaptativeRefreshComputer.error();
+            LogFactory.getLog(this.getClass()).warn("get http error", e);
+        }
+    }
+
+    private class BouchotPostCallBack implements Callback {
+        
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            if (config.isUsingXPost()) {
+                scheduler.schedule(() -> {
+                    parsePosts(response);
+                }, new Date());
+            } else {
+                importPosts();
+            }
+        }
+
+        @Override
+        public void onFailure(Call call, IOException e) {
+            LogFactory.getLog(this.getClass()).error("post error", e);
+        }
+    }
 }
