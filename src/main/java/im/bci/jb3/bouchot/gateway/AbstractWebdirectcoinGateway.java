@@ -69,10 +69,10 @@ public abstract class AbstractWebdirectcoinGateway extends WebSocketListener imp
             this.ws = ws;
             MessageC2S message = new MessageC2S();
             GetC2S get = new GetC2S();
-            get.setRoom(this.getRoom());
+            get.setRoom(config.getRemoteRoom());
             message.setGet(get);
             ws.send(objectMapper.writeValueAsString(message));
-            LOGGER.info("Connected to " + getRoom());
+            LOGGER.info("Connected to " + config.getLocalRoom());
         } catch (JsonProcessingException ex) {
             LOGGER.error(ex);
         }
@@ -91,25 +91,25 @@ public abstract class AbstractWebdirectcoinGateway extends WebSocketListener imp
     }
 
     @Override
-    public String getRoom() {
-        return config.getLocalRoom();
-    }
-
-    @Override
-    public synchronized void post(String nickname, String messageBody, String auth) {
-        try {
-            if (null != this.ws) {
-                MessageC2S message = new MessageC2S();
-                PostC2S post = new PostC2S();
-                post.setAuth(auth);
-                post.setMessage(messageBody);
-                post.setNickname(nickname);
-                post.setRoom(config.getRemoteRoom());
-                message.setPost(post);
-                ws.send(objectMapper.writeValueAsString(message));
+    public synchronized boolean handlePost(String nickname, String messageBody, String room, String auth) {
+        if (StringUtils.equals(config.getLocalRoom(), room)) {
+            try {
+                if (null != this.ws) {
+                    MessageC2S message = new MessageC2S();
+                    PostC2S post = new PostC2S();
+                    post.setAuth(auth);
+                    post.setMessage(messageBody);
+                    post.setNickname(nickname);
+                    post.setRoom(config.getRemoteRoom());
+                    message.setPost(post);
+                    ws.send(objectMapper.writeValueAsString(message));
+                }
+            } catch (JsonProcessingException ex) {
+                LOGGER.error(ex);
             }
-        } catch (JsonProcessingException ex) {
-            LOGGER.error(ex);
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -118,16 +118,16 @@ public abstract class AbstractWebdirectcoinGateway extends WebSocketListener imp
         for (Post post : posts) {
             post.setId(CleanUtils.truncateId(post.getId()));
             if (StringUtils.equals(config.getRemoteRoom(), post.getRoom())) {
-                    post.setRoom(config.getLocalRoom());
-                    post.setNickname(CleanUtils.truncateNickname(post.getNickname()));
-                    post.setMessage(CleanUtils.truncateMessage(post.getMessage()));
-                    if (null != post.getRevisions()) {
-                        for (PostRevision revision : post.getRevisions()) {
-                            revision.setMessage(CleanUtils.truncateMessage(revision.getMessage()));
-                        }
+                post.setRoom(config.getLocalRoom());
+                post.setNickname(CleanUtils.truncateNickname(post.getNickname()));
+                post.setMessage(CleanUtils.truncateMessage(post.getMessage()));
+                if (null != post.getRevisions()) {
+                    for (PostRevision revision : post.getRevisions()) {
+                        revision.setMessage(CleanUtils.truncateMessage(revision.getMessage()));
                     }
-                    postPepository.save(post);
-                    newPosts.add(post);
+                }
+                postPepository.save(post);
+                newPosts.add(post);
             }
         }
         if (!newPosts.isEmpty()) {
@@ -137,14 +137,14 @@ public abstract class AbstractWebdirectcoinGateway extends WebSocketListener imp
 
     @Override
     public void onClosed(WebSocket webSocket, int code, String reason) {
-        LOGGER.info("Disconnected from " + getRoom() + ": " + code + " " + reason);
+        LOGGER.info("Disconnected from " + config.getLocalRoom() + ": " + code + " " + reason);
         nbConnexionFailOrClose = Math.min(30, nbConnexionFailOrClose + 1);
         this.connect();
     }
 
     @Override
     public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-        LOGGER.error("Connection failure from " + getRoom(), t);
+        LOGGER.error("Connection failure from " + config.getLocalRoom(), t);
         nbConnexionFailOrClose = Math.min(30, nbConnexionFailOrClose + 1);
         this.connect();
     }

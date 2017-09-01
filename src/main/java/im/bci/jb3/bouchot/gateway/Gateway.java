@@ -5,6 +5,5 @@ package im.bci.jb3.bouchot.gateway;
  * @author devnewton <devnewton@bci.im>
  */
 public interface Gateway {
-    String getRoom();
-    void post(String nickname, String message, String auth);
+    boolean handlePost(String nickname, String message, String room, String auth);
 }

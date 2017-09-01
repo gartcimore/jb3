@@ -13,14 +13,12 @@ public class Gateways {
 
     @Autowired
     private Gateway[] gateways;
-    
+
     public boolean handlePost(String nickname, String message, String room, String auth) {
-        for(Gateway gateway : gateways) {
-            if(StringUtils.equals(room, gateway.getRoom())) {
-                gateway.post(nickname, message, auth);
-                return true;
-            }
+        boolean handled = false;
+        for (Gateway gateway : gateways) {
+            handled |= gateway.handlePost(nickname, message, room, auth);
         }
-        return false;
+        return handled;
     }
 }
