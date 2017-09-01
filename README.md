@@ -94,7 +94,7 @@ There is several options to deploy and host jb3. Here is one that requires:
 
 ### Application configuration
 
-Please change the jb3.room.default in application.properties file.
+Please change the jb3.defaults.room in application.properties file.
 
 ### Deployment
 

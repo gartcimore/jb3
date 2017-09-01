@@ -29,7 +29,9 @@ jb3_common = {
         return rooms;
     },
     getDefaultRooms: function () {
-        return [{rname: "cppfrug"}, {rname: "devnewton"}, {rname: "dlfp"}, {rname: "euromussels"}, {rname: "ototu"}, {rname: "gabuzomeu"}, {rname: "moules"}, {rname: "sveetch"}, {rname: "batavie"}];
+        return document.getElementById('jb3-defaults').dataset.rooms.split(",").map(function(room) {
+            return {rname: room};
+        });
     },
     initTotozLazyLoading: function () {
         $('.jb3-posts').on({

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
  *
  * @author devnewton <devnewton@bci.im>
  */
-@ConditionalOnExpression("'${jb3.room.default:}' != 'gabuzomeu'")
+@ConditionalOnExpression("'${jb3.defaults.room:}' != 'gabuzomeu'")
 @Component
 public class GabuzomeuGateway extends AbstractWebdirectcoinGateway {
     

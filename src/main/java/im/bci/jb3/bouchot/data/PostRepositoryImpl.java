@@ -25,7 +25,7 @@ public class PostRepositoryImpl implements PostRepository {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    @Value("${jb3.room.default}")
+    @Value("${jb3.defaults.room}")
     private String defaultRoom;
 
     @Value("${jb3.room.history.size}")

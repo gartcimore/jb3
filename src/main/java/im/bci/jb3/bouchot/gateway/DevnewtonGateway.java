@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
  *
  * @author devnewton <devnewton@bci.im>
  */
-@ConditionalOnExpression("'${jb3.room.default:}' != 'devnewton'")
+@ConditionalOnExpression("'${jb3.defaults.room:}' != 'devnewton'")
 @Component
 public class DevnewtonGateway extends AbstractWebdirectcoinGateway {
     

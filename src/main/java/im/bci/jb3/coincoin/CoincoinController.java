@@ -10,18 +10,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/")
 public class CoincoinController {
 
-	@Value("${jb3.room.default}")
+	@Value("${jb3.defaults.room}")
 	private String defaultRoom;
+        
+        @Value("${jb3.defaults.rooms:}")
+	private String defaultsRooms;
 
 	@RequestMapping(path = "", method = RequestMethod.GET)
 	public String index(Model model) {
 		model.addAttribute("jb3DefaultRoom", defaultRoom);
+                model.addAttribute("jb3DefaultsRooms", defaultsRooms);
 		model.addAttribute("wro-group", "coincoin");
 		return "coincoin/coincoin";
 	}
 
 	@RequestMapping(path = "/rooms", method = RequestMethod.GET)
 	public String rooms(Model model) {
+                model.addAttribute("jb3DefaultsRooms", defaultsRooms);
 		model.addAttribute("wro-group", "rooms");
 		return "rooms/rooms";
 	}
@@ -34,6 +39,7 @@ public class CoincoinController {
         
 	@RequestMapping(path = "/visio", method = RequestMethod.GET)
 	public String visio(Model model) {
+                model.addAttribute("jb3DefaultsRooms", defaultsRooms);
 		model.addAttribute("wro-group", "visio");
 		return "visio/visio";
 	}

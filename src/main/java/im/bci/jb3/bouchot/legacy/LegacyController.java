@@ -46,7 +46,7 @@ public class LegacyController {
 	@Autowired
 	private LegacyUtils legacyUtils;
 
-	@Value("${jb3.room.default}")
+	@Value("${jb3.defaults.room}")
 	private String defaultRoom;
 
 	private Period postsGetPeriod;
