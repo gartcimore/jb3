@@ -34,7 +34,25 @@ public class LegacyPost {
         this.id = id;
     }
 
+    public String getTribune() {
+		return tribune;
+	}
+
+	public void setTribune(String tribune) {
+		this.tribune = tribune;
+	}
+
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	private String tribune;
     private String info;
+    private String login;
     private String message;
     private String time;
     private long id;

@@ -28,7 +28,7 @@ public class CleanUtils {
     }
 
     public static String truncateMessage(String message) {
-        return StringUtils.abbreviate(message, MAX_POST_LENGTH);
+        return StringUtils.abbreviate(StringUtils.defaultString(message), MAX_POST_LENGTH);
     }
 
     public static String truncateRoom(String room) {

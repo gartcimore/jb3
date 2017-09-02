@@ -1,6 +1,12 @@
 package im.bci.jb3.bouchot.gateway;
 
+import im.bci.jb3.bouchot.data.GatewayPostId;
+import im.bci.jb3.bouchot.data.Post;
+import im.bci.jb3.bouchot.data.PostRepository;
+import im.bci.jb3.bouchot.legacy.LegacyPost;
 import im.bci.jb3.bouchot.legacy.LegacyUtils;
+import im.bci.jb3.bouchot.logic.CleanUtils;
+import im.bci.jb3.event.NewPostsEvent;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -8,77 +14,173 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
 import okhttp3.Request.Builder;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  *
  * @author devnewton <devnewton@bci.im>
  */
 @Component
-public class AnatidGateway implements Gateway {
+public class AnatidGateway extends WebSocketListener implements Gateway {
 
+	private final Log LOGGER = LogFactory.getLog(this.getClass());
+
+	@Autowired
+	private PostRepository postPepository;
+
+	@Autowired
+	private OkHttpClient httpClient;
+
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	@Autowired
+	protected LegacyUtils legacyUtils;
+
+	@Resource(name = "mouleScheduler")
+	private TaskScheduler scheduler;
+	
     @Autowired
-    private OkHttpClient httpClient;
+    private ApplicationEventPublisher publisher;
 
-    @Autowired
-    protected LegacyUtils legacyUtils;
+	private HttpUrl plopToUrl, plopFromUrl;
+	private List<String> rooms;
+	private final BouchotPostCallBack bouchotPostCallback = new BouchotPostCallBack();
+	private int nbConnexionFailOrClose;
 
-    private HttpUrl plopToUrl;
-    private List<String> rooms;
-    private final BouchotPostCallBack bouchotPostCallback = new BouchotPostCallBack();
+	@Value("${jb3.anatid.url:}")
+	public void setPlopToUrl(String anatidUrl) {
+		if (StringUtils.isNotBlank(anatidUrl)) {
+			this.plopToUrl = HttpUrl.parse(anatidUrl).newBuilder().addPathSegments("plop/to").build();
+			this.plopFromUrl = HttpUrl.parse(anatidUrl).newBuilder().addPathSegments("plop/from").build();
+		}
+	}
 
-    @Value("${jb3.anatid.plopto.url:}")
-    public void setPlopToUrl(String plopToUrl) {
-        if (StringUtils.isNotBlank(plopToUrl)) {
-            this.plopToUrl = HttpUrl.parse(plopToUrl);
-        }
-    }
+	@Value("${jb3.anatid.rooms:}")
+	public void setRooms(String rooms) {
+		this.rooms = Arrays.asList(StringUtils.split(rooms, ','));
+	}
 
-    @Value("${jb3.anatid.rooms:}")
-    public void setRooms(String rooms) {
-        this.rooms = Arrays.asList(StringUtils.split(rooms, ','));
-    }
+	@PostConstruct
+	public void connect() {
+		scheduler.schedule(() -> {
+			Request request = new Request.Builder().url(plopFromUrl).build();
+			httpClient.newWebSocket(request, this);
+		}, DateTime.now().plusMinutes(nbConnexionFailOrClose).toDate());
+	}
 
-    @Override
-    public boolean handlePost(String nickname, String message, String room, String auth) {
-        if (rooms.contains(room)) {
-            if (null != plopToUrl) {
-                okhttp3.FormBody.Builder body = new FormBody.Builder().add("message",
-                        legacyUtils.convertToLegacyNorloges(message,
-                                DateTime.now().withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy(),
-                                room))
-                        .add("tribune", room);
-                Builder request = new Request.Builder().url(plopToUrl).header("User-Agent", nickname).post(body.build());
-                httpClient.newCall(request.build()).enqueue(bouchotPostCallback);
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
+	@Override
+	public void onOpen(WebSocket ws, Response response) {
+		nbConnexionFailOrClose = Math.max(0, nbConnexionFailOrClose - 1);
+		LOGGER.info("Connected to anatid");
+	}
 
-    private class BouchotPostCallBack implements Callback {
+	@Override
+	public void onMessage(WebSocket webSocket, String text) {
+		try {
+			LegacyPost legacyPost = objectMapper.readValue(text, LegacyPost.class);
+			if(rooms.contains(legacyPost.getTribune())) {
+				importPost(legacyPost);
+			}
+		} catch (IOException e) {
+			LOGGER.error(text);
+		}
 
-        @Override
-        public void onResponse(Call call, Response response) throws IOException {
-        }
+	}
 
-        @Override
-        public void onFailure(Call call, IOException e) {
-            LogFactory.getLog(this.getClass()).error("post error", e);
-        }
-    }
+	@Override
+	public void onClosed(WebSocket webSocket, int code, String reason) {
+		LOGGER.info("Disconnected from anatid: " + code + " " + reason);
+		nbConnexionFailOrClose = Math.min(30, nbConnexionFailOrClose + 1);
+		this.connect();
+	}
+
+	@Override
+	public void onFailure(WebSocket webSocket, Throwable t, Response response) {
+		LOGGER.error("Connection failure from anatid", t);
+		nbConnexionFailOrClose = Math.min(30, nbConnexionFailOrClose + 1);
+		this.connect();
+	}
+
+	public void importPost(LegacyPost legacyPost) {
+		try {
+			GatewayPostId gatewayPostId = new GatewayPostId();
+			gatewayPostId.setGateway(legacyPost.getTribune());
+			gatewayPostId.setPostId(String.valueOf(legacyPost.getId()));
+			if (!postPepository.existsByGatewayPostId(gatewayPostId)) {
+				Post post = new Post();
+				post.setGatewayPostId(gatewayPostId);
+				post.setRoom(legacyPost.getTribune());
+				DateTime postTimeRounded = LegacyUtils.legacyPostTimeFormatter.parseDateTime(legacyPost.getTime()).secondOfMinute()
+						.roundFloorCopy();
+				long nbPostsAtSameSecond = postPepository.countPosts(postTimeRounded, postTimeRounded.plusSeconds(1),
+						legacyPost.getTribune());
+				post.setTime(postTimeRounded.withMillisOfSecond((int) nbPostsAtSameSecond));
+				String nickname = CleanUtils.truncateNickname(legacyPost.getLogin());
+				if (StringUtils.isBlank(nickname)) {
+					nickname = CleanUtils.truncateNickname(legacyPost.getInfo());
+				}
+				post.setNickname(CleanUtils.cleanNickname(nickname));
+				post.setMessage(legacyUtils.convertFromLegacyNorloges(
+						CleanUtils.cleanMessage(CleanUtils.truncateMessage(legacyPost.getMessage())), post.getTime(), legacyPost.getTribune()));
+				postPepository.save(post);
+				publisher.publishEvent(new NewPostsEvent(post));
+			}
+		} catch (Exception e) {
+			LogFactory.getLog(this.getClass()).warn(e);
+		}
+	}
+
+	@Override
+	public boolean handlePost(String nickname, String message, String room, String auth) {
+		if (rooms.contains(room)) {
+			if (null != plopToUrl) {
+				okhttp3.FormBody.Builder body = new FormBody.Builder()
+						.add("message",
+								legacyUtils.convertToLegacyNorloges(message, DateTime.now()
+										.withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy(), room))
+						.add("tribune", room);
+				Builder request = new Request.Builder().url(plopToUrl).header("User-Agent", nickname)
+						.post(body.build());
+				httpClient.newCall(request.build()).enqueue(bouchotPostCallback);
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private class BouchotPostCallBack implements Callback {
+
+		@Override
+		public void onResponse(Call call, Response response) throws IOException {
+		}
+
+		@Override
+		public void onFailure(Call call, IOException e) {
+			LOGGER.error("post error", e);
+		}
+	}
 }
