@@ -67,7 +67,7 @@ public class AnatidGateway extends WebSocketListener implements Gateway {
     @Autowired
     private ApplicationEventPublisher publisher;
 
-	private HttpUrl plopToUrl, plopFromUrl;
+	private HttpUrl postUrl, pollUrl;
 	private List<String> rooms;
 	private final BouchotPostCallBack bouchotPostCallback = new BouchotPostCallBack();
 	private int nbConnexionFailOrClose;
@@ -75,8 +75,8 @@ public class AnatidGateway extends WebSocketListener implements Gateway {
 	@Value("${jb3.anatid.url}")
 	public void setPlopToUrl(String anatidUrl) {
 		if (StringUtils.isNotBlank(anatidUrl)) {
-			this.plopToUrl = HttpUrl.parse(anatidUrl).newBuilder().addPathSegments("post").build();
-			this.plopFromUrl = HttpUrl.parse(anatidUrl).newBuilder().addPathSegments("poll").build();
+			this.postUrl = HttpUrl.parse(anatidUrl).newBuilder().addPathSegments("post").build();
+			this.pollUrl = HttpUrl.parse(anatidUrl).newBuilder().addPathSegments("poll").build();
 		}
 	}
 
@@ -88,7 +88,7 @@ public class AnatidGateway extends WebSocketListener implements Gateway {
 	@PostConstruct
 	public void connect() {
 		scheduler.schedule(() -> {
-			Request request = new Request.Builder().url(plopFromUrl).build();
+			Request request = new Request.Builder().url(pollUrl).build();
 			httpClient.newWebSocket(request, this);
 		}, DateTime.now().plusMinutes(nbConnexionFailOrClose).toDate());
 	}
@@ -158,13 +158,14 @@ public class AnatidGateway extends WebSocketListener implements Gateway {
 	@Override
 	public boolean handlePost(String nickname, String message, String room, String auth) {
 		if (rooms.contains(room)) {
-			if (null != plopToUrl) {
+			if (null != postUrl) {
 				okhttp3.FormBody.Builder body = new FormBody.Builder()
 						.add("message",
 								legacyUtils.convertToLegacyNorloges(message, DateTime.now()
 										.withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy(), room))
-						.add("tribune", room);
-				Builder request = new Request.Builder().url(plopToUrl).header("User-Agent", nickname)
+						.add("tribune", room)
+						.add("auth", auth);
+				Builder request = new Request.Builder().url(postUrl).header("User-Agent", nickname)
 						.post(body.build());
 				httpClient.newCall(request.build()).enqueue(bouchotPostCallback);
 			}
