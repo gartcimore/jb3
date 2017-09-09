@@ -32,6 +32,7 @@ import org.joda.time.DateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
@@ -42,6 +43,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  * @author devnewton <devnewton@bci.im>
  */
+@ConditionalOnProperty(name="jb3.anatid.url")
 @Component
 public class AnatidGateway extends WebSocketListener implements Gateway {
 
@@ -70,7 +72,7 @@ public class AnatidGateway extends WebSocketListener implements Gateway {
 	private final BouchotPostCallBack bouchotPostCallback = new BouchotPostCallBack();
 	private int nbConnexionFailOrClose;
 
-	@Value("${jb3.anatid.url:}")
+	@Value("${jb3.anatid.url}")
 	public void setPlopToUrl(String anatidUrl) {
 		if (StringUtils.isNotBlank(anatidUrl)) {
 			this.plopToUrl = HttpUrl.parse(anatidUrl).newBuilder().addPathSegments("post").build();
