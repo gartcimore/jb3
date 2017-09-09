@@ -73,8 +73,8 @@ public class AnatidGateway extends WebSocketListener implements Gateway {
 	@Value("${jb3.anatid.url:}")
 	public void setPlopToUrl(String anatidUrl) {
 		if (StringUtils.isNotBlank(anatidUrl)) {
-			this.plopToUrl = HttpUrl.parse(anatidUrl).newBuilder().addPathSegments("plop/to").build();
-			this.plopFromUrl = HttpUrl.parse(anatidUrl).newBuilder().addPathSegments("plop/from").build();
+			this.plopToUrl = HttpUrl.parse(anatidUrl).newBuilder().addPathSegments("post").build();
+			this.plopFromUrl = HttpUrl.parse(anatidUrl).newBuilder().addPathSegments("poll").build();
 		}
 	}
 
