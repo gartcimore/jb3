@@ -104,7 +104,7 @@ public abstract class AbstractWebdirectcoinGateway extends WebSocketListener imp
                     message.setPost(post);
                     ws.send(objectMapper.writeValueAsString(message));
                 }
-            } catch (JsonProcessingException ex) {
+            } catch (Exception ex) {
                 LOGGER.error(ex);
             }
             return true;

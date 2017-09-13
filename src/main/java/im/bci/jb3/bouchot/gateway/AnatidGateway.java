@@ -43,7 +43,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  * @author devnewton <devnewton@bci.im>
  */
-@ConditionalOnProperty(name="jb3.anatid.url")
+@ConditionalOnProperty(name = "jb3.anatid.url")
 @Component
 public class AnatidGateway extends WebSocketListener implements Gateway {
 
@@ -63,9 +63,9 @@ public class AnatidGateway extends WebSocketListener implements Gateway {
 
 	@Resource(name = "mouleScheduler")
 	private TaskScheduler scheduler;
-	
-    @Autowired
-    private ApplicationEventPublisher publisher;
+
+	@Autowired
+	private ApplicationEventPublisher publisher;
 
 	private HttpUrl postUrl, pollUrl;
 	private List<String> rooms;
@@ -103,7 +103,7 @@ public class AnatidGateway extends WebSocketListener implements Gateway {
 	public void onMessage(WebSocket webSocket, String text) {
 		try {
 			LegacyPost legacyPost = objectMapper.readValue(text, LegacyPost.class);
-			if(rooms.contains(legacyPost.getTribune())) {
+			if (rooms.contains(legacyPost.getTribune())) {
 				importPost(legacyPost);
 			}
 		} catch (IOException e) {
@@ -135,8 +135,8 @@ public class AnatidGateway extends WebSocketListener implements Gateway {
 				Post post = new Post();
 				post.setGatewayPostId(gatewayPostId);
 				post.setRoom(legacyPost.getTribune());
-				DateTime postTimeRounded = LegacyUtils.legacyPostTimeFormatter.parseDateTime(legacyPost.getTime()).secondOfMinute()
-						.roundFloorCopy();
+				DateTime postTimeRounded = LegacyUtils.legacyPostTimeFormatter.parseDateTime(legacyPost.getTime())
+						.secondOfMinute().roundFloorCopy();
 				long nbPostsAtSameSecond = postPepository.countPosts(postTimeRounded, postTimeRounded.plusSeconds(1),
 						legacyPost.getTribune());
 				post.setTime(postTimeRounded.withMillisOfSecond((int) nbPostsAtSameSecond));
@@ -146,7 +146,8 @@ public class AnatidGateway extends WebSocketListener implements Gateway {
 				}
 				post.setNickname(CleanUtils.cleanNickname(nickname));
 				post.setMessage(legacyUtils.convertFromLegacyNorloges(
-						CleanUtils.cleanMessage(CleanUtils.truncateMessage(legacyPost.getMessage())), post.getTime(), legacyPost.getTribune()));
+						CleanUtils.cleanMessage(CleanUtils.truncateMessage(legacyPost.getMessage())), post.getTime(),
+						legacyPost.getTribune()));
 				postPepository.save(post);
 				publisher.publishEvent(new NewPostsEvent(post));
 			}
@@ -158,16 +159,21 @@ public class AnatidGateway extends WebSocketListener implements Gateway {
 	@Override
 	public boolean handlePost(String nickname, String message, String room, String auth) {
 		if (rooms.contains(room)) {
-			if (null != postUrl) {
-				okhttp3.FormBody.Builder body = new FormBody.Builder()
-						.add("message",
-								legacyUtils.convertToLegacyNorloges(message, DateTime.now()
-										.withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy(), room))
-						.add("tribune", room)
-						.add("auth", auth);
-				Builder request = new Request.Builder().url(postUrl).header("User-Agent", nickname)
-						.post(body.build());
-				httpClient.newCall(request.build()).enqueue(bouchotPostCallback);
+			try {
+				if (null != postUrl) {
+					okhttp3.FormBody.Builder body = new FormBody.Builder().add("message",
+							legacyUtils.convertToLegacyNorloges(message, DateTime.now()
+									.withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy(), room))
+							.add("tribune", room);
+					if (StringUtils.isNotBlank(auth)) {
+						body.add("auth", auth);
+					}
+					Builder request = new Request.Builder().url(postUrl).header("User-Agent", nickname)
+							.post(body.build());
+					httpClient.newCall(request.build()).enqueue(bouchotPostCallback);
+				}
+			} catch (Exception e) {
+				LOGGER.error("post error", e);
 			}
 			return true;
 		} else {
