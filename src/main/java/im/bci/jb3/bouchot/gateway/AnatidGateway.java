@@ -32,6 +32,7 @@ import org.joda.time.DateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
@@ -42,6 +43,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  * @author devnewton <devnewton@bci.im>
  */
+@ConditionalOnProperty(name = "jb3.anatid.url")
 @Component
 public class AnatidGateway extends WebSocketListener implements Gateway {
 
@@ -61,20 +63,20 @@ public class AnatidGateway extends WebSocketListener implements Gateway {
 
 	@Resource(name = "mouleScheduler")
 	private TaskScheduler scheduler;
-	
-    @Autowired
-    private ApplicationEventPublisher publisher;
 
-	private HttpUrl plopToUrl, plopFromUrl;
+	@Autowired
+	private ApplicationEventPublisher publisher;
+
+	private HttpUrl postUrl, pollUrl;
 	private List<String> rooms;
 	private final BouchotPostCallBack bouchotPostCallback = new BouchotPostCallBack();
 	private int nbConnexionFailOrClose;
 
-	@Value("${jb3.anatid.url:}")
+	@Value("${jb3.anatid.url}")
 	public void setPlopToUrl(String anatidUrl) {
 		if (StringUtils.isNotBlank(anatidUrl)) {
-			this.plopToUrl = HttpUrl.parse(anatidUrl).newBuilder().addPathSegments("plop/to").build();
-			this.plopFromUrl = HttpUrl.parse(anatidUrl).newBuilder().addPathSegments("plop/from").build();
+			this.postUrl = HttpUrl.parse(anatidUrl).newBuilder().addPathSegments("post").build();
+			this.pollUrl = HttpUrl.parse(anatidUrl).newBuilder().addPathSegments("poll").build();
 		}
 	}
 
@@ -86,7 +88,7 @@ public class AnatidGateway extends WebSocketListener implements Gateway {
 	@PostConstruct
 	public void connect() {
 		scheduler.schedule(() -> {
-			Request request = new Request.Builder().url(plopFromUrl).build();
+			Request request = new Request.Builder().url(pollUrl).build();
 			httpClient.newWebSocket(request, this);
 		}, DateTime.now().plusMinutes(nbConnexionFailOrClose).toDate());
 	}
@@ -101,7 +103,7 @@ public class AnatidGateway extends WebSocketListener implements Gateway {
 	public void onMessage(WebSocket webSocket, String text) {
 		try {
 			LegacyPost legacyPost = objectMapper.readValue(text, LegacyPost.class);
-			if(rooms.contains(legacyPost.getTribune())) {
+			if (rooms.contains(legacyPost.getTribune())) {
 				importPost(legacyPost);
 			}
 		} catch (IOException e) {
@@ -133,8 +135,8 @@ public class AnatidGateway extends WebSocketListener implements Gateway {
 				Post post = new Post();
 				post.setGatewayPostId(gatewayPostId);
 				post.setRoom(legacyPost.getTribune());
-				DateTime postTimeRounded = LegacyUtils.legacyPostTimeFormatter.parseDateTime(legacyPost.getTime()).secondOfMinute()
-						.roundFloorCopy();
+				DateTime postTimeRounded = LegacyUtils.legacyPostTimeFormatter.parseDateTime(legacyPost.getTime())
+						.secondOfMinute().roundFloorCopy();
 				long nbPostsAtSameSecond = postPepository.countPosts(postTimeRounded, postTimeRounded.plusSeconds(1),
 						legacyPost.getTribune());
 				post.setTime(postTimeRounded.withMillisOfSecond((int) nbPostsAtSameSecond));
@@ -144,7 +146,8 @@ public class AnatidGateway extends WebSocketListener implements Gateway {
 				}
 				post.setNickname(CleanUtils.cleanNickname(nickname));
 				post.setMessage(legacyUtils.convertFromLegacyNorloges(
-						CleanUtils.cleanMessage(CleanUtils.truncateMessage(legacyPost.getMessage())), post.getTime(), legacyPost.getTribune()));
+						CleanUtils.cleanMessage(CleanUtils.truncateMessage(legacyPost.getMessage())), post.getTime(),
+						legacyPost.getTribune()));
 				postPepository.save(post);
 				publisher.publishEvent(new NewPostsEvent(post));
 			}
@@ -156,15 +159,21 @@ public class AnatidGateway extends WebSocketListener implements Gateway {
 	@Override
 	public boolean handlePost(String nickname, String message, String room, String auth) {
 		if (rooms.contains(room)) {
-			if (null != plopToUrl) {
-				okhttp3.FormBody.Builder body = new FormBody.Builder()
-						.add("message",
-								legacyUtils.convertToLegacyNorloges(message, DateTime.now()
-										.withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy(), room))
-						.add("tribune", room);
-				Builder request = new Request.Builder().url(plopToUrl).header("User-Agent", nickname)
-						.post(body.build());
-				httpClient.newCall(request.build()).enqueue(bouchotPostCallback);
+			try {
+				if (null != postUrl) {
+					okhttp3.FormBody.Builder body = new FormBody.Builder().add("message",
+							legacyUtils.convertToLegacyNorloges(message, DateTime.now()
+									.withZone(LegacyUtils.legacyTimeZone).secondOfMinute().roundFloorCopy(), room))
+							.add("tribune", room);
+					if (StringUtils.isNotBlank(auth)) {
+						body.add("auth", auth);
+					}
+					Builder request = new Request.Builder().url(postUrl).header("User-Agent", nickname)
+							.post(body.build());
+					httpClient.newCall(request.build()).enqueue(bouchotPostCallback);
+				}
+			} catch (Exception e) {
+				LOGGER.error("post error", e);
 			}
 			return true;
 		} else {
