@@ -164,7 +164,7 @@ jb3_post_to_html = /*
             if( /(ogg|mp3|wav)$/i.test(remaining) ) {
                 return '<audio src="' + fullUrl + '" controls preload="none" title="' + fullUrl + '"></audio>';
             } else {
-                return '<a href="' + fullUrl + '" target="_blank">'+ domain +'</a>';
+                return '<a href="' + fullUrl + '" target="_blank" rel="noreferrer">'+ domain +'</a>';
             }
          },
         peg$c19 = "\\_",
