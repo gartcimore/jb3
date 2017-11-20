@@ -1,12 +1,16 @@
 package im.bci.jb3.bouchot.data;
 
+import org.springframework.data.mongodb.core.index.Indexed;
+
 /**
  *
  * @author devnewton <devnewton@bci.im>
  */
 public class GatewayPostId {
 
+    @Indexed
     private String gateway;
+    @Indexed
     private String postId;
 
     public String getGateway() {
