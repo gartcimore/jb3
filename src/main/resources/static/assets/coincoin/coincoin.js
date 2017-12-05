@@ -335,7 +335,7 @@ jb3 = {
                 this.insertTextInMessageControl('====> <b>Moment ' + this.getSelectedText() + '</b> <====', 16);
                 return true;
             case 'f':
-                this.insertTextInMessageControl('/fortune ');
+                this.insertTextInMessageControl('\u03C6');
                 return true;
             case 'b':
                 this.insertTextInMessageControl('<b>' + this.getSelectedText() + '</b>', 3);
