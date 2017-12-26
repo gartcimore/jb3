@@ -1,0 +1,19 @@
+{
+    "short_name": "jb3",
+    "name": "jb3",
+    "description": "Tribune and mouling agent",
+    "icons": [
+        {
+            "src": "favicon.png",
+            "type": "image/png",
+            "sizes": "56x47"
+        },
+        {
+            "src": "icon.png",
+            "type": "image/png",
+            "sizes": "221x221"
+        }
+    ],
+    "display": "standalone",
+    "start_url": "/"
+}
