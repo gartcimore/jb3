@@ -296,20 +296,30 @@ jb3 = {
             var dates = container.getElementsByClassName("jb3-posts-date");
             var day = moment(message.time);
             var date = null;
+            var dateAfter = null;
             for (var d = 0; d < dates.length; ++d) {
-                if (moment(dates[d].dataset.date).isSame(day, 'day')) {
+                var dateDay = moment(dates[d].dataset.date);
+                if (dateDay.isSame(day, 'day')) {
                     date = dates[d];
                     break;
                 }
+                if (dateDay.isAfter(day, 'day')) {
+                    dateAfter = dates[d];
+                    break;
+                }
             }
-            if(!date) {
+            if (!date) {
                 date = document.createElement('div');
                 date.classList.add("jb3-posts-date");
                 date.dataset.date = day.format("YYYY-MM-DD");
                 var dateTitle = document.createElement('time');
                 dateTitle.appendChild(document.createTextNode(day.format("dddd D MMMM YYYY")));
                 date.appendChild(dateTitle);
-                container.insertAdjacentElement('beforeend', date);
+                if (dateAfter) {
+                    dateAfter.insertAdjacentElement('beforebegin', date);
+                } else {
+                    container.insertAdjacentElement('beforeend', date);
+                }
             }
             var t = message.time;
             var posts = date.getElementsByClassName('jb3-post');
