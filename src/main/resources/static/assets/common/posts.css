@@ -1,6 +1,18 @@
 .jb3-posts {
-	border-spacing: 2px 1px;
+    border-spacing: 2px 1px;
 }
+
+.jb3-posts-date>time {
+    border-bottom: 2px solid #adbfee;
+    border-top: 1px solid #9fc5eb;
+    margin: 0;
+    padding: .2em;
+    text-align: center;
+    width: 100%;
+    display: block;
+    font-weight: bold;
+}
+
 
 .jb3-post:target {
     border: 1px solid #FFD202;
@@ -21,95 +33,95 @@
 }
 
 .jb3-revisions {
-	display: none;
+    display: none;
 }
 
 .jb3-revisions-button {
-	margin-left: 4px;
-	cursor: pointer;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+    margin-left: 4px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .jb3-revise-button {
-	margin-left: 4px;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+    margin-left: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .jb3-post .jb3-revise-button {
-	color: rgba(0, 0, 0, 0.0);
+    color: rgba(0, 0, 0, 0.0);
 }
 
 .jb3-post-is-mine:hover .jb3-revise-button {
-	color: initial;
-        cursor: pointer;
+    color: initial;
+    cursor: pointer;
 }
 
 .jb3-post:nth-of-type(odd) {
-	background-color: #FBFBFB;
+    background-color: #FBFBFB;
 }
 
 .jb3-post-time {
-	padding-right: 5px;
-	padding-left: 5px;
-	text-align: center;
-	color: black;
-	font-weight: bold;
-	white-space: nowrap;
-	border-radius: 8px;
-	border: 1px solid grey;
-	display: inline-block;
-	vertical-align: text-top;
+    padding-right: 5px;
+    padding-left: 5px;
+    text-align: center;
+    color: black;
+    font-weight: bold;
+    white-space: nowrap;
+    border-radius: 8px;
+    border: 1px solid grey;
+    display: inline-block;
+    vertical-align: text-top;
 }
 
 .jb3-post-room {
-	padding-right: 5px;
-	padding-left: 5px;
-	color: #25662D;
-	font-weight: normal;
-	display: inline-block;
-	word-break: break-all;
-	border-radius: 8px;
-	border: 1px solid grey;
-	vertical-align: text-top;
+    padding-right: 5px;
+    padding-left: 5px;
+    color: #25662D;
+    font-weight: normal;
+    display: inline-block;
+    word-break: break-all;
+    border-radius: 8px;
+    border: 1px solid grey;
+    vertical-align: text-top;
 }
 
 .jb3-post-nickname {
-	padding-right: 5px;
-	padding-left: 5px;
-	color: #833;
-	display: inline-block;
-	word-break: break-all;
-	border-radius: 8px;
-	border: 1px solid grey;
-	vertical-align: text-top;
+    padding-right: 5px;
+    padding-left: 5px;
+    color: #833;
+    display: inline-block;
+    word-break: break-all;
+    border-radius: 8px;
+    border: 1px solid grey;
+    vertical-align: text-top;
 }
 
 .jb3-post-message {
-	padding-right: 5px;
-	padding-left: 5px;
-	color: black;
-	word-break: break-all;
-	display: block;
-	vertical-align: text-top;
+    padding-right: 5px;
+    padding-left: 5px;
+    color: black;
+    word-break: break-all;
+    display: block;
+    vertical-align: text-top;
 }
 
 .jb3-post-message a {
-	font-weight: bold;
-	color: #1690f3;
+    font-weight: bold;
+    color: #1690f3;
 }
 
 .jb3-post-message a:hover {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 .jb3-post-message a:visited {
-	color: #0b78d0;
+    color: #0b78d0;
 }
 
 .jb3-post-message code {
@@ -137,100 +149,100 @@
 }
 
 .jb3-cite {
-	color: #5F7FBF;
-        cursor: pointer; 
+    color: #5F7FBF;
+    cursor: pointer; 
 }
 
 .jb3-cite-mine {
-	font-weight: bold;
-	color: #C00;
+    font-weight: bold;
+    color: #C00;
 }
 
 .jb3-cited-by-me .jb3-post-time {
-	font-weight: bold;
-	color: #C00;
+    font-weight: bold;
+    color: #C00;
 }
 
 .jb3-cited .jb3-post-time {
-	font-weight: bold;
-	color: #5F7FBF;
+    font-weight: bold;
+    color: #5F7FBF;
 }
 
 .jb3-highlight {
-	background-color: #FFD202 !important;
+    background-color: #FFD202 !important;
 }
 
 .jb3-totoz {
-	position: relative;
-	font-weight: bold;
-	color: #0A1;
+    position: relative;
+    font-weight: bold;
+    color: #0A1;
 }
 
 .jb3-totoz img {
-	display: none;
+    display: none;
 }
 
 .jb3-totoz:hover img {
-	display: inline;
-	position: absolute;
-	bottom: 100%;
+    display: inline;
+    position: absolute;
+    bottom: 100%;
 }
 
 .jb3-bigorno {
-	border: 1px solid #F00;
+    border: 1px solid #F00;
 }
 
 .jb3-post-icon {
-	background-repeat: no-repeat;
-	vertical-align: text-top;
+    background-repeat: no-repeat;
+    vertical-align: text-top;
 }
 
 .jb3-post-is-reply-to-mine .jb3-post-icon {
-	background-image: url("/assets/common/icons/post/reply-to-mine.png");
-	width: 16px;
-	height: 16px;
-	display: inline-block;
+    background-image: url("/assets/common/icons/post/reply-to-mine.png");
+    width: 16px;
+    height: 16px;
+    display: inline-block;
 }
 
 .jb3-post-is-bigorno .jb3-post-icon {
-	background-image: url("/assets/common/icons/post/bigorno.png");
-	width: 16px;
-	height: 16px;
-	display: inline-block;
+    background-image: url("/assets/common/icons/post/bigorno.png");
+    width: 16px;
+    height: 16px;
+    display: inline-block;
 }
 
 .jb3-post-is-mine .jb3-post-icon {
-	background-image: url("/assets/common/icons/post/mine.png");
-	width: 16px;
-	height: 16px;
-	display: inline-block;
+    background-image: url("/assets/common/icons/post/mine.png");
+    width: 16px;
+    height: 16px;
+    display: inline-block;
 }
 
 /* desktop */
 @media only screen and (min-width: 768px) {
-	.jb3-post-time {
-		border: none;
-	}
-	.jb3-post-nickname {
-		width: 8em;
-		border: none;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-	.jb3-post-room {
-		width: 8em;
-		border: none;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-	.jb3-post-message {
-		display: inline;
-	}
-	.jb3-post-icon {
-		width: 16px;
-		height: 16px;
-		display: inline-block;
-	}
+    .jb3-post-time {
+        border: none;
+    }
+    .jb3-post-nickname {
+        width: 8em;
+        border: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .jb3-post-room {
+        width: 8em;
+        border: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .jb3-post-message {
+        display: inline;
+    }
+    .jb3-post-icon {
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+    }
 }
