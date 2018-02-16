@@ -74,6 +74,15 @@ public class LegacyUtils {
 
         }
     };
+        static final Escaper bsvEscaper = new Escaper() {
+
+        @Override
+        public String escape(String s) {
+            return s.replaceAll("[\u001E\u001F]", "");
+
+        }
+    };
+
 
     private static final Pattern urlPattern = Pattern.compile("(((https?|ftp|gopher)://)|(data:))[^\\s]+");
 

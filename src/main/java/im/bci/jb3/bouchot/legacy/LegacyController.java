@@ -104,6 +104,19 @@ public class LegacyController {
 			return null;
 		}
 	}
+        
+        @RequestMapping(path = "/bsv", method = RequestMethod.GET)
+	public String bsv(@RequestParam(value = "room", required = false) String room,
+			@RequestParam(value = "last", required = false) Long lastId, WebRequest webRequest, Model model,
+			HttpServletResponse response) {
+		if (get(lastId, room, webRequest, model, LegacyUtils.bsvEscaper)) {
+			response.setContentType("text/plain");
+			response.setHeader("Content-Disposition", "attachment; filename=\"backend.bsv\"");
+			return "bouchot/legacy/bsv";
+		} else {
+			return null;
+		}
+	}
 
 	private boolean get(Long lastId, String room, WebRequest webRequest, Model model, LegacyUtils.Escaper escaper) {
 		DateTime end = DateTime.now(DateTimeZone.UTC).plusHours(1);
