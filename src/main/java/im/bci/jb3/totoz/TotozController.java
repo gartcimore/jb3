@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,42 +24,47 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/totoz")
 public class TotozController {
 
-	private File totozDir;
+    private File totozDir;
 
-	@Value("${jb3.totoz.dir:}")
-	public void setPasteDir(String totozDir) {
-		if (StringUtils.isEmpty(totozDir)) {
-			String cacheDir = System.getenv("XDG_CACHE_HOME");
-			if (StringUtils.isEmpty(cacheDir)) {
-				cacheDir = new File(System.getProperty("user.home"), ".cache").getAbsolutePath();
-			}
-			this.totozDir = new File(new File(cacheDir, "jb3"), "totoz");
-			this.totozDir.mkdirs();
-		} else {
-			this.totozDir = new File(totozDir);
-		}
-	}
+    @Value("${jb3.totoz.dir:}")
+    public void setTotozDir(String totozDir) {
+        if (StringUtils.isEmpty(totozDir)) {
+            String cacheDir = System.getenv("XDG_CACHE_HOME");
+            if (StringUtils.isEmpty(cacheDir)) {
+                cacheDir = new File(System.getProperty("user.home"), ".cache").getAbsolutePath();
+            }
+            this.totozDir = new File(new File(cacheDir, "jb3"), "totoz");
+            this.totozDir.mkdirs();
+        } else {
+            this.totozDir = new File(totozDir);
+        }
+    }
 
-	@RequestMapping("/img/{totoz}")
-	@ResponseBody
-	public ResponseEntity<FileSystemResource> img(@PathVariable("totoz") String totoz)
-			throws MalformedURLException, IOException {
-		File totozFile = new File(totozDir, totoz);
-		if (!totozFile.exists()) {
-			URL totozUrl = UriComponentsBuilder.fromHttpUrl("https://nsfw.totoz.eu/img/").path(totoz).build().toUri().toURL();
-			FileUtils.copyURLToFile(totozUrl, totozFile);
-		}
-		return ResponseEntity.ok().lastModified(totozFile.lastModified()).contentType(detectContentType(totozFile))
-				.contentLength(totozFile.length()).body(new FileSystemResource(totozFile));
-	}
+    @RequestMapping("/img/{totoz}")
+    @ResponseBody
+    public ResponseEntity<FileSystemResource> img(@PathVariable("totoz") String totoz)
+            throws MalformedURLException, IOException {
+        File totozFile = new File(totozDir, totoz);
+        if (!totozFile.exists()) {
+            URL totozUrl = UriComponentsBuilder.fromHttpUrl("https://nsfw.totoz.eu/img/").path(totoz).build().toUri().toURL();
+            FileUtils.copyURLToFile(totozUrl, totozFile);
+        }
+        File totozMetadataFile = new File(totozDir, totoz + ".json");
+        if (!totozMetadataFile.exists()) {
+            URL totozMetadataUrl = UriComponentsBuilder.fromHttpUrl("https://nsfw.totoz.eu/img/").path(totoz).path("info.json").build().toUri().toURL();
+            FileUtils.copyURLToFile(totozMetadataUrl, totozMetadataFile);
+        }
+        return ResponseEntity.ok().lastModified(totozFile.lastModified()).contentType(detectContentType(totozFile))
+                .contentLength(totozFile.length()).body(new FileSystemResource(totozFile));
+    }
 
-	private MediaType detectContentType(File totozFile) {
-		try {
-			return MediaType.parseMediaType(Files.probeContentType(totozFile.toPath()));
-		} catch (Exception e) {
-			return MediaType.ALL;
-		}
+    private MediaType detectContentType(File totozFile) {
+        try {
+            return MediaType.parseMediaType(Files.probeContentType(totozFile.toPath()));
+        } catch (Exception e) {
+            return MediaType.ALL;
+        }
 
-	}
+    }
 
 }
