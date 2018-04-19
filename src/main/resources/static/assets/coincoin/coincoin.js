@@ -154,20 +154,32 @@ jb3 = {
     },
     postCurrentMessage: function () {
         var selectedRoom = this.controlsRoom.val();
-        var auth = localStorage.getItem("dlfp-auth")
-        if (this.checkAuth(auth, selectedRoom)) {
+        var auth = this.checkAuth(selectedRoom);
+        if (auth) {
             this.postMessage(this.controlsNickname.val(), this.controlsMessage.val(), selectedRoom, auth);
             this.controlsMessage.val('');
         }
     },
-    checkAuth: function (auth, selectedRoom) {
+    checkAuth: function (selectedRoom) {
         if (selectedRoom === 'dlfp') {
+            var auth = localStorage.getItem("dlfp-auth");
             if (this.checkIfDlfpTokenIsExpired(auth)) {
                 window.location.href = "/dlfp/connect";
                 return false;
+            } else {
+                return auth;
             }
+        } else if(selectedRoom === 'gamatomic') {
+            var auth =  localStorage.getItem('gamatomic-auth');
+            if(auth) {
+                return auth;
+            } else {
+                window.alert("Please configure gamatomic cookie (in rooms page)");
+                return false;
+            }
+        } else {
+            return true;
         }
-        return true;
     },
     checkIfDlfpTokenIsExpired: function (authStr) {
         if (!authStr) {

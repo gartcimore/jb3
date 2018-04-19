@@ -5,6 +5,10 @@ riot.tag(
                 <form action="/dlfp/connect" class="o-form-element" if="{ rname.value == \'dlfp\' }">\
                         <input type="submit" class="c-button c-button--info" value="Connect & authorize">\
                 </form>\
+                <div class="o-form-element" if="{ rname.value == \'gamatomic\' }">\
+                        <label class="c-label" for="gamatomicAuk">Cookie:</label>\
+                        <input name="gamatomicAuk" type="text" class="c-field" placeholder="Paste Auk cookie here" onchange="{ save }">\
+                </div>\
 		<div class="c-input-group" if="{ !rname.value }">\
                     <input name="rname" class="c-field" type="text" placeholder="Type new room\'s name">\
                     <button if="{ !rname.value }" class="c-button c-button--info" onclick="{ save }">Create new room</button>\
@@ -12,6 +16,7 @@ riot.tag(
 		<div class="o-form-element" if="{ !rname.value }" >\
                     <button class="c-button c-button--warning" onclick="{ resetAll }">Reset all rooms</button>\
 		</div>\
+                 <button if="{ rname.value == \'gamatomic\' }" class="c-button c-button--info" onclick="{ save }">Save</button>\
 		<button if="{ rname.value }" class="c-button" onclick="{ cancel }">Cancel</button>\
 		<button if="{ rname.value }" class="c-button c-button--warning" onclick="{ del }">Delete</button>\
 </fieldset>\
@@ -27,6 +32,9 @@ riot.tag(
 							this.trigger('save-room', {
 								rname : this.rname.value
 							});
+                                                        if(this.gamatomicAuk) {
+                                                            localStorage.setItem('gamatomic-auth', this.gamatomicAuk.value);
+                                                        }
 							this.rname.value = '';
 							this.update();
 						}
