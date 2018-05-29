@@ -129,6 +129,7 @@ jb3 = {
             }
         }, ".jb3-spoiler");
         jb3_common.initHighlight();
+        jb3_common.initUrlPreview();
         jb3_common.initTotozLazyLoading();
         self.initNickname();
         self.coin = new Worker("/assets/coincoin/webdirectcoin.js");

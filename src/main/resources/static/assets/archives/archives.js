@@ -11,5 +11,6 @@ function Jb3Archives() {
 	});
 	jb3_common.initHighlight();
     jb3_common.initTotozLazyLoading();
+    jb3_common.initUrlPreview();
 }
 new Jb3Archives();

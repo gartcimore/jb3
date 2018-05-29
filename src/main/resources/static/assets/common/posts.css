@@ -124,6 +124,25 @@
     color: #0b78d0;
 }
 
+.jb3-post-message a .jb3-url-preview {
+    display: none;
+}
+
+.jb3-post-message a:hover .jb3-url-preview {
+    display: inline;
+    position: relative;
+    left: 2%;
+}
+
+iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: auto;
+    border: 0;
+}
+
 .jb3-post-message code {
     font-family: monospace;
     font-weight: inherit;
