@@ -21,6 +21,9 @@ public class TotozCache {
 
     private final Log LOGGER = LogFactory.getLog(this.getClass());
     private File totozDir;
+    
+    @Value("${jb3.totoz.url}")
+    private String totozUrl;
 
     @Value("${jb3.totoz.dir:}")
     public void setTotozDir(String totozDir) {
@@ -41,7 +44,7 @@ public class TotozCache {
         try {
             File totozMetadataFile = new File(totozDir, totoz + ".json");
             if (!totozMetadataFile.exists()) {
-                URL totozMetadataUrl = UriComponentsBuilder.fromHttpUrl("https://nsfw.totoz.eu/totoz/").path(totoz).path("/info.json").build().toUri().toURL();
+                URL totozMetadataUrl = UriComponentsBuilder.fromHttpUrl(totozUrl).path("/totoz/").path(totoz).path("/info.json").build().toUri().toURL();
                 FileUtils.copyURLToFile(totozMetadataUrl, totozMetadataFile);
             }
         } catch (Exception e) {
@@ -52,8 +55,8 @@ public class TotozCache {
     public File cacheTotoz(String totoz) throws IOException {
         File totozFile = new File(totozDir, totoz);
         if (!totozFile.exists()) {
-            URL totozUrl = UriComponentsBuilder.fromHttpUrl("https://nsfw.totoz.eu/img/").path(totoz).build().toUri().toURL();
-            FileUtils.copyURLToFile(totozUrl, totozFile);
+            URL totozImgUrl = UriComponentsBuilder.fromHttpUrl(totozUrl).path("/img/").path(totoz).build().toUri().toURL();
+            FileUtils.copyURLToFile(totozImgUrl, totozFile);
         }
         return totozFile;
     }

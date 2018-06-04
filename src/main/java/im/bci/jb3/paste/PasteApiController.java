@@ -19,8 +19,10 @@ import java.util.ArrayList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  *
@@ -66,9 +68,12 @@ public class PasteApiController {
         return mv;
     }
 
+    @Value("${jb3.totoz.url}")
+    private String totozUrl;
+
     @RequestMapping(path = "/totoz/search", method = RequestMethod.GET)
     public ArrayList<Totoz> searchTotoz(@RequestParam(name = "terms", required = true) String terms, @RequestParam(name = "offset", required = false, defaultValue = "0") int offset) throws IOException {
-        Document doc = Jsoup.connect("https://nsfw.totoz.eu/search.xml").data("terms", terms)
+        Document doc = Jsoup.connect(UriComponentsBuilder.fromHttpUrl(totozUrl).path("/search.xml").build().toString()).data("terms", terms)
                 .data("offset", Integer.toString(offset)).get();
         ArrayList<Totoz> totozList = new ArrayList<>();
         for (Element t : doc.select("totoz")) {
