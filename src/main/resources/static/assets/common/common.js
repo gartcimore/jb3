@@ -50,9 +50,9 @@ jb3_common = {
         $('.jb3-posts').on({
             mouseenter: function (event) {
                 var url = $(event.target);
-                if (url.find('.jb3-url-preview').length === 0) {
+                if (url.next('.jb3-url-preview').length === 0) {
                     var urlIframe = '<div class="jb3-url-preview"><iframe src="/preview?url=' + encodeURI(url.attr('href')) + '"/></div>';
-                    url.append(urlIframe);
+                    url.after(urlIframe);
                 }
             },
             mouseleave: function (event) {
