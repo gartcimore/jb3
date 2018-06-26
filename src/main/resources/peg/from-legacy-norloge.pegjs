@@ -72,7 +72,7 @@ idNorloge
  { return norlogeConverter.convertIdNorloge(id, b); }
 
 fullNorloge
- = y: norlogeYear "-" m: norlogeMonth "-" d:norlogeDay "T" h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds i:indice? b:bouchot?
+ = y: norlogeYear "-" m: norlogeMonth "-" d:norlogeDay [T# ] h:norlogeHours ":" mi:norlogeMinutes ":" s:norlogeSeconds i:indice? b:bouchot?
  {
  return norlogeConverter.convertFullNorloge(y, m, d, h, mi, s, i, b);
  }

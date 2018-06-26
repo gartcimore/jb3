@@ -169,8 +169,8 @@ jb3_from_legacy_norloge = /*
         peg$c25 = function(id, b) { return norlogeConverter.convertIdNorloge(id, b); },
         peg$c26 = "-",
         peg$c27 = peg$literalExpectation("-", false),
-        peg$c28 = "T",
-        peg$c29 = peg$literalExpectation("T", false),
+        peg$c28 = /^[T# ]/,
+        peg$c29 = peg$classExpectation(["T", "#", " "], false, false),
         peg$c30 = ":",
         peg$c31 = peg$literalExpectation(":", false),
         peg$c32 = function(y, m, d, h, mi, s, i, b) {
@@ -703,8 +703,8 @@ jb3_from_legacy_norloge = /*
             if (s4 !== peg$FAILED) {
               s5 = peg$parsenorlogeDay();
               if (s5 !== peg$FAILED) {
-                if (input.charCodeAt(peg$currPos) === 84) {
-                  s6 = peg$c28;
+                if (peg$c28.test(input.charAt(peg$currPos))) {
+                  s6 = input.charAt(peg$currPos);
                   peg$currPos++;
                 } else {
                   s6 = peg$FAILED;
