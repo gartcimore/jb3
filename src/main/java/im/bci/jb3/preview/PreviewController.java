@@ -34,6 +34,7 @@ public class PreviewController {
         try {
             switch (url.getHost()) {
                 case "twitter.com":
+                case "mobile.twitter.com":
                     return previewTwittos(url);
                 default:
                     return "";
