@@ -47,7 +47,7 @@ jb3_common = {
         }, ".jb3-totoz");
     },
     initUrlPreview: function () {
-        $('.jb3-posts').on({
+        $('.jb3-post-message').on({
             mouseenter: function (event) {
                 var url = $(event.target);
                 if (url.next('.jb3-url-preview').length === 0) {
