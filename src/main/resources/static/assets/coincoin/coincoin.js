@@ -26,7 +26,7 @@ jb3 = {
                 );
         var roomInDomain = uri.domain().slice(0, -uri.tld().length - 1);
         roomInDomain = self.rooms[roomInDomain] && roomInDomain;
-        self.controlsRoom.attr("size", self.controlsRoom.find('option').length);
+        self.controlsRoom.attr("size", Math.min(self.controlsRoom.find('option').length, 10));
         self.controlsRoom.val(roomInURI || roomInDomain || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
         var postsContainer = document.getElementById('jb3-posts-container');
         for (var room in self.rooms) {
