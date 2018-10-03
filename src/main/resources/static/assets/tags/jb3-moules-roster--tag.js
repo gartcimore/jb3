@@ -1,6 +1,6 @@
 var jb3MoulesRosterTemplate = '\
-<select id="moules" class="c-card__item" size="{ Math.min(Object.keys(moulesNicknames).length, 10) }">\
-    <option each="{ nickname, ids in moulesNicknames }">{ nickname }<sup if="{ ids.size > 1 }" class="jb3-moules-roster-multi-sup">{ ids.size }</sup></option>\
+<select id="moules" class="c-card__item" size="{ Math.max(2, Math.min(Object.keys(moulesNicknames).length, 10)) }">\
+    <option each="{ nickname, ids in moulesNicknames }">{ nickname }{ ids.size > 1 && " &times; " + ids.size }</option>\
 </select>\
 ';
 
