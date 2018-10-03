@@ -30,8 +30,8 @@ var jb3VisioTemplate = '\
     <div class="o-grid__cell">\
         <jb3-visio-local-video if="{ localVideoStream }" name="localVideo" stream="{ localVideoStream }" nickname="{ jb3_common.getNickname() }"></jb3-visio-local-video>\
     </div>\
-    <div class="o-grid__cell" each="{ name, moule in remoteMoules }">\
-        <jb3-visio-remote-video name="{ name }" stream="{ moule.stream }" nickname="{ moule.nickname }"></jb3-visio-local-video>\
+    <div class="o-grid__cell" each="{ mouleName, moule in remoteMoules }">\
+        <jb3-visio-remote-video id="{ mouleName }" stream="{ moule.stream }" nickname="{ moule.nickname }"></jb3-visio-local-video>\
     </div>\
 </div>\
 <div class="c-input-group u-letter-box--medium" if="{ localVideoStream }">\
@@ -103,12 +103,12 @@ function jb3VisioConstructor(opts) {
             self.nextRTC.request('text', null, self.conversationId.value, {nickname: jb3_common.getNickname()});
         });
         self.nextRTC.on('localStream', function (member, stream) {
-            self.localVideoStream = URL.createObjectURL( stream.stream );
+            self.localVideoStream = stream.stream;
             self.update();
         });
         self.nextRTC.on('remoteStream', function (member, stream) {
             self.remoteMoules[stream.member] = self.remoteMoules[stream.member] || {}; 
-            self.remoteMoules[stream.member].stream = URL.createObjectURL( stream.stream );
+            self.remoteMoules[stream.member].stream = stream.stream;
             self.update();
         });
         self.nextRTC.on('text', function (nextRTC, event) {
