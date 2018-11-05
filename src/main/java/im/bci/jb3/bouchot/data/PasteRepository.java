@@ -46,7 +46,7 @@ public class PasteRepository {
     private int pasteMaxFiles;
 
     public String saveFilePaste(MultipartFile multipartFile) throws FileNotFoundException, IOException {
-        String filename = UUID.randomUUID() + StringUtils.getFilenameExtension(multipartFile.getOriginalFilename())  + ".gz";
+        String filename = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(multipartFile.getOriginalFilename())  + ".gz";
         try (FileOutputStream fos = new FileOutputStream(new File(pasteDir, filename));
                 GZIPOutputStream gzos = new GZIPOutputStream(fos);
                 InputStream is = multipartFile.getInputStream()) {
