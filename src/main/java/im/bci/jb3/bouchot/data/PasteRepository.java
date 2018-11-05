@@ -10,7 +10,7 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.UUID;
-import java.util.zip.ZipOutputStream;
+import java.util.zip.GZIPOutputStream;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -46,11 +46,11 @@ public class PasteRepository {
     private int pasteMaxFiles;
 
     public String saveFilePaste(MultipartFile multipartFile) throws FileNotFoundException, IOException {
-        String filename = UUID.randomUUID() + ".zip";
+        String filename = UUID.randomUUID() + StringUtils.getFilenameExtension(multipartFile.getName())  + ".gz";
         try (FileOutputStream fos = new FileOutputStream(new File(pasteDir, filename));
-                ZipOutputStream zos = new ZipOutputStream(fos);
+                GZIPOutputStream gzos = new GZIPOutputStream(fos);
                 InputStream is = multipartFile.getInputStream()) {
-            FileCopyUtils.copy(is, zos);
+            FileCopyUtils.copy(is, gzos);
         }
         cleanup();
         return buildPasteUrl(filename);
