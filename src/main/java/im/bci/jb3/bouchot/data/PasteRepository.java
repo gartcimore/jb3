@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.UUID;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -45,12 +46,24 @@ public class PasteRepository {
     @Value("${jb3.paste.maxFiles:3}")
     private int pasteMaxFiles;
 
+    private static final Pattern EXTENSION_WHITELIST = Pattern.compile("(png|jpe?g|mp3|ogg|wav)", Pattern.CASE_INSENSITIVE);
+
     public String saveFilePaste(MultipartFile multipartFile) throws FileNotFoundException, IOException {
-        String filename = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(multipartFile.getOriginalFilename())  + ".gz";
-        try (FileOutputStream fos = new FileOutputStream(new File(pasteDir, filename));
-                GZIPOutputStream gzos = new GZIPOutputStream(fos);
-                InputStream is = multipartFile.getInputStream()) {
-            FileCopyUtils.copy(is, gzos);
+        final String filenameExtension = StringUtils.getFilenameExtension(multipartFile.getOriginalFilename());
+        String filename;
+        if (EXTENSION_WHITELIST.matcher(filenameExtension).matches()) {
+            filename = UUID.randomUUID() + "." + filenameExtension;
+            try (FileOutputStream fos = new FileOutputStream(new File(pasteDir, filename));
+                    InputStream is = multipartFile.getInputStream()) {
+                FileCopyUtils.copy(is, fos);
+            }
+        } else {
+            filename = UUID.randomUUID() + "." + filenameExtension + ".gz";
+            try (FileOutputStream fos = new FileOutputStream(new File(pasteDir, filename));
+                    GZIPOutputStream gzos = new GZIPOutputStream(fos);
+                    InputStream is = multipartFile.getInputStream()) {
+                FileCopyUtils.copy(is, gzos);
+            }
         }
         cleanup();
         return buildPasteUrl(filename);
