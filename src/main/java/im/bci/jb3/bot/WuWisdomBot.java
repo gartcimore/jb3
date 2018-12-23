@@ -3,7 +3,6 @@ package im.bci.jb3.bot;
 import im.bci.jb3.bouchot.data.Post;
 import im.bci.jb3.bouchot.logic.Norloge;
 import im.bci.jb3.bouchot.logic.Tribune;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -11,6 +10,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -30,6 +32,10 @@ public class WuWisdomBot implements Bot {
                 HttpGet request = null;
 
                 try {
+
+//                    Document doc = Jsoup.connect("https://wutangclan.net/wu-wisdom/").get();
+//                    Element wisdom = doc.select("blockquote.wu-wisdom").first();
+//                    wisdom.text();
 
                     String url = "https://wutangclan.net/wu-wisdom/";
                     HttpClient client = HttpClientBuilder.create().build();
@@ -57,6 +63,8 @@ public class WuWisdomBot implements Bot {
     }
 
     static String extractWisdom(String content) {
-        return StringUtils.substringBetween(content, "<blockquote class=\"wu-wisdom\"><h1>", "</h1>");
+        Document doc = Jsoup.parse(content, "UTF-8");
+        Element wisdom = doc.select("blockquote.wu-wisdom").first();
+        return wisdom.text();
     }
 }
