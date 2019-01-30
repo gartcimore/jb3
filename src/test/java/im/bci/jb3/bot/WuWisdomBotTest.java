@@ -1,16 +1,13 @@
 package im.bci.jb3.bot;
 
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-import org.junit.jupiter.api.Test;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-
-class WuWisdomBotTest {
+public class WuWisdomBotTest {
 
 
     @Test
-    void shouldExtractQuoteFromString() {
+    public void shouldExtractQuoteFromString() {
         String expected = "Don't compare. Be unique. Don't fight your misfortune. Transform it.";
         String content = "<article id=\"post-34\" class=\"post-34 page type-page status-publish hentry\">\n" +
                 "\t<header class=\"entry-header\">\n" +
@@ -28,6 +25,6 @@ class WuWisdomBotTest {
                 "</section>";
 
         String quote = WuWisdomBot.extractWisdom(content);
-        assertThat(quote, is(expected));
+        assertEquals(quote, expected);
     }
 }
