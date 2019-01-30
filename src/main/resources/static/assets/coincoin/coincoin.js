@@ -54,7 +54,7 @@ jb3 = {
             self.trollometre.update(selectedRoom);
             $('#jb3-visio-link').attr('href', "/visio?room=" + selectedRoom);
         });
-        self.controlsMessage.bind('keypress', function (event) {
+        self.controlsMessage.bind('keydown', function (event) {
             if (event.altKey) {
                 if (self.handleAltShortcut(event.key)) {
                     event.stopPropagation();
