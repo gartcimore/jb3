@@ -1,116 +1,123 @@
 body {
-	background-color: #FEFEFE;
+    background-color: #FEFEFE;
 }
 
 header {
-	position: relative;
-	display: none;
-	z-index: 3;
+    position: relative;
+    display: none;
+    z-index: 3;
 }
 
 #jb3-layout {
-	position: fixed;
-	top: 0px;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
 }
 
 #jb3-layout-vertical {
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-end;
-	overflow: hidden;
-	width: 100%;
-	height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
 }
 
 #jb3-layout-horizontal {
-	display: flex;
-	overflow: auto;
-	height: 100%;
+    display: flex;
+    overflow: auto;
+    height: 100%;
 }
 
 #jb3-posts-container {
-	margin: 0;
-	padding: 0;
-	overflow-x: visible;
-	overflow-y: scroll;
-	width: 100%;
-	height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: visible;
+    overflow-y: scroll;
+    width: 100%;
+    height: 100%;
 }
 
 #jb3-hidden-posts {
-	display: none;
+    display: none;
+}
+
+#jb3-controls-message-post {
+    display: none;
 }
 
 #jb3-roster {
-	resize: horizontal;
-	overflow: auto;
-	display: none;
-	flex-direction: column;
-	justify-content: flex-end;
-	padding: 2px;
+    resize: horizontal;
+    overflow: auto;
+    display: none;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 2px;
 }
 
 /* desktop */
 @media only screen and (min-width: 768px) {
-	#jb3-roster {
-		display: flex;
-	}
-	header {
-		display: block;
-	}
-	#jb3-layout {
-		top: 57px;
-	}
+    #jb3-roster {
+        display: flex;
+    }
+    header {
+        display: block;
+    }
+    #jb3-layout {
+        top: 57px;
+    }
+    #jb3-controls-message-post {
+        display: block;
+    }
 }
 
 #jb3-roster .c-card {
-	max-height: 100%;
+    max-height: 100%;
 }
 
 #jb3-controls {
-	display: flex;
-	flex-flow: row wrap;
+    display: flex;
+    flex-flow: row wrap;
 }
 
 #jb3-controls label {
-	flex: 0 1 auto;
+    flex: 0 1 auto;
 }
 
 #jb3-controls-nickname {
-	flex: 0 1 auto;
+    flex: 0 1 auto;
 }
 
 #jb3-controls-room {
-	width: 100%;
-	padding: .5em 0;
+    width: 100%;
+    padding: .5em 0;
 }
 
 #jb3-controls-message-container {
-	flex: 1 1 auto;
-	margin-right: 2px;
+    flex: 1 1 auto;
+    margin-right: 2px;
 }
 
 #jb3-post-popup {
-	position: absolute;
-	left: 0px;
-	right: 0px;
-	bottom: 0px;
-	margin: 0;
-	display: flex;
-	justify-content: center;
-	flex: 1 1 auto;
-	pointer-events: none;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    flex: 1 1 auto;
+    pointer-events: none;
 }
 
 #jb3-post-popup-content {
-	background-color: #f3f3f3;
-	border-radius: 4px;
+    background-color: #f3f3f3;
+    border-radius: 4px;
 }
 
 #trollometre {
-	width: 100%;
-	padding-bottom: 5px;
+    width: 100%;
+    padding-bottom: 5px;
 }
