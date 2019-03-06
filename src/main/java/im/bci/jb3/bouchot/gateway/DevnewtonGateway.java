@@ -15,7 +15,7 @@ public class DevnewtonGateway extends AbstractWebdirectcoinGateway {
         Jb3BouchotConfig config = new Jb3BouchotConfig();
         config.setLocalRoom("devnewton");
         config.setRemoteRoom("devnewton");
-        config.setWebdirectcoinURL("https://b3.bci.im/webdirectcoin");
+        config.setWebdirectcoinURL("https://jb3.devnewton.fr/webdirectcoin");
         return config;
     }
 

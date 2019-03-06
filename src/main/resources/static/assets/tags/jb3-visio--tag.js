@@ -77,8 +77,8 @@ function jb3VisioConstructor(opts) {
             mediaConfig: self.getMediaConfig(),
             peerConfig: {
                 iceServers: [
-                    {urls: "stun:turn.bci.im"},
-                    {urls: "turn:turn.bci.im", credential: "ornottobe", username: "jb3" }
+                    {urls: "stun:turn.devnewton.fr"},
+                    {urls: "turn:turn.devnewton.fr", credential: "ornottobe", username: "jb3" }
                 ],
                 iceTransportPolicy: 'all',
                 rtcpMuxPolicy: 'negotiate'

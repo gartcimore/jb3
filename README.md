@@ -14,21 +14,21 @@ jb3 is a KISS tribune powered by java, spring boot and mongodb.
 
 # Demo
 
-A live demo is accessible [here](https://b3.bci.im).
+A live demo is accessible [here](https://jb3.devnewton.fr).
 
 ## Coincoin configuration
 
 You can also configure your favorite coincoin using these parameters:
 
-- backend URL: https://b3.bci.im/legacy/xml
-- post URL: https://b3.bci.im/legacy/post
+- backend URL: https://jb3.devnewton.fr/legacy/xml
+- post URL: https://jb3.devnewton.fr/legacy/post
 - post data: message=%m
 - tags: encoded
 
 ## Advanced coincoin configuration
 
-- backend using last id: https://b3.bci.im/legacy/xml?last=%last
-- post returns backend: post request to https://b3.bci.im/legacy/post include backend data (same as GET https://b3.bci.im/legacy/xml response).
+- backend using last id: https://jb3.devnewton.fr/legacy/xml?last=%last
+- post returns backend: post request to https://jb3.devnewton.fr/legacy/post include backend data (same as GET https://jb3.devnewton.fr/legacy/xml response).
 - post message using last id: message=%m&last=%last
 - XPOST: post reply body contains last messages
 - X-Post-Id: post reply returns posted message id in X-Post-Id header
@@ -37,7 +37,7 @@ You can also configure your favorite coincoin using these parameters:
 
 Rooms are like IRC channel. From a coincoin, they can be seen as independent tribune.
 
-- room backend : https://b3.bci.im/legacy/xml?room=%room
+- room backend : https://jb3.devnewton.fr/legacy/xml?room=%room
 - post message in a room: message=%m&room=%room
 
 ## Gateway rooms
