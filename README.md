@@ -90,7 +90,7 @@ The frontend is now accessible on [locahost:8080](http://localhost:8080).
 There is several options to deploy and host jb3. Here is one that requires:
 
 - a domain name (example: mydomain.me).
-- a web server with http proxy capabilities (example [ngix](http://nginx.org/)).
+- a web server with http proxy capabilities (example [nginx](http://nginx.org/)).
 
 ### Application configuration
 
@@ -98,5 +98,5 @@ Please change the jb3.defaults.room in application.properties file.
 
 ### Deployment
 
-1. Build and launch jb3 on the server.
-2. Configure your web server to act as reverse proxy on http://localhost:8080
+1. Build and launch jb3 on the server. If your OS use systemd, check the [sample configuration](docs/jb3.service).
+2. Configure your web server to act as reverse proxy on [http://localhost:8080](http://localhost:8080). If you are using nginx, check the [sample configuration](docs/nginx-sample.conf).

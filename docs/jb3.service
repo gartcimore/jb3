@@ -1,0 +1,41 @@
+# sample systemd unit
+
+[Unit]
+Description=jb3
+After=network.target
+
+[Service]
+
+# user jb3 must exists
+User=jb3
+ProtectHome=yes
+ProtectSystem=strict
+PrivateTmp=yes
+
+# this directory must be created and owned by the jb3 user
+ReadWritePaths=/var/lib/jb3
+ReadWritePaths=/tmp
+RemoveIPC=yes
+
+Environment=LOGGING_LEVEL_ROOT=WARN
+Environment=LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB=ERROR
+
+# setup the name of your tribune here
+Environment=JB3_DEFAULTS_ROOM=changeme
+Environment=JB3_DEFAULTS_ROOMS=changeme,devnewton,dlfp,euromussels,ototu,gabuzomeu,moules,sveetch,batavie
+Environment=JB3_ANATID_ROOMS=dlfp,euromussels,ototu,moules,sveetch,batavie
+Environment=JB3_ANATID_URL=https://node.devnewton.fr/anatid
+Environment=JB3_ROOM_HISTORY_SIZE=200
+Environment=JB3_POSTS_TTL=P1000Y
+Environment=JB3_ROOM_POSTS_TTL=P1000Y
+Environment=HANDLEBARS_CACHE=true
+
+# these directories must be created and owned by the jb3 user
+Environment=JB3_PASTE_DIR=/var/lib/jb3/paste
+Environment=JB3_TOTOZ_DIR=/var/lib/jb3/totoz
+
+Environment=JB3_PASTE_MAXFILES=100
+
+# follow the https://linuxfr.org/developpeur instruction to get theses values
+Environment=JB3_DLFP_OAUTH_CLIENT_ID=changeme
+Environment=JB3_DLFP_OAUTH_CLIENT_SECRET=changeme
