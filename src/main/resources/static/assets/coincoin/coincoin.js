@@ -40,7 +40,6 @@ jb3 = {
             self.rooms[room].postsDiv = postsDivForRoom;
         }
 
-        $('#jb3-visio-link').attr('href', "/visio?room=" + self.controlsRoom.val());
         if (roomInURI === self.controlsRoom.val()) {
             $('#jb3-roster').hide();
             $('header').hide();
@@ -52,7 +51,6 @@ jb3 = {
             $('.jb3-posts[data-room="' + selectedRoom + '"]').show();
             self.scrollPostsContainerToBottom();
             self.trollometre.update(selectedRoom);
-            $('#jb3-visio-link').attr('href', "/visio?room=" + selectedRoom);
         });
         self.controlsMessage.bind('keydown', function (event) {
             if (event.altKey) {

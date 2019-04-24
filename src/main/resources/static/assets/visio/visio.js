@@ -1,1 +1,0 @@
-riot.mount('jb3-visio');

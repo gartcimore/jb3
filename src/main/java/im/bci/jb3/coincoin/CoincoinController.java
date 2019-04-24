@@ -36,11 +36,5 @@ public class CoincoinController {
 		model.addAttribute("wro-group", "paste");
 		return "paste/paste";
 	}
-        
-	@RequestMapping(path = "/visio", method = RequestMethod.GET)
-	public String visio(Model model) {
-                model.addAttribute("jb3DefaultsRooms", defaultsRooms);
-		model.addAttribute("wro-group", "visio");
-		return "visio/visio";
-	}
+
 }
