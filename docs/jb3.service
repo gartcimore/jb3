@@ -22,8 +22,8 @@ Environment=LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB=ERROR
 
 # setup the name of your tribune here
 Environment=JB3_DEFAULTS_ROOM=changeme
-Environment=JB3_DEFAULTS_ROOMS=changeme,devnewton,dlfp,euromussels,ototu,gabuzomeu,moules,sveetch,batavie
-Environment=JB3_ANATID_ROOMS=dlfp,euromussels,ototu,moules,sveetch,batavie
+Environment=JB3_DEFAULTS_ROOMS=changeme,devnewton,dlfp,euromussels,ototu,gabuzomeu,moules,sveetch
+Environment=JB3_ANATID_ROOMS=dlfp,euromussels,ototu,moules,sveetch
 Environment=JB3_ANATID_URL=https://node.devnewton.fr/anatid
 Environment=JB3_ROOM_HISTORY_SIZE=200
 Environment=JB3_POSTS_TTL=P1000Y

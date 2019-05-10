@@ -46,10 +46,11 @@ Gateway are used to receive and post on external tribunes or other chat systems.
 
 Implemented gateways:
 
-- batavie
 - dlfp
 - euromussels
+- gabuzomeu
 - moules
+- ototu
 - sveetch
 
 # Build and run demo using [docker](https://www.docker.com/)
