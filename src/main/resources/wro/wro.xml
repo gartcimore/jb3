@@ -20,6 +20,7 @@
 		<js>classpath:META-INF/resources/webjars/riot/2.4.1/riot.js</js>
 		<js>classpath:META-INF/resources/webjars/chart.js/2.2.2/dist/Chart.js
 		</js>
+		<js>classpath:META-INF/resources/webjars/hammerjs/2.0.8/hammer.js</js>
 		<js>/assets/thirdparty/responsive-sketchpad.js</js>
 		<js>/assets/tags/jb3-moules-roster--tag.js</js>
 		<js>/assets/tags/jb3-raw--tag.js</js>

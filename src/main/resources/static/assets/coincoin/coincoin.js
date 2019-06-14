@@ -28,6 +28,7 @@ jb3 = {
         roomInDomain = self.rooms[roomInDomain] && roomInDomain;
         self.controlsRoom.attr("size", Math.min(self.controlsRoom.find('option').length, 10));
         self.controlsRoom.val(roomInURI || roomInDomain || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
+        self.controlsMessage.attr("placeholder", self.controlsRoom.val());
         var postsContainer = document.getElementById('jb3-posts-container');
         for (var room in self.rooms) {
             var postsDivForRoom = document.createElement("div");
@@ -49,6 +50,7 @@ jb3 = {
             var selectedRoom = localStorage.selectedRoom = self.controlsRoom.val();
             $('.jb3-posts[data-room!="' + selectedRoom + '"]').hide();
             $('.jb3-posts[data-room="' + selectedRoom + '"]').show();
+            self.controlsMessage.attr("placeholder", selectedRoom);
             self.scrollPostsContainerToBottom();
             self.trollometre.update(selectedRoom);
         });
@@ -144,12 +146,39 @@ jb3 = {
         self.coin.postMessage({type: "connect", url: wurl.toString()});
         self.updateMessages();
         self.initTrollometre();
+        self.setupGesture();
         setTimeout(function () {
             self.refreshDlfpToken();
         }, 1000);
         setInterval(function () {
             self.refreshDlfpToken();
         }, 60 * 60 * 1000);
+    },
+    setupGesture: function() {
+        delete Hammer.defaults.cssProps.userSelect;
+        var hammertime = new Hammer(document.getElementById("jb3-posts-container"), {
+            inputClass: Hammer.TouchInput
+        });
+        var self = this;
+        hammertime.on('swipeleft', function(e) {
+        	var tribuneSelect = self.controlsRoom[0];
+            if (tribuneSelect.selectedIndex === 0) {
+                tribuneSelect.selectedIndex = tribuneSelect.options.length - 1;
+            } else {
+                tribuneSelect.selectedIndex = tribuneSelect.selectedIndex - 1;
+            }
+            self.controlsRoom.change();
+        }
+        );
+        hammertime.on('swiperight', function(e) {
+        	var tribuneSelect = self.controlsRoom[0];
+            if (tribuneSelect.selectedIndex >= (tribuneSelect.options.length - 1)) {
+                tribuneSelect.selectedIndex = 0;
+            } else {
+                tribuneSelect.selectedIndex = tribuneSelect.selectedIndex + 1;
+            }
+            self.controlsRoom.change();
+        });
     },
     postCurrentMessage: function () {
         var selectedRoom = this.controlsRoom.val();
