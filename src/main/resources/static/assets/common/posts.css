@@ -130,16 +130,8 @@
 
 .jb3-post-message a:hover + .jb3-url-preview {
     display: inline;
-    position: relative;
-    bottom: 0;
-    left: 2%;
-}
-
-iframe {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    border: 0;
+    bottom: 100%;
 }
 
 .jb3-post-message code {

@@ -47,12 +47,24 @@ jb3_common = {
         }, ".jb3-totoz");
     },
     initUrlPreview: function () {
-        $('.jb3-post-message').on({
+        $('.jb3-posts').on({
             mouseenter: function (event) {
                 var url = $(event.target);
                 if (url.next('.jb3-url-preview').length === 0) {
-                    var urlIframe = '<div class="jb3-url-preview"><iframe src="/preview?url=' + encodeURI(url.attr('href')) + '"/></div>';
-                    url.after(urlIframe);
+                	var xhr = new XMLHttpRequest();
+			        xhr.onreadystatechange = function (event) {
+			            if (xhr.readyState === 4) {
+			                if (xhr.status === 200) {
+			                	if (url.next('.jb3-url-preview').length === 0) {
+				                    var preview = JSON.parse(xhr.response);
+				                    var previewFigure = `<figure class="jb3-url-preview"><img src="${preview.image}" /><figcaption>${preview.title}</figcaption></figure>`;
+				                    url.after(previewFigure);
+			                	}
+			                }
+			            }
+			        };
+			        xhr.open("GET", "/api/preview?url=" + encodeURIComponent(url.attr('href')));
+			        xhr.send();
                 }
             },
             mouseleave: function (event) {
