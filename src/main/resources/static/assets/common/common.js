@@ -49,16 +49,16 @@ jb3_common = {
     initUrlPreview: function () {
         $('.jb3-posts').on({
             mouseenter: function (event) {
-                var url = $(event.target);
-                if (url.next('.jb3-url-preview').length === 0) {
+                var url = $(event.currentTarget);
+                if (url.find('.jb3-url-preview').length === 0) {
                 	var xhr = new XMLHttpRequest();
 			        xhr.onreadystatechange = function (event) {
 			            if (xhr.readyState === 4) {
 			                if (xhr.status === 200) {
-			                	if (url.next('.jb3-url-preview').length === 0) {
+			                	if (url.find('.jb3-url-preview').length === 0) {
 				                    var preview = JSON.parse(xhr.response);
 				                    var previewFigure = `<figure class="jb3-url-preview"><img src="${preview.image}" /><figcaption>${preview.title}</figcaption></figure>`;
-				                    url.after(previewFigure);
+				                    url.append(previewFigure);
 			                	}
 			                }
 			            }

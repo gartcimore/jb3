@@ -124,14 +124,20 @@
     color: #0b78d0;
 }
 
-.jb3-post-message a + .jb3-url-preview {
+.jb3-post-message a .jb3-url-preview {
     display: none;
 }
 
-.jb3-post-message a:hover + .jb3-url-preview {
-    display: inline;
+.jb3-post-message a:hover .jb3-url-preview {
+    display: block;
     position: absolute;
-    bottom: 100%;
+    top: 0;
+    left: 0;
+    color: black;
+    background-color: #FBFBFB;
+    border: 1px solid black;
+    padding: 4px;
+    border-radius: 8px;
 }
 
 .jb3-post-message code {
