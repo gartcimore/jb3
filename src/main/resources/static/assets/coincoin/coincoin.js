@@ -186,6 +186,7 @@ jb3 = {
         if (auth) {
             this.postMessage(this.controlsNickname.val(), this.controlsMessage.val(), selectedRoom, auth);
             this.controlsMessage.val('');
+            this.clearNotification();
         }
     },
     checkAuth: function (selectedRoom) {
@@ -326,6 +327,9 @@ jb3 = {
         message.message = jb3_post_to_html.parse(message.message);
         message.postIsMine = message.nickname === userNickname || (message.room && message.nickname === localStorage.getItem(message.room + '-login')) ? " jb3-post-is-mine" : "";
         message.postIsBigorno = message.message.search(new RegExp("(moules|" + RegExp.escape(userNickname) + ")&lt;", "i")) >= 0 ? " jb3-post-is-bigorno" : "";
+        if(message.postIsBigorno) {
+        	this.notifyBigorno(message);
+        }
         var messageDiv = this.messageTemplate(message);
         this.insertMessageDiv(messageDiv, message);
     },
@@ -392,11 +396,22 @@ jb3 = {
             if (cited.hasClass('jb3-post-is-mine')) {
                 cited.addClass('jb3-cited-by-me');
                 cite.addClass('jb3-cite-mine');
-                cite.closest('.jb3-post').addClass('jb3-post-is-reply-to-mine');
+                var post = cite.closest('.jb3-post');
+                post.addClass('jb3-post-is-reply-to-mine');
+                self.notifyReply({message: post.text(), id: post.attr("id")});
             } else {
                 cited.addClass('jb3-cited');
             }
         });
+    },
+    notifyBigorno: function(message) {
+    	document.title = "\uD83D\uDCE3 jb3";
+    },
+    notifyReply: function(message) {
+    	document.title = "\u21AA jb3";
+    },
+    clearNotification: function() {
+    	document.title = "jb3";
     },
     handleAltShortcut: function (keychar) {
         switch (keychar) {
