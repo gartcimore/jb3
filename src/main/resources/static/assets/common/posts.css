@@ -219,25 +219,16 @@
     vertical-align: text-top;
 }
 
-.jb3-post-is-reply-to-mine .jb3-post-icon {
-    background-image: url("/assets/common/icons/post/reply-to-mine.png");
-    width: 16px;
-    height: 16px;
-    display: inline-block;
+.jb3-post-is-reply-to-mine .jb3-post-icon:before {
+    content: "\21AA"
 }
 
-.jb3-post-is-bigorno .jb3-post-icon {
-    background-image: url("/assets/common/icons/post/bigorno.png");
-    width: 16px;
-    height: 16px;
-    display: inline-block;
+.jb3-post-is-bigorno .jb3-post-icon:before {
+    content: "\1F4E3"
 }
 
-.jb3-post-is-mine .jb3-post-icon {
-    background-image: url("/assets/common/icons/post/mine.png");
-    width: 16px;
-    height: 16px;
-    display: inline-block;
+.jb3-post-is-mine .jb3-post-icon:before{
+    content: "\2B50"
 }
 
 /* desktop */
