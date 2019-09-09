@@ -231,6 +231,11 @@
     content: "\2B50"
 }
 
+.jb3-duck {
+	cursor: crosshair;
+	color: #718732
+}
+
 /* desktop */
 @media only screen and (min-width: 768px) {
     .jb3-post-time {

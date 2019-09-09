@@ -128,6 +128,13 @@ jb3 = {
                 spoiler.toggleClass('jb3-revealed-spoiler');
             }
         }, ".jb3-spoiler");
+        $('.jb3-posts').on({
+            click: function (event) {
+                var button = $(event.target);
+                var post = button.parents('.jb3-post');
+                self.insertTextInMessageControl('#' + post.attr('id') + ' pan ! pan !');
+            }
+        }, ".jb3-duck");
         jb3_common.initHighlight();
         jb3_common.initUrlPreview();
         jb3_common.initTotozLazyLoading();
