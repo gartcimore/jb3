@@ -49,7 +49,7 @@ public class FortuneRepositoryImpl implements FortuneRepository {
         if (StringUtils.isNotBlank(rq.getNicknameFilter())) {
             query = query.addCriteria(Criteria.where("posts").elemMatch(Criteria.where("nickname").regex(rq.getNicknameFilter())));
         }
-        query = query.with(new PageRequest(rq.getPage(), rq.getPageSize(), Sort.Direction.DESC, "time"));
+        query = query.with(PageRequest.of(rq.getPage(), rq.getPageSize(), Sort.Direction.DESC, "time"));
         return mongoTemplate.find(query, Fortune.class, COLLECTION_NAME);
     }
 

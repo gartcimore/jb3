@@ -48,10 +48,10 @@ public class CleanUtils {
         doc.body().children().select("span[style='text-decoration: line-through']").tagName("s");
         doc.body().children().select("span[style='text-decoration: underline']").tagName("u");
         for (Element element : doc.body().children().select(":not(a,b,i,s,u,tt,code,spoiler)")) {
-            element.replaceWith(TextNode.createFromEncoded(element.toString(), null));
+            element.replaceWith(TextNode.createFromEncoded(element.toString()));
         }
         for (Element element : doc.body().children().select("a")) {
-            element.replaceWith(TextNode.createFromEncoded(element.attr("href"), null));
+            element.replaceWith(TextNode.createFromEncoded(element.attr("href")));
         }
         Cleaner cleaner = new Cleaner(messageWhitelist);
         doc = cleaner.clean(doc);

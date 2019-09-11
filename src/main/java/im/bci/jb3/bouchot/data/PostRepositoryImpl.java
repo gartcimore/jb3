@@ -38,7 +38,7 @@ public class PostRepositoryImpl implements PostRepository {
         Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate()).and("room")
                 .is(roomOrDefault(room));
         Query query = new Query().addCriteria(criteria)
-                .with(new PageRequest(0, roomHistorySize, Sort.Direction.DESC, "time", "gatewayPostId.postId"));
+                .with(PageRequest.of(0, roomHistorySize, Sort.Direction.DESC, "time", "gatewayPostId.postId"));
         List<Post> result = mongoTemplate.find(query, Post.class, COLLECTION_NAME);
         return result;
     }
@@ -48,7 +48,7 @@ public class PostRepositoryImpl implements PostRepository {
         Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate()).and("room")
                 .is(roomOrDefault(room));
         Query query = new Query().addCriteria(criteria)
-                .with(new PageRequest(0, roomHistorySize, Sort.Direction.ASC, "time", "gatewayPostId.postId"));
+                .with(PageRequest.of(0, roomHistorySize, Sort.Direction.ASC, "time", "gatewayPostId.postId"));
         List<Post> result = mongoTemplate.find(query, Post.class, COLLECTION_NAME);
         return result;
     }
@@ -58,7 +58,7 @@ public class PostRepositoryImpl implements PostRepository {
         Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate()).and("room")
                 .is(roomOrDefault(room));
         Query query = new Query().addCriteria(criteria)
-                .with(new PageRequest(0, roomHistorySize, Sort.Direction.ASC, "time", "gatewayPostId.postId"));
+                .with(PageRequest.of(0, roomHistorySize, Sort.Direction.ASC, "time", "gatewayPostId.postId"));
         return mongoTemplate.count(query, COLLECTION_NAME);
     }
 
@@ -86,7 +86,7 @@ public class PostRepositoryImpl implements PostRepository {
         Criteria criteria = Criteria.where("time").gte(start.toDate()).lt(end.toDate()).and("room")
                 .is(roomOrDefault(room));
         Query query = new Query().addCriteria(criteria)
-                .with(new PageRequest(0, 9, Sort.Direction.ASC, "time", "gatewayPostId.postId"));
+                .with(PageRequest.of(0, 9, Sort.Direction.ASC, "time", "gatewayPostId.postId"));
         List<Post> posts = mongoTemplate.find(query, Post.class, COLLECTION_NAME);
         if (posts.isEmpty()) {
             return null;
@@ -141,13 +141,13 @@ public class PostRepositoryImpl implements PostRepository {
         if (nbCriteria > 0) {
             switch(sort) {
                 case RELEVANCE:
-                    query.with(new PageRequest(rq.getPage(), rq.getPageSize()));
+                    query.with(PageRequest.of(rq.getPage(), rq.getPageSize()));
                     break;
                 case TIME_ASC:
-                    query.with(new PageRequest(rq.getPage(), rq.getPageSize(), Sort.Direction.ASC, "time"));
+                    query.with(PageRequest.of(rq.getPage(), rq.getPageSize(), Sort.Direction.ASC, "time"));
                     break;
                 case TIME_DESC:
-                    query.with(new PageRequest(rq.getPage(), rq.getPageSize(), Sort.Direction.DESC, "time"));
+                    query.with(PageRequest.of(rq.getPage(), rq.getPageSize(), Sort.Direction.DESC, "time"));
                     break;
             }
             return mongoTemplate.find(query, Post.class, COLLECTION_NAME);

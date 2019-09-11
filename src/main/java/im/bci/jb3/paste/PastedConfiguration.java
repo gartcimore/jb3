@@ -3,12 +3,12 @@ package im.bci.jb3.paste;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import im.bci.jb3.bouchot.data.PasteRepository;
 
 @Configuration
-public class PastedConfiguration extends WebMvcConfigurerAdapter {
+public class PastedConfiguration implements WebMvcConfigurer {
 
 	@Autowired
 	private PasteRepository pasteRepository;
