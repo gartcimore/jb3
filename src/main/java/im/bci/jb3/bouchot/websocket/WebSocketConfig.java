@@ -38,7 +38,7 @@ public class WebSocketConfig  implements WebSocketConfigurer {
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(webSocketHandler, "/webdirectcoin").addInterceptors(new HandshakeInterceptor() {
+		registry.addHandler(webSocketHandler, "/webdirectcoin").setAllowedOrigins("*").addInterceptors(new HandshakeInterceptor() {
             
             @Override
             public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
