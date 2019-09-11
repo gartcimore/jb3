@@ -35,7 +35,7 @@ public class TotozController {
 		try {
 			return MediaType.parseMediaType(Files.probeContentType(totozFile.toPath()));
 		} catch (Exception e) {
-			return MediaType.ALL;
+			return MediaType.IMAGE_PNG;
 		}
 
 	}
