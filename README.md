@@ -70,7 +70,7 @@ Please note that a thorough knowledge of Java web application development and ho
 
 ## Requirements
 
-- JDK 8+
+- OpenJDK 11+
 - Maven 3+
 - mongodb 2+
 

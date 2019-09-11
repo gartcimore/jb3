@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.1.RELEASE</version>
+		<version>2.1.8.RELEASE</version>
 	</parent>
 	<artifactId>jb3</artifactId>
 	<groupId>im.bci</groupId>
@@ -34,7 +34,7 @@
 		<dependency>
 			<groupId>pl.allegro.tech.boot</groupId>
 			<artifactId>handlebars-spring-boot-starter</artifactId>
-			<version>0.2.12</version>
+			<version>0.3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -173,8 +173,8 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>1.11</source>
+					<target>1.11</target>
 				</configuration>
 			</plugin>
 			<plugin>
