@@ -49,12 +49,14 @@ class Jb3 {
             $("#jb3-layout").css('top', '0px');
         }
         this.controlsRoom.change(() => {
+        	let previouslySelectedRoom = localStorage.selectedRoom;
             let selectedRoom = localStorage.selectedRoom = this.controlsRoom.val();
             $('.jb3-posts[data-room!="' + selectedRoom + '"]').hide();
             $('.jb3-posts[data-room="' + selectedRoom + '"]').show();
             this.controlsMessage.attr("placeholder", selectedRoom);
             this.scrollPostsContainerToBottom();
             this.trollometre.update(selectedRoom);
+            this.clearNotification(previouslySelectedRoom);
         });
         this.controlsMessage.bind('keydown', (event) => {
             if (event.altKey) {
@@ -196,7 +198,7 @@ class Jb3 {
         if (auth) {
             this.postMessage(this.controlsNickname.val(), this.controlsMessage.val(), selectedRoom, auth);
             this.controlsMessage.val('');
-            this.clearNotification();
+            this.clearNotification(selectedRoom);
         }
     }
     
@@ -417,7 +419,7 @@ class Jb3 {
                 cite.addClass('jb3-cite-mine');
                 let post = cite.closest('.jb3-post');
                 post.addClass('jb3-post-is-reply-to-mine');
-                this.notifyReply({message: post.text(), id: post.attr("id")});
+                this.notifyReply({message: post.text(), id: post.attr("id"), room: post.attr("data-room")});
             } else {
                 cited.addClass('jb3-cited');
             }
@@ -425,14 +427,26 @@ class Jb3 {
     }
     notifyBigorno(message) {
     	document.title = "\uD83D\uDCE3 jb3";
+    	let room = document.querySelector(`#jb3-controls-room option[value="${message.room}"`);
+    	if(room && room.innerText.indexOf("\uD83D\uDCE3") < 0) {
+    		room.innerText += "\uD83D\uDCE3";
+    	}
     }
     
     notifyReply(message) {
     	document.title = "\u21AA jb3";
+    	let room = document.querySelector(`#jb3-controls-room option[value="${message.room}"`);
+    	if(room && room.innerText.indexOf('\u21AA') < 0) {
+    		room.innerText += "\u21AA";
+    	}
     }
     
-    clearNotification() {
+    clearNotification(roomName) {
     	document.title = "jb3";
+    	let room = document.querySelector(`#jb3-controls-room option[value="${roomName}"`);
+    	if(room) {
+    		room.innerText = room.innerText.replace("\u21AA", "").replace("\uD83D\uDCE3", "");
+    	}
     }
     
     handleAltShortcut(keychar) {
