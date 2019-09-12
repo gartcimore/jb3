@@ -31,7 +31,7 @@ function jb3MoulesRosterConstructor() {
         });
         self.update();
     });
-    self.on('clear-presence', function () {
+    self.on('clear-presences', function () {
         self.moulesPresences.clear();
         self.moulesNicknames = {};
         self.update();
