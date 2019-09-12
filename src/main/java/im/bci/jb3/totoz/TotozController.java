@@ -27,6 +27,7 @@ public class TotozController {
 	public ResponseEntity<FileSystemResource> img(@PathVariable("totoz") String totoz)
 			throws MalformedURLException, IOException {
 		File totozFile = cache.cacheTotoz(totoz);
+		cache.cacheMetadata(totoz);
 		return ResponseEntity.ok().lastModified(totozFile.lastModified()).contentType(detectContentType(totozFile))
 				.contentLength(totozFile.length()).body(new FileSystemResource(totozFile));
 	}
