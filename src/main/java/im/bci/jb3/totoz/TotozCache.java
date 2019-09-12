@@ -3,6 +3,9 @@ package im.bci.jb3.totoz;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,9 +37,11 @@ public class TotozCache {
 			this.totozDir = new File(totozDir);
 		}
 	}
+	
 
 	public File cacheTotoz(String totoz) throws IOException {
-		File totozFile = new File(totozDir, totoz);
+		String totozFilename = URLEncoder.encode(totoz, StandardCharsets.US_ASCII);
+		File totozFile = new File(totozDir, totozFilename);
 		if (!totozFile.exists()) {
 			URL totozImgUrl = UriComponentsBuilder.fromHttpUrl(totozUrl).path("/img/").path(totoz).build().toUri()
 					.toURL();
