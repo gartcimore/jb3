@@ -1,67 +1,69 @@
-jb3 = {
-    init: function () {
-        var self = this;
-        Handlebars.registerHelper('time2norloge', function (time) {
-            return moment(time).format(self.norlogeFormat);
+const NORLOGE_NORMAL = "HH:mm:ss";
+const NORLOGE_FULL = "YYYY-MM-DD HH:mm:ss";
+
+class Jb3 {
+    constructor() {
+        Handlebars.registerHelper('time2norloge', (time) => {
+            return moment(time).format(NORLOGE_NORMAL);
         });
-        self.messageTemplate = Handlebars.compile($("#message-template").html());
-        self.newMessages = [];
-        self.controlsMessage = $('#jb3-controls-message');
-        self.controlsRoom = $('#jb3-controls-room');
-        self.controlsNickname = $('#jb3-controls-nickname');
-        self.rooms = {};
-        self.rooms[self.controlsRoom.val()] = {};
-        jb3_common.getRooms().forEach(function (room) {
-            self.rooms[room.rname] = {};
+        this.messageTemplate = Handlebars.compile($("#message-template").html());
+        this.newMessages = [];
+        this.controlsMessage = $('#jb3-controls-message');
+        this.controlsRoom = $('#jb3-controls-room');
+        this.controlsNickname = $('#jb3-controls-nickname');
+        this.rooms = {};
+        this.rooms[this.controlsRoom.val()] = {};
+        jb3_common.getRooms().forEach((room) => {
+            this.rooms[room.rname] = {};
         });
-        var uri = URI(window.location);
-        var roomInURI = uri.search(true).room;
+        let uri = URI(window.location);
+        let roomInURI = uri.search(true).room;
         if (roomInURI) {
-            self.rooms[roomInURI] = {};
+        	this.rooms[roomInURI] = {};
         }
-        self.controlsRoom.empty().append(
-                Object.keys(self.rooms).sort().map(function (room) {
+        this.controlsRoom.empty().append(
+                Object.keys(this.rooms).sort().map((room) => {
             return new Option(room, room);
         })
                 );
-        var roomInDomain = uri.domain().slice(0, -uri.tld().length - 1);
-        roomInDomain = self.rooms[roomInDomain] && roomInDomain;
-        self.controlsRoom.attr("size", Math.min(self.controlsRoom.find('option').length, 10));
-        self.controlsRoom.val(roomInURI || roomInDomain || localStorage.selectedRoom || self.controlsRoom.find('option:first').val());
-        self.controlsMessage.attr("placeholder", self.controlsRoom.val());
-        var postsContainer = document.getElementById('jb3-posts-container');
-        for (var room in self.rooms) {
-            var postsDivForRoom = document.createElement("div");
+        let roomInDomain = uri.domain().slice(0, -uri.tld().length - 1);
+        roomInDomain = this.rooms[roomInDomain] && roomInDomain;
+        this.controlsRoom.attr("size", Math.min(this.controlsRoom.find('option').length, 10));
+        this.controlsRoom.val(roomInURI || roomInDomain || localStorage.selectedRoom || this.controlsRoom.find('option:first').val());
+        this.controlsMessage.attr("placeholder", this.controlsRoom.val());
+        let postsContainer = document.getElementById('jb3-posts-container');
+        for (let room in this.rooms) {
+            let postsDivForRoom = document.createElement("div");
             postsDivForRoom.dataset.room = room;
             postsDivForRoom.className += "jb3-posts";
-            if (room != self.controlsRoom.val()) {
+            if (room != this.controlsRoom.val()) {
                 postsDivForRoom.setAttribute('style', 'display:none')
             }
             postsContainer.appendChild(postsDivForRoom);
-            self.rooms[room].postsDiv = postsDivForRoom;
+            this.rooms[room].postsDiv = postsDivForRoom;
         }
 
-        if (roomInURI === self.controlsRoom.val()) {
+        if (roomInURI === this.controlsRoom.val()) {
             $('#jb3-roster').hide();
             $('header').hide();
             $("#jb3-layout").css('top', '0px');
         }
-        self.controlsRoom.change(function () {
-            var selectedRoom = localStorage.selectedRoom = self.controlsRoom.val();
+        this.controlsRoom.change(() => {
+            let selectedRoom = localStorage.selectedRoom = this.controlsRoom.val();
             $('.jb3-posts[data-room!="' + selectedRoom + '"]').hide();
             $('.jb3-posts[data-room="' + selectedRoom + '"]').show();
-            self.controlsMessage.attr("placeholder", selectedRoom);
-            self.scrollPostsContainerToBottom();
-            self.trollometre.update(selectedRoom);
+            this.controlsMessage.attr("placeholder", selectedRoom);
+            this.scrollPostsContainerToBottom();
+            this.trollometre.update(selectedRoom);
         });
-        self.controlsMessage.bind('keydown', function (event) {
+        this.controlsMessage.bind('keydown', (event) => {
             if (event.altKey) {
-                if (self.handleAltShortcut(event.key)) {
+                if (this.handleAltShortcut(event.key)) {
                     event.stopPropagation();
                     event.preventDefault();
                 }
             } else if (event.keyCode === 13) {
-                self.postCurrentMessage();
+            	this.postCurrentMessage();
             }
         });
         if ($('header').css('display') === 'block') {
@@ -69,10 +71,10 @@ jb3 = {
         } else {
             $('#jb3-show-controls').html("&equiv;");
         }
-        $('#jb3-show-controls').click(function () {
-            var header = $('header');
-            var layout = $('#jb3-layout');
-            var button = $('#jb3-show-controls');
+        $('#jb3-show-controls').click(() => {
+            let header = $('header');
+            let layout = $('#jb3-layout');
+            let button = $('#jb3-show-controls');
             if (header.css('display') === 'block') {
                 header.css('display', 'none');
                 layout.css('top', '0px');
@@ -82,123 +84,125 @@ jb3 = {
                 layout.css('top', '57px');
                 button.html("&slarr;");
             }
-            var roster = $('#jb3-roster');
+            let roster = $('#jb3-roster');
             if (roster.css('display') === 'flex') {
                 roster.css('display', 'none');
             } else {
                 roster.css('display', 'flex');
             }
         });
-        $("#jb3-controls-message-post").click(function () {
-            self.postCurrentMessage();
+        $("#jb3-controls-message-post").click(() => {
+            this.postCurrentMessage();
         });
-        $("#jb3-controls-message-attach").click(function () {
-            self.pasteModal.trigger('show');
+        $("#jb3-controls-message-attach").click(() => {
+            this.pasteModal.trigger('show');
         });
-        $('.jb3-posts').on('click', '.jb3-post-time', function (e) {
-            var postId = $(e.target).parent().attr('id');
+        $('.jb3-posts').on('click', '.jb3-post-time', (e) => {
+            let postId = $(e.target).parent().attr('id');
             if (postId) {
-                self.insertTextWithSpacesAroundInMessageControl('#' + postId);
+                this.insertTextWithSpacesAroundInMessageControl('#' + postId);
             }
         });
-        $('.jb3-posts').on('click', '.jb3-post-nickname', function (e) {
-            var nickname = $(e.target).text();
+        $('.jb3-posts').on('click', '.jb3-post-nickname', (e) => {
+            let nickname = $(e.target).text();
             if (nickname) {
-                self.insertTextWithSpacesAroundInMessageControl(nickname + '<');
+            	this.insertTextWithSpacesAroundInMessageControl(nickname + '<');
             }
         });
         $('.jb3-posts').on({
-            click: function (event) {
-                var button = $(event.target);
-                var post = button.parents('.jb3-post');
-                var revisions = $('#' + post.attr('id') + '-revisions');
-                self.revisionsModal.trigger('show', revisions.html());
+            click: (event) => {
+                let button = $(event.target);
+                let post = button.parents('.jb3-post');
+                let revisions = $('#' + post.attr('id') + '-revisions');
+                this.revisionsModal.trigger('show', revisions.html());
             }
         }, ".jb3-revisions-button");
         $('.jb3-posts').on({
-            click: function (event) {
-                var button = $(event.target);
-                var post = button.parents('.jb3-post');
-                self.insertTextInMessageControl('/revise #' + post.attr('id') + ' ');
+            click: (event) => {
+                let button = $(event.target);
+                let post = button.parents('.jb3-post');
+                this.insertTextInMessageControl('/revise #' + post.attr('id') + ' ');
             }
         }, ".jb3-post-is-mine .jb3-revise-button");
         $('.jb3-posts').on({
-            click: function (event) {
-                var spoiler = $(event.target);
+            click: (event) => {
+                let spoiler = $(event.target);
                 spoiler.toggleClass('jb3-revealed-spoiler');
             }
         }, ".jb3-spoiler");
         $('.jb3-posts').on({
-            click: function (event) {
-                var button = $(event.target);
-                var post = button.parents('.jb3-post');
-                self.insertTextInMessageControl('#' + post.attr('id') + ' pan ! pan !');
+            click: (event) => {
+                let button = $(event.target);
+                let post = button.parents('.jb3-post');
+                this.insertTextInMessageControl('#' + post.attr('id') + ' pan ! pan !');
             }
         }, ".jb3-duck");
         jb3_common.initHighlight();
         jb3_common.initUrlPreview();
         jb3_common.initTotozLazyLoading();
-        self.initNickname();
-        self.coin = new Worker("/assets/coincoin/webdirectcoin.js");
-        self.coin.onmessage = function (event) {
-            self.onCoinMessage(event);
+        this.initNickname();
+        this.coin = new Worker("/assets/coincoin/webdirectcoin.js");
+        this.coin.onmessage = (event) => {
+        	this.onCoinMessage(event);
         };
-        var url = URI();
-        var wurl = new URI({
+        let url = URI();
+        let wurl = new URI({
             protocol: url.protocol() === "https" ? "wss" : "ws",
             hostname: url.hostname(),
             port: url.port(),
             path: "/webdirectcoin"
         });
-        self.coin.postMessage({type: "connect", url: wurl.toString()});
-        self.updateMessages();
-        self.initTrollometre();
-        self.setupGesture();
-        setTimeout(function () {
-            self.refreshDlfpToken();
+        this.coin.postMessage({type: "connect", url: wurl.toString()});
+        this.updateMessages();
+        this.initTrollometre();
+        this.setupGesture();
+        setTimeout(() => {
+        	this.refreshDlfpToken();
         }, 1000);
-        setInterval(function () {
-            self.refreshDlfpToken();
+        setInterval(() => {
+        	this.refreshDlfpToken();
         }, 60 * 60 * 1000);
-    },
-    setupGesture: function() {
+    }
+    
+    setupGesture() {
         delete Hammer.defaults.cssProps.userSelect;
-        var hammertime = new Hammer(document.getElementById("jb3-posts-container"), {
+        let hammertime = new Hammer(document.getElementById("jb3-posts-container"), {
             inputClass: Hammer.TouchInput
         });
-        var self = this;
-        hammertime.on('swipeleft', function(e) {
-        	var tribuneSelect = self.controlsRoom[0];
+        hammertime.on('swipeleft', (e) =>{
+        	let tribuneSelect = this.controlsRoom[0];
             if (tribuneSelect.selectedIndex === 0) {
                 tribuneSelect.selectedIndex = tribuneSelect.options.length - 1;
             } else {
                 tribuneSelect.selectedIndex = tribuneSelect.selectedIndex - 1;
             }
-            self.controlsRoom.change();
+            this.controlsRoom.change();
         }
         );
-        hammertime.on('swiperight', function(e) {
-        	var tribuneSelect = self.controlsRoom[0];
+        hammertime.on('swiperight', (e) => {
+        	let tribuneSelect = this.controlsRoom[0];
             if (tribuneSelect.selectedIndex >= (tribuneSelect.options.length - 1)) {
                 tribuneSelect.selectedIndex = 0;
             } else {
                 tribuneSelect.selectedIndex = tribuneSelect.selectedIndex + 1;
             }
-            self.controlsRoom.change();
+            this.controlsRoom.change();
         });
-    },
-    postCurrentMessage: function () {
-        var selectedRoom = this.controlsRoom.val();
-        var auth = this.checkAuth(selectedRoom);
+    }
+    
+    postCurrentMessage() {
+        let selectedRoom = this.controlsRoom.val();
+        let auth = this.checkAuth(selectedRoom);
         if (auth) {
             this.postMessage(this.controlsNickname.val(), this.controlsMessage.val(), selectedRoom, auth);
             this.controlsMessage.val('');
             this.clearNotification();
         }
-    },
-    checkAuth: function (selectedRoom) {
+    }
+    
+    checkAuth(selectedRoom) {
         if (selectedRoom === 'dlfp') {
-            var auth = localStorage.getItem("dlfp-auth");
+            let auth = localStorage.getItem("dlfp-auth");
             if (this.checkIfDlfpTokenIsExpired(auth)) {
                 window.location.href = "/dlfp/connect";
                 return false;
@@ -206,7 +210,7 @@ jb3 = {
                 return auth;
             }
         } else if(selectedRoom === 'gamatomic') {
-            var auth =  localStorage.getItem('gamatomic-auth');
+            let auth =  localStorage.getItem('gamatomic-auth');
             if(auth) {
                 return auth;
             } else {
@@ -216,140 +220,148 @@ jb3 = {
         } else {
             return true;
         }
-    },
-    checkIfDlfpTokenIsExpired: function (authStr) {
+    }
+    
+    checkIfDlfpTokenIsExpired(authStr) {
         if (!authStr) {
             return true;
         }
-        var auth = JSON.parse(authStr);
+        let auth = JSON.parse(authStr);
         if (!auth.expires_timestamp) {
             return true;
         }
         return auth.expires_timestamp < Date.now();
-    },
-    updateMessages: function () {
-        var self = this;
-        self.onNewMessages(self.newMessages.splice(0, 500));
-        setTimeout(function () {
-            self.updateMessages();
+    }
+    
+    updateMessages() {
+    	this.onNewMessages(this.newMessages.splice(0, 500));
+        setTimeout(() => {
+        	this.updateMessages();
         }, 1000);
-    },
-    onCoinMessage: function (event) {
-        var self = this;
-        var message = event.data;
+    }
+    
+    onCoinMessage(event) {
+        let message = event.data;
         if (message.posts) {
-            self.newMessages = self.newMessages.concat(message.posts);
+        	this.newMessages = this.newMessages.concat(message.posts);
         }
         if (message.disconnected) {
-            self.moulesRoster.trigger('clear-presences');
+        	this.moulesRoster.trigger('clear-presences');
         }
         if (message.connected) {
-            self.moulesRoster.trigger('clear-presences');
-            self.refreshMessages();
-            self.coin.postMessage({type: "nickname", nickname: jb3_common.getNickname()});
+        	this.moulesRoster.trigger('clear-presences');
+        	this.refreshMessages();
+        	this.coin.postMessage({type: "nickname", nickname: jb3_common.getNickname()});
         }
         if (message.presence) {
-            self.moulesRoster.trigger('presence', message.presence);
+        	this.moulesRoster.trigger('presence', message.presence);
         }
         if (message.webdirectcoin_not_available) {
             console.log("webdirectcoin is not available");
         }
         if (message.norloge) {
-            self.updateCite(message.norloge);
+        	this.updateCite(message.norloge);
         }
-    },
-    norlogeFormat: "HH:mm:ss",
-    norlogeFullFormat: "YYYY-MM-DD HH:mm:ss",
-    initNickname: function () {
-        var self = this;
-        self.controlsNickname.val(jb3_common.getNickname());
-        self.controlsNickname.change(function () {
-            jb3_common.setNickname(self.controlsNickname.val());
-            self.coin.postMessage({type: "nickname", nickname: jb3_common.getNickname()});
+    }
+    
+    initNickname() {
+    	this.controlsNickname.val(jb3_common.getNickname());
+    	this.controlsNickname.change(() =>{
+            jb3_common.setNickname(this.controlsNickname.val());
+            this.coin.postMessage({type: "nickname", nickname: jb3_common.getNickname()});
         });
         riot.mount('jb3-raw');
         riot.mount('jb3-modal');
-        self.moulesRoster = riot.mount('jb3-moules-roster')[0];
-        self.revisionsModal = riot.mount('jb3-revisions-modal')[0];
-        self.pasteModal = riot.mount('jb3-paste-modal')[0];
-        self.pasteModal.on('pasted', function (pastedText) {
-            self.insertTextInMessageControl(pastedText);
+        this.moulesRoster = riot.mount('jb3-moules-roster')[0];
+        this.revisionsModal = riot.mount('jb3-revisions-modal')[0];
+        this.pasteModal = riot.mount('jb3-paste-modal')[0];
+        this.pasteModal.on('pasted', (pastedText) => {
+        	this.insertTextInMessageControl(pastedText);
         });
-    },
-    highlightPostAndReplies: function (postId, showPopup) {
-        var post = $('#' + postId);
+    }
+    
+    highlightPostAndReplies(postId, showPopup) {
+        let post = $('#' + postId);
         post.addClass("jb3-highlight");
         if (showPopup) {
             $('#jb3-post-popup-content').html(post.html());
         }
         $(".jb3-cite[data-ref='" + post.attr('id') + "']").addClass("jb3-highlight");
-    },
-    unhighlightPostAndReplies: function (postId) {
-        var post = $('#' + postId);
+    }
+    
+    unhighlightPostAndReplies(postId) {
+        let post = $('#' + postId);
         post.removeClass("jb3-highlight");
         $(".jb3-cite[data-ref='" + post.attr('id') + "']").removeClass("jb3-highlight");
         $('#jb3-post-popup-content').empty();
-    },
-    postMessage: function (nickname, message, room, auth) {
+    }
+    
+    postMessage(nickname, message, room, auth) {
         this.coin.postMessage({type: "send", destination: "post", body: {message: message, nickname: nickname, room: room, auth: auth}});
-    },
-    refreshMessages: function () {
-        var selectedRoom = this.controlsRoom.val();
+    }
+    
+    refreshMessages() {
+        let selectedRoom = this.controlsRoom.val();
         this.refreshRoom(selectedRoom);
-        for (var room in this.rooms) {
+        for (let room in this.rooms) {
             if (room !== selectedRoom) {
                 this.refreshRoom(room);
             }
         }
-    },
-    refreshRoom: function (room) {
+    }
+    
+    refreshRoom(room) {
         this.coin.postMessage({type: "send", destination: "get", body: {room: room}});
-    },
-    isPostsContainerAtBottom: function () {
-        var postContainer = $('#jb3-posts-container');
+    }
+    
+    isPostsContainerAtBottom() {
+        let postContainer = $('#jb3-posts-container');
         return Math.ceil(postContainer.scrollTop() + postContainer.innerHeight()) >= postContainer[0].scrollHeight;
-    },
-    scrollPostsContainerToBottom: function () {
-        var postContainer = $('#jb3-posts-container');
+    }
+    
+    scrollPostsContainerToBottom() {
+        let postContainer = $('#jb3-posts-container');
         postContainer.scrollTop(postContainer.prop("scrollHeight"));
-    },
-    onNewMessages: function (data) {
+    }
+    
+    onNewMessages(data) {
         if (data && data.length > 0) {
-            var self = this;
-            var userNickname = $('#jb3-controls-nickname').val();
-            var wasAtbottom = self.isPostsContainerAtBottom();
-            for (var d in data) {
-                var message = data[d];
+            let userNickname = $('#jb3-controls-nickname').val();
+            let wasAtbottom = this.isPostsContainerAtBottom();
+            for (let d in data) {
+                let message = data[d];
                 this.trollometre.feed(message);
-                self.onMessage(userNickname, message);
+                this.onMessage(userNickname, message);
             }
-            self.updateNorloges();
-            self.trollometre.update(this.controlsRoom.val());
+            this.updateNorloges();
+            this.trollometre.update(this.controlsRoom.val());
             if (wasAtbottom) {
-                self.scrollPostsContainerToBottom();
+            	this.scrollPostsContainerToBottom();
             }
         }
     }
-    , onMessage: function (userNickname, message) {
+    
+    onMessage(userNickname, message) {
         message.message = jb3_post_to_html.parse(message.message);
         message.postIsMine = message.nickname === userNickname || (message.room && message.nickname === localStorage.getItem(message.room + '-login')) ? " jb3-post-is-mine" : "";
         message.postIsBigorno = message.message.search(new RegExp("(moules|" + RegExp.escape(userNickname) + ")&lt;", "i")) >= 0 ? " jb3-post-is-bigorno" : "";
         if(message.postIsBigorno) {
         	this.notifyBigorno(message);
         }
-        var messageDiv = this.messageTemplate(message);
+        let messageDiv = this.messageTemplate(message);
         this.insertMessageDiv(messageDiv, message);
-    },
-    insertMessageDiv: function (messageDiv, message) {
-        var existingDiv = document.getElementById(message.id);
+    }
+    
+    insertMessageDiv(messageDiv, message) {
+        let existingDiv = document.getElementById(message.id);
         if (!existingDiv) {
-            var container = this.rooms[message.room].postsDiv;
-            var dates = container.getElementsByClassName("jb3-posts-date");
-            var day = moment(message.time);
-            var date = null;
-            var dateAfter = null;
-            for (var d = 0; d < dates.length; ++d) {
-                var dateDay = moment(dates[d].dataset.date);
+            let container = this.rooms[message.room].postsDiv;
+            let dates = container.getElementsByClassName("jb3-posts-date");
+            let day = moment(message.time);
+            let date = null;
+            let dateAfter = null;
+            for (let d = 0; d < dates.length; ++d) {
+                let dateDay = moment(dates[d].dataset.date);
                 if (dateDay.isSame(day, 'day')) {
                     date = dates[d];
                     break;
@@ -363,7 +375,7 @@ jb3 = {
                 date = document.createElement('div');
                 date.classList.add("jb3-posts-date");
                 date.dataset.date = day.format("YYYY-MM-DD");
-                var dateTitle = document.createElement('time');
+                let dateTitle = document.createElement('time');
                 dateTitle.appendChild(document.createTextNode(day.format("dddd D MMMM YYYY")));
                 date.appendChild(dateTitle);
                 if (dateAfter) {
@@ -372,10 +384,10 @@ jb3 = {
                     container.insertAdjacentElement('beforeend', date);
                 }
             }
-            var t = message.time;
-            var posts = date.getElementsByClassName('jb3-post');
-            for (var p = 0; p < posts.length; ++p) {
-                var post = posts[p];
+            let t = message.time;
+            let posts = date.getElementsByClassName('jb3-post');
+            for (let p = 0; p < posts.length; ++p) {
+                let post = posts[p];
                 if (t < post.dataset.time) {
                     post.insertAdjacentHTML('beforebegin', messageDiv);
                     return;
@@ -386,41 +398,44 @@ jb3 = {
             existingDiv.outerHTML = messageDiv;
         }
 
-    },
-    updateNorloges: function () {
-        var self = this;
-        $('.jb3-cite-raw').each(function () {
-            var cite = $(this);
-            var postId = cite.data('ref');
-            var cited = $('#' + postId);
-            var citedNorloge = cited.find('.jb3-post-time');
+    }
+    
+    updateNorloges() {
+        $('.jb3-cite-raw').each((_, element) => {
+            let cite = $(element);
+            let postId = cite.data('ref');
+            let cited = $('#' + postId);
+            let citedNorloge = cited.find('.jb3-post-time');
             if (citedNorloge.length > 0) {
                 cite.text(citedNorloge.text());
                 cite.removeClass('jb3-cite-raw');
             } else {
-                self.coin.postMessage({type: "send", destination: "getNorloge", body: {messageId: postId}});
+            	this.coin.postMessage({type: "send", destination: "getNorloge", body: {messageId: postId}});
             }
             if (cited.hasClass('jb3-post-is-mine')) {
                 cited.addClass('jb3-cited-by-me');
                 cite.addClass('jb3-cite-mine');
-                var post = cite.closest('.jb3-post');
+                let post = cite.closest('.jb3-post');
                 post.addClass('jb3-post-is-reply-to-mine');
-                self.notifyReply({message: post.text(), id: post.attr("id")});
+                this.notifyReply({message: post.text(), id: post.attr("id")});
             } else {
                 cited.addClass('jb3-cited');
             }
         });
-    },
-    notifyBigorno: function(message) {
+    }
+    notifyBigorno(message) {
     	document.title = "\uD83D\uDCE3 jb3";
-    },
-    notifyReply: function(message) {
+    }
+    
+    notifyReply(message) {
     	document.title = "\u21AA jb3";
-    },
-    clearNotification: function() {
+    }
+    
+    clearNotification() {
     	document.title = "jb3";
-    },
-    handleAltShortcut: function (keychar) {
+    }
+    
+    handleAltShortcut(keychar) {
         switch (keychar) {
             case 'o':
                 this.insertTextInMessageControl('_o/* <b>BLAM</b>! ');
@@ -460,66 +475,72 @@ jb3 = {
                 return true;
         }
         return false;
-    },
-    getSelectedText: function () {
-        var controlsMessage = document.getElementById("jb3-controls-message");
+    }
+    
+    getSelectedText() {
+        let controlsMessage = document.getElementById("jb3-controls-message");
         if (controlsMessage) {
             return controlsMessage.value.substring(controlsMessage.selectionStart, controlsMessage.selectionEnd);
         } else {
             return"";
         }
-    },
-    insertTextInMessageControl: function (text, pos) {
-        var control = document.getElementById("jb3-controls-message");
+    }
+    
+    insertTextInMessageControl(text, pos) {
+        let control = document.getElementById("jb3-controls-message");
         if (!pos) {
             pos = text.length;
         }
-        var selectionEnd = control.selectionStart + pos;
+        let selectionEnd = control.selectionStart + pos;
         control.value = control.value.substring(0, control.selectionStart) + text + control.value.substr(control.selectionEnd);
         control.focus();
         control.setSelectionRange(selectionEnd, selectionEnd);
-    },
-    insertTextWithSpacesAroundInMessageControl: function (text) {
-        var control = document.getElementById("jb3-controls-message");
-        var textBefore = control.value.substring(0, control.selectionStart);
+    }
+    
+    insertTextWithSpacesAroundInMessageControl(text) {
+        let control = document.getElementById("jb3-controls-message");
+        let textBefore = control.value.substring(0, control.selectionStart);
         if (/.*\S$/.test(textBefore)) {
             textBefore = textBefore.concat(" ");
         }
-        var textAfter = control.value.substr(control.selectionStart);
-        var firstPart = textBefore.concat(text).concat(' ');
-        var caretPos = firstPart.length;
+        let textAfter = control.value.substr(control.selectionStart);
+        let firstPart = textBefore.concat(text).concat(' ');
+        let caretPos = firstPart.length;
         control.value = firstPart.concat(textAfter);
         control.focus();
         control.setSelectionRange(caretPos, caretPos);
-    },
-    updateCite: function (norloge) {
-        var self = this;
-        $(".jb3-cite-raw[data-ref='" + norloge.messageId + "']").each(function () {
-            var cite = $(this);
-            cite.text(moment(norloge.time).format(self.norlogeFullFormat));
+    }
+    
+    updateCite(norloge) {
+        $(".jb3-cite-raw[data-ref='" + norloge.messageId + "']").each((_, element) =>{
+            let cite = $(element);
+            cite.text(moment(norloge.time).format(NORLOGE_FULL));
             cite.removeClass('jb3-cite-raw');
         });
-    },
-    initTrollometre: function () {
+    }
+    
+    initTrollometre() {
         this.trollometre = new Trollometre(document.getElementById("trollometre"));
-    },
-    refreshDlfpToken: function () {
-        var dlfpAuth = localStorage.getItem("dlfp-auth");
+    }
+    
+    refreshDlfpToken() {
+        let dlfpAuth = localStorage.getItem("dlfp-auth");
         if (dlfpAuth) {
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function (event) {
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = (event) => {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
                         localStorage.setItem("dlfp-auth", xhr.response);
                     }
                 }
             };
-            var token = JSON.parse(dlfpAuth);
-            var body = new FormData();
+            let token = JSON.parse(dlfpAuth);
+            let body = new FormData();
             body.append("token", token.refresh_token);
             xhr.open("POST", "/dlfp/refresh-token");
             xhr.send(body);
         }
     }
-};
-jb3.init();
+}
+
+let jb3 = new Jb3();
