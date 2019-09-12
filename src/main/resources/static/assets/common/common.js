@@ -1,24 +1,27 @@
-jb3_common = {
-    getNickname: function () {
+class Jb3Common {
+    getNickname() {
         return localStorage.nickname || (localStorage.nickname = this.randomNickname());
-    },
-    setNickname: function(nickname) {
+    }
+    
+    setNickname(nickname) {
         localStorage.nickname = nickname;
-    },
-    randomNickname: function () {
-        var letters = ["aeiouy", 'bcdfghjklmnpqrstvwxz'];
-        var nicknameLength = 3 + Math.floor(Math.random() * 5);
-        var lettersIndex = Math.floor(Math.random() * letters.length);
-        var nickname = "";
-        for (var l = 0; l < nicknameLength; ++l) {
-            var c = letters[lettersIndex].charAt(Math.floor(Math.random() * letters[lettersIndex].length));
+    }
+    
+    randomNickname() {
+        let letters = ["aeiouy", 'bcdfghjklmnpqrstvwxz'];
+        let nicknameLength = 3 + Math.floor(Math.random() * 5);
+        let lettersIndex = Math.floor(Math.random() * letters.length);
+        let nickname = "";
+        for (let l = 0; l < nicknameLength; ++l) {
+            let c = letters[lettersIndex].charAt(Math.floor(Math.random() * letters[lettersIndex].length));
             nickname = nickname.concat(c);
             lettersIndex = (lettersIndex + 1) % letters.length;
         }
         return nickname;
-    },
-    getRooms: function () {
-        var rooms;
+    }
+    
+    getRooms() {
+        let rooms;
         try {
             rooms = JSON.parse(localStorage.rooms);
         } catch (e) {
@@ -27,37 +30,40 @@ jb3_common = {
             rooms = this.getDefaultRooms();
         }
         return rooms;
-    },
-    getDefaultRooms: function () {
-        return document.getElementById('jb3-defaults').dataset.rooms.split(",").map(function(room) {
+    }
+    
+    getDefaultRooms() {
+        return document.getElementById('jb3-defaults').dataset.rooms.split(",").map((room) => {
             return {rname: room};
         });
-    },
-    initTotozLazyLoading: function () {
+    }
+    
+    initTotozLazyLoading() {
         $('.jb3-posts').on({
-            mouseenter: function (event) {
-                var totoz = $(event.target);
+            mouseenter: (event) => {
+                let totoz = $(event.target);
                 if (totoz.find('img').length === 0) {
-                    var totozImg = '<img src="/totoz/img/' + encodeURI(totoz.text()) + '"/>';
+                    let totozImg = '<img src="/totoz/img/' + encodeURI(totoz.text()) + '"/>';
                     totoz.append(totozImg);
                 }
             },
-            mouseleave: function (event) {
+            mouseleave: (event) => {
             }
         }, ".jb3-totoz");
-    },
-    initUrlPreview: function () {
+    }
+    
+    initUrlPreview() {
         $('.jb3-posts').on({
-            mouseenter: function (event) {
-                var url = $(event.currentTarget);
+            mouseenter: (event) => {
+                let url = $(event.currentTarget);
                 if (url.find('.jb3-url-preview').length === 0) {
-                	var xhr = new XMLHttpRequest();
-			        xhr.onreadystatechange = function (event) {
+                	let xhr = new XMLHttpRequest();
+			        xhr.onreadystatechange = (event) => {
 			            if (xhr.readyState === 4) {
 			                if (xhr.status === 200) {
 			                	if (url.find('.jb3-url-preview').length === 0) {
-				                    var preview = JSON.parse(xhr.response);
-				                    var previewFigure = `<figure class="jb3-url-preview"><img src="${preview.image}" /><figcaption>${preview.title}</figcaption></figure>`;
+				                    let preview = JSON.parse(xhr.response);
+				                    let previewFigure = `<figure class="jb3-url-preview"><img src="${preview.image}" /><figcaption>${preview.title}</figcaption></figure>`;
 				                    url.append(previewFigure);
 			                	}
 			                }
@@ -67,23 +73,23 @@ jb3_common = {
 			        xhr.send();
                 }
             },
-            mouseleave: function (event) {
+            mouseleave: (event) => {
             }
         }, "a");
-    },
-    initHighlight: function () {
-        var self = this;
+    }
+    
+    initHighlight() {
         $('.jb3-posts').on({
-            mouseenter: function (event) {
-                self.highlightPostAndReplies($(event.target).data('ref'), true);
+            mouseenter: (event) => {
+                this.highlightPostAndReplies($(event.target).data('ref'), true);
             },
-            mouseleave: function (event) {
-                self.unhighlightPostAndReplies($(event.target).data('ref'));
+            mouseleave: (event) => {
+            	this.unhighlightPostAndReplies($(event.target).data('ref'));
             },
-            click: function (event) {
-                var postContainer = $('#jb3-posts-container');
-                var postId = $(event.target).data('ref');
-                var quoted = $('#' + postId);
+            click: (event) => {
+                let postContainer = $('#jb3-posts-container');
+                let postId = $(event.target).data('ref');
+                let quoted = $('#' + postId);
                 if (quoted.length > 0) {
                     postContainer.scrollTop(quoted[0].offsetTop - event.clientY + postContainer.offset().top + 10);
                 } else {
@@ -92,30 +98,34 @@ jb3_common = {
             }
         }, ".jb3-cite");
         $('.jb3-posts').on({
-            mouseenter: function (event) {
-                self.highlightPostAndReplies($(event.target).parent().attr('id'), false);
+            mouseenter: (event) => {
+            	this.highlightPostAndReplies($(event.target).parent().attr('id'), false);
             },
-            mouseleave: function (event) {
-                self.unhighlightPostAndReplies($(event.target).parent().attr('id'));
+            mouseleave: (event) => {
+            	this.unhighlightPostAndReplies($(event.target).parent().attr('id'));
             }
         }, ".jb3-post-time");
-    },
-    highlightPostAndReplies: function (postId, showPopup) {
-        var post = $('#' + postId);
+    }
+    
+    highlightPostAndReplies(postId, showPopup) {
+        let post = $('#' + postId);
         post.addClass("jb3-highlight");
         if (showPopup) {
             $('#jb3-post-popup-content').html(post.html());
         }
         $(".jb3-cite[data-ref='" + post.attr('id') + "']").addClass("jb3-highlight");
-    },
-    unhighlightPostAndReplies: function (postId) {
-        var post = $('#' + postId);
+    }
+    
+    unhighlightPostAndReplies(postId) {
+        let post = $('#' + postId);
         post.removeClass("jb3-highlight");
         $(".jb3-cite[data-ref='" + post.attr('id') + "']").removeClass("jb3-highlight");
         $('#jb3-post-popup-content').empty();
     }
 };
 
-RegExp.escape = function (str) {
+jb3_common = new Jb3Common();
+
+RegExp.escape = (str) => {
     return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 };
