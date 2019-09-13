@@ -7,6 +7,9 @@ class Jb3 {
             return moment(time).format(NORLOGE_NORMAL);
         });
         this.messageTemplate = Handlebars.compile($("#message-template").html());
+        this.myLastMessageByRoom = {};
+        this.lastBigornoMessageByRoom = {};
+        this.lastReplyMessageByRoom = {};
         this.newMessages = [];
         this.controlsMessage = $('#jb3-controls-message');
         this.controlsRoom = $('#jb3-controls-room');
@@ -56,7 +59,8 @@ class Jb3 {
             this.controlsMessage.attr("placeholder", selectedRoom);
             this.scrollPostsContainerToBottom();
             this.trollometre.update(selectedRoom);
-            this.clearNotification(previouslySelectedRoom);
+            this.clearBigorno(previouslySelectedRoom);
+            this.clearReply(previouslySelectedRoom);
         });
         this.controlsMessage.bind('keydown', (event) => {
             if (event.altKey) {
@@ -336,6 +340,7 @@ class Jb3 {
                 this.onMessage(userNickname, message);
             }
             this.updateNorloges();
+            this.updateNotifications();
             this.trollometre.update(this.controlsRoom.val());
             if (wasAtbottom) {
             	this.scrollPostsContainerToBottom();
@@ -347,8 +352,17 @@ class Jb3 {
         message.message = jb3_post_to_html.parse(message.message);
         message.postIsMine = message.nickname === userNickname || (message.room && message.nickname === localStorage.getItem(message.room + '-login')) ? " jb3-post-is-mine" : "";
         message.postIsBigorno = message.message.search(new RegExp("(moules|" + RegExp.escape(userNickname) + ")&lt;", "i")) >= 0 ? " jb3-post-is-bigorno" : "";
+        if(message.postIsMine) {
+        	let lastMessage = this.myLastMessageByRoom[message.room];
+        	if(!lastMessage || lastMessage.time < message.time) {
+        		this.myLastMessageByRoom[message.room] = message;
+        	}
+        }
         if(message.postIsBigorno) {
-        	this.notifyBigorno(message);
+        	let lastBigorno = this.lastBigornoMessageByRoom[message.room];
+        	if(!lastBigorno || lastBigorno.time < message.time) {
+        		this.lastBigornoMessageByRoom[message.room] = message;
+        	}
         }
         let messageDiv = this.messageTemplate(message);
         this.insertMessageDiv(messageDiv, message);
@@ -419,14 +433,72 @@ class Jb3 {
                 cite.addClass('jb3-cite-mine');
                 let post = cite.closest('.jb3-post');
                 post.addClass('jb3-post-is-reply-to-mine');
-                this.notifyReply({message: post.text(), id: post.attr("id"), room: post.attr("data-room")});
+                
+                let reply = {message: post.text(), id: post.attr("id"), room: post.attr("data-room"), time: post.attr("data-time")};
+                let lastReply = this.lastReplyMessageByRoom[reply.room];
+            	if(!lastReply || lastReply.time < reply.time) {
+            		this.lastReplyMessageByRoom[reply.room] = reply;
+            	}
             } else {
                 cited.addClass('jb3-cited');
             }
         });
     }
+    
+    updateNotifications() {
+    	let bigorno = false;
+    	let reply = false;
+    	for (let room in this.rooms) {
+    		bigorno |= this.updateBigorno(room);
+    		reply |= this.updateReply(room);
+    	}
+    	if(bigorno && document.title.indexOf("\uD83D\uDCE3") < 0) {
+    		document.title = `\uD83D\uDCE3${document.title}`;
+    	}
+    	if(reply && document.title.indexOf("\u21AA") < 0) {
+    		document.title = `\u21AA${document.title}`;
+    	}
+    }
+    
+    updateBigorno(room) {
+		let bigorno = this.lastBigornoMessageByRoom[room];
+		let myLastMessage = this.myLastMessageByRoom[room];
+		if(bigorno && myLastMessage) {
+			if(bigorno.time > myLastMessage.time) {
+				this.notifyBigorno(bigorno);
+				return true;
+			}else {
+				this.clearBigorno(room);
+			}
+		} else if(!bigorno && myLastMessage) {
+			this.clearBigorno(room);
+		} else if(bigorno && !myLastMessage) {
+			this.notifyBigorno(bigorno);
+			return true;
+		}
+		return false;
+    }
+    
+    updateReply(room) {
+		let reply = this.lastReplyMessageByRoom[room];
+		let myLastMessage = this.myLastMessageByRoom[room];
+		if(reply && myLastMessage) {
+			if(reply.time > myLastMessage.time) {
+				this.notifyReply(reply);
+				return true;
+			}else {
+				this.clearReply(room);
+			}
+		} else if(!reply && myLastMessage) {
+			this.clearReply(room);
+		} else if(reply && !myLastMessage) {
+			this.notifyReply(reply);
+			return true;
+		}
+		return false;
+    }
+    
     notifyBigorno(message) {
-    	document.title = "\uD83D\uDCE3 jb3";
     	let room = document.querySelector(`#jb3-controls-room option[value="${message.room}"`);
     	if(room && room.innerText.indexOf("\uD83D\uDCE3") < 0) {
     		room.innerText += "\uD83D\uDCE3";
@@ -434,18 +506,25 @@ class Jb3 {
     }
     
     notifyReply(message) {
-    	document.title = "\u21AA jb3";
     	let room = document.querySelector(`#jb3-controls-room option[value="${message.room}"`);
     	if(room && room.innerText.indexOf('\u21AA') < 0) {
     		room.innerText += "\u21AA";
     	}
     }
     
-    clearNotification(roomName) {
-    	document.title = "jb3";
+    clearBigorno(roomName) {
+    	document.title = document.title.replace("\uD83D\uDCE3", "");
     	let room = document.querySelector(`#jb3-controls-room option[value="${roomName}"`);
     	if(room) {
-    		room.innerText = room.innerText.replace("\u21AA", "").replace("\uD83D\uDCE3", "");
+    		room.innerText = room.innerText.replace("\uD83D\uDCE3", "");
+    	}
+    }
+    
+    clearReply(roomName) {
+    	document.title = document.title.replace("\u21AA", "");
+    	let room = document.querySelector(`#jb3-controls-room option[value="${roomName}"`);
+    	if(room) {
+    		room.innerText = room.innerText.replace("\u21AA", "");
     	}
     }
     
