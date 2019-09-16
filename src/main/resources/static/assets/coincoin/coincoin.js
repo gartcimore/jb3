@@ -202,7 +202,6 @@ class Jb3 {
         if (auth) {
             this.postMessage(this.controlsNickname.val(), this.controlsMessage.val(), selectedRoom, auth);
             this.controlsMessage.val('');
-            this.clearNotification(selectedRoom);
         }
     }
     
