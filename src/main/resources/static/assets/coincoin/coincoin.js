@@ -54,13 +54,14 @@ class Jb3 {
         this.controlsRoom.change(() => {
         	let previouslySelectedRoom = localStorage.selectedRoom;
             let selectedRoom = localStorage.selectedRoom = this.controlsRoom.val();
-            $('.jb3-posts[data-room!="' + selectedRoom + '"]').hide();
-            $('.jb3-posts[data-room="' + selectedRoom + '"]').show();
+            $(`.jb3-posts[data-room!="${selectedRoom}"]`).hide();
+            $(`.jb3-posts[data-room="${selectedRoom}"]`).show();
             this.controlsMessage.attr("placeholder", selectedRoom);
             this.scrollPostsContainerToBottom();
             this.trollometre.update(selectedRoom);
-            this.clearBigorno(previouslySelectedRoom);
-            this.clearReply(previouslySelectedRoom);
+            
+            localStorage.setItem(`lastReadMessageTime-${previouslySelectedRoom}`, new Date().toISOString());
+            this.updateNotifications();
         });
         this.controlsMessage.bind('keydown', (event) => {
             if (event.altKey) {
@@ -448,8 +449,8 @@ class Jb3 {
     	let bigorno = false;
     	let reply = false;
     	for (let room in this.rooms) {
-    		bigorno |= this.updateBigorno(room);
-    		reply |= this.updateReply(room);
+    		bigorno |= this.updateNotification(room, "\uD83D\uDCE3", this.lastBigornoMessageByRoom);
+    		reply |= this.updateNotification(room, "\u21AA", this.lastReplyMessageByRoom);
     	}
     	if(bigorno && document.title.indexOf("\uD83D\uDCE3") < 0) {
     		document.title = `\uD83D\uDCE3${document.title}`;
@@ -459,71 +460,45 @@ class Jb3 {
     	}
     }
     
-    updateBigorno(room) {
-		let bigorno = this.lastBigornoMessageByRoom[room];
-		let myLastMessage = this.myLastMessageByRoom[room];
-		if(bigorno && myLastMessage) {
-			if(bigorno.time > myLastMessage.time) {
-				this.notifyBigorno(bigorno);
-				return true;
-			}else {
-				this.clearBigorno(room);
-			}
-		} else if(!bigorno && myLastMessage) {
-			this.clearBigorno(room);
-		} else if(bigorno && !myLastMessage) {
-			this.notifyBigorno(bigorno);
-			return true;
-		}
-		return false;
+    momentOfMessage(message) {
+    	const JB3_OLDEST_MOMENT = moment("2000-01-01 12:00:00Z");
+    	return message && message.time && moment(message.time) || JB3_OLDEST_MOMENT;
     }
     
-    updateReply(room) {
-		let reply = this.lastReplyMessageByRoom[room];
-		let myLastMessage = this.myLastMessageByRoom[room];
-		if(reply && myLastMessage) {
-			if(reply.time > myLastMessage.time) {
-				this.notifyReply(reply);
-				return true;
-			}else {
-				this.clearReply(room);
-			}
-		} else if(!reply && myLastMessage) {
-			this.clearReply(room);
-		} else if(reply && !myLastMessage) {
-			this.notifyReply(reply);
+    lastReadMessageMoment(room) {
+    	const JB3_OLDEST_MOMENT = moment("2000-01-01 12:00:00Z");
+    	let str = localStorage.getItem(`lastReadMessageTime-${room}`);
+    	if(str) {
+    		return moment(str);
+    	} else {
+    		return JB3_OLDEST_MOMENT;
+    	}
+    }
+       
+    updateNotification(room, notificationString, lastNotifierMessages) {
+		let notifier = lastNotifierMessages[room];
+		let notifierMoment = this.momentOfMessage(notifier);
+		if(notifierMoment.isAfter(this.lastReadMessageMoment(room)) && notifierMoment.isAfter(this.momentOfMessage(this.myLastMessageByRoom[room]))) {
+			this.addNotification(notifier, notificationString);
 			return true;
-		}
-		return false;
+		} else {
+			this.clearNotification(room, notifier, notificationString);
+			return false;
+		}		
     }
     
-    notifyBigorno(message) {
+    addNotification(message, notificationString) {
     	let room = document.querySelector(`#jb3-controls-room option[value="${message.room}"`);
-    	if(room && room.innerText.indexOf("\uD83D\uDCE3") < 0) {
-    		room.innerText += "\uD83D\uDCE3";
+    	if(room && room.innerText.indexOf(notificationString) < 0) {
+    		room.innerText += notificationString;
     	}
     }
     
-    notifyReply(message) {
-    	let room = document.querySelector(`#jb3-controls-room option[value="${message.room}"`);
-    	if(room && room.innerText.indexOf('\u21AA') < 0) {
-    		room.innerText += "\u21AA";
-    	}
-    }
-    
-    clearBigorno(roomName) {
-    	document.title = document.title.replace("\uD83D\uDCE3", "");
+    clearNotification(roomName, message, notificationString) {
+    	document.title = document.title.replace(notificationString, "");
     	let room = document.querySelector(`#jb3-controls-room option[value="${roomName}"`);
     	if(room) {
-    		room.innerText = room.innerText.replace("\uD83D\uDCE3", "");
-    	}
-    }
-    
-    clearReply(roomName) {
-    	document.title = document.title.replace("\u21AA", "");
-    	let room = document.querySelector(`#jb3-controls-room option[value="${roomName}"`);
-    	if(room) {
-    		room.innerText = room.innerText.replace("\u21AA", "");
+    		room.innerText = room.innerText.replace(notificationString, "");
     	}
     }
     
