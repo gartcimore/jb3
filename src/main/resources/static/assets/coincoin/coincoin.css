@@ -18,6 +18,7 @@ header {
 
 #jb3-layout-vertical {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
     justify-content: flex-end;
     overflow: hidden;
@@ -49,9 +50,9 @@ header {
 }
 
 #jb3-roster {
-    resize: horizontal;
     overflow: auto;
     display: none;
+    flex: 0 1 20%;
     flex-direction: column;
     justify-content: flex-end;
     padding: 2px;
