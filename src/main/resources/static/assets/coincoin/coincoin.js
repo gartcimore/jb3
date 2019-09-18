@@ -371,45 +371,48 @@ class Jb3 {
     insertMessageDiv(messageDiv, message) {
         let existingDiv = document.getElementById(message.id);
         if (!existingDiv) {
-            let container = this.rooms[message.room].postsDiv;
-            let dates = container.getElementsByClassName("jb3-posts-date");
-            let day = moment(message.time);
-            let date = null;
-            let dateAfter = null;
-            for (let d = 0; d < dates.length; ++d) {
-                let dateDay = moment(dates[d].dataset.date);
-                if (dateDay.isSame(day, 'day')) {
-                    date = dates[d];
-                    break;
-                }
-                if (dateDay.isAfter(day, 'day')) {
-                    dateAfter = dates[d];
-                    break;
-                }
-            }
-            if (!date) {
-                date = document.createElement('div');
-                date.classList.add("jb3-posts-date");
-                date.dataset.date = day.format("YYYY-MM-DD");
-                let dateTitle = document.createElement('time');
-                dateTitle.appendChild(document.createTextNode(day.format("dddd D MMMM YYYY")));
-                date.appendChild(dateTitle);
-                if (dateAfter) {
-                    dateAfter.insertAdjacentElement('beforebegin', date);
-                } else {
-                    container.insertAdjacentElement('beforeend', date);
-                }
-            }
-            let t = message.time;
-            let posts = date.getElementsByClassName('jb3-post');
-            for (let p = 0; p < posts.length; ++p) {
-                let post = posts[p];
-                if (t < post.dataset.time) {
-                    post.insertAdjacentHTML('beforebegin', messageDiv);
-                    return;
-                }
-            }
-            date.insertAdjacentHTML('beforeend', messageDiv);
+        	let room = this.rooms[message.room];
+        	if(room && room.postsDiv) {
+	            let container = room.postsDiv;
+	            let dates = container.getElementsByClassName("jb3-posts-date");
+	            let day = moment(message.time);
+	            let date = null;
+	            let dateAfter = null;
+	            for (let d = 0; d < dates.length; ++d) {
+	                let dateDay = moment(dates[d].dataset.date);
+	                if (dateDay.isSame(day, 'day')) {
+	                    date = dates[d];
+	                    break;
+	                }
+	                if (dateDay.isAfter(day, 'day')) {
+	                    dateAfter = dates[d];
+	                    break;
+	                }
+	            }
+	            if (!date) {
+	                date = document.createElement('div');
+	                date.classList.add("jb3-posts-date");
+	                date.dataset.date = day.format("YYYY-MM-DD");
+	                let dateTitle = document.createElement('time');
+	                dateTitle.appendChild(document.createTextNode(day.format("dddd D MMMM YYYY")));
+	                date.appendChild(dateTitle);
+	                if (dateAfter) {
+	                    dateAfter.insertAdjacentElement('beforebegin', date);
+	                } else {
+	                    container.insertAdjacentElement('beforeend', date);
+	                }
+	            }
+	            let t = message.time;
+	            let posts = date.getElementsByClassName('jb3-post');
+	            for (let p = 0; p < posts.length; ++p) {
+	                let post = posts[p];
+	                if (t < post.dataset.time) {
+	                    post.insertAdjacentHTML('beforebegin', messageDiv);
+	                    return;
+	                }
+	            }
+	            date.insertAdjacentHTML('beforeend', messageDiv);
+        	}
         } else {
             existingDiv.outerHTML = messageDiv;
         }
