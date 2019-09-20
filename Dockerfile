@@ -1,4 +1,4 @@
-FROM openjdk:8
+FROM adoptopenjdk/maven-openjdk11
 
 # Update apt
 RUN apt-get update
@@ -6,12 +6,6 @@ RUN apt-get update
 # Install mongodb
 RUN apt-get install -y mongodb-server
 RUN service mongodb start
-
-# Install maven
-RUN apt-get install -y maven
-
-# Set correct java version
-RUN update-java-alternatives -s java-1.8.0-openjdk-amd64
 
 WORKDIR /code
 
@@ -26,4 +20,4 @@ RUN ["mvn", "package"]
 
 EXPOSE 27017
 EXPOSE 8080
-ENTRYPOINT service mongodb start && java -jar target/jb3-1.0-SNAPSHOT.jar
+ENTRYPOINT service mongodb start && java -jar target/jb3-1.2-SNAPSHOT.jar
