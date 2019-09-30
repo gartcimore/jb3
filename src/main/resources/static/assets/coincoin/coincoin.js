@@ -148,27 +148,38 @@ class Jb3 {
         jb3_common.initUrlPreview();
         jb3_common.initTotozLazyLoading();
         this.initNickname();
-        this.coin = new Worker("/assets/coincoin/webdirectcoin.js");
-        this.coin.onmessage = (event) => {
-        	this.onCoinMessage(event);
-        };
-        let url = URI();
-        let wurl = new URI({
-            protocol: url.protocol() === "https" ? "wss" : "ws",
-            hostname: url.hostname(),
-            port: url.port(),
-            path: "/webdirectcoin"
-        });
-        this.coin.postMessage({type: "connect", url: wurl.toString()});
         this.updateMessages();
         this.initTrollometre();
         this.setupGesture();
+        this.connect();
         setTimeout(() => {
         	this.refreshDlfpToken();
         }, 1000);
         setInterval(() => {
         	this.refreshDlfpToken();
         }, 60 * 60 * 1000);
+    }
+    
+    connect() {
+        let reconnectDelay = 10; 
+        let sseCoin = new EventSource(`/ssecoin/posts/?rooms=${Object.keys(this.rooms).join(',')}`);
+        sseCoin.onopen = () => {
+            reconnectDelay = 10;
+        };
+        sseCoin.onmessage = (event) => {
+            try {
+                let newMessage = JSON.parse(event.data);
+                this.newMessages = this.newMessages.concat(JSON.parse(event.data));
+            } catch(e) {
+                console.log(e);
+            }
+        };
+        sseCoin.onerror = (err) => {
+            console.log(`Lost connection, retry in ${reconnectDelay} seconds`);
+            sseCoin.close();
+            reconnectDelay = Math.max(reconnectDelay + 10, 600);
+            setTimeout(() => this.connect(), reconnectDelay * 1000);
+        };      
     }
     
     setupGesture() {
@@ -201,8 +212,21 @@ class Jb3 {
         let selectedRoom = this.controlsRoom.val();
         let auth = this.checkAuth(selectedRoom);
         if (auth) {
-            this.postMessage(this.controlsNickname.val(), this.controlsMessage.val(), selectedRoom, auth);
-            this.controlsMessage.val('');
+            let data = new FormData();
+            data.append("message", this.controlsMessage.val());
+            data.append("nickname", this.controlsNickname.val());
+            data.append("room", selectedRoom);
+            data.append("auth", auth);
+            fetch("/ssecoin/posts", {
+                method: 'POST',  
+                body: data
+            }
+            ).then(response => {
+                if(response.ok) {
+                    this.controlsMessage.val('');
+                }
+            } );
+            
         }
     }
     
@@ -246,35 +270,10 @@ class Jb3 {
         }, 1000);
     }
     
-    onCoinMessage(event) {
-        let message = event.data;
-        if (message.posts) {
-        	this.newMessages = this.newMessages.concat(message.posts);
-        }
-        if (message.disconnected) {
-        	this.moulesRoster.trigger('clear-presences');
-        }
-        if (message.connected) {
-        	this.moulesRoster.trigger('clear-presences');
-        	this.refreshMessages();
-        	this.coin.postMessage({type: "nickname", nickname: jb3_common.getNickname()});
-        }
-        if (message.presence) {
-        	this.moulesRoster.trigger('presence', message.presence);
-        }
-        if (message.webdirectcoin_not_available) {
-            console.log("webdirectcoin is not available");
-        }
-        if (message.norloge) {
-        	this.updateCite(message.norloge);
-        }
-    }
-    
     initNickname() {
     	this.controlsNickname.val(jb3_common.getNickname());
     	this.controlsNickname.change(() =>{
             jb3_common.setNickname(this.controlsNickname.val());
-            this.coin.postMessage({type: "nickname", nickname: jb3_common.getNickname()});
         });
         riot.mount('jb3-raw');
         riot.mount('jb3-modal');
@@ -301,25 +300,7 @@ class Jb3 {
         $(".jb3-cite[data-ref='" + post.attr('id') + "']").removeClass("jb3-highlight");
         $('#jb3-post-popup-content').empty();
     }
-    
-    postMessage(nickname, message, room, auth) {
-        this.coin.postMessage({type: "send", destination: "post", body: {message: message, nickname: nickname, room: room, auth: auth}});
-    }
-    
-    refreshMessages() {
-        let selectedRoom = this.controlsRoom.val();
-        this.refreshRoom(selectedRoom);
-        for (let room in this.rooms) {
-            if (room !== selectedRoom) {
-                this.refreshRoom(room);
-            }
-        }
-    }
-    
-    refreshRoom(room) {
-        this.coin.postMessage({type: "send", destination: "get", body: {room: room}});
-    }
-    
+
     isPostsContainerAtBottom() {
         let postContainer = $('#jb3-posts-container');
         return Math.ceil(postContainer.scrollTop() + postContainer.innerHeight()) >= postContainer[0].scrollHeight;
@@ -429,7 +410,13 @@ class Jb3 {
                 cite.text(citedNorloge.text());
                 cite.removeClass('jb3-cite-raw');
             } else {
-            	this.coin.postMessage({type: "send", destination: "getNorloge", body: {messageId: postId}});
+                fetch(`/ssecoin/posts/${postId}`).then(response => response.json() ).then((post) => {
+                    $(`.jb3-cite-raw[data-ref='${post.id}']`).each((_, element) =>{
+                        let cite = $(element);
+                        cite.text(moment(post.time).format(NORLOGE_FULL));
+                        cite.removeClass('jb3-cite-raw');
+                    });
+                });
             }
             if (cited.hasClass('jb3-post-is-mine')) {
                 cited.addClass('jb3-cited-by-me');
@@ -579,14 +566,6 @@ class Jb3 {
         control.value = firstPart.concat(textAfter);
         control.focus();
         control.setSelectionRange(caretPos, caretPos);
-    }
-    
-    updateCite(norloge) {
-        $(".jb3-cite-raw[data-ref='" + norloge.messageId + "']").each((_, element) =>{
-            let cite = $(element);
-            cite.text(moment(norloge.time).format(NORLOGE_FULL));
-            cite.removeClass('jb3-cite-raw');
-        });
     }
     
     initTrollometre() {
