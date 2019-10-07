@@ -12,11 +12,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import im.bci.jb3.bouchot.data.Post;
 import im.bci.jb3.bouchot.data.PostRepository;
 import im.bci.jb3.bouchot.logic.UserPostHandler;
+import im.bci.jb3.bouchot.websocket.messages.data.Presence;
 import im.bci.jb3.event.NewPostsEvent;
 
 @Service
@@ -69,7 +71,7 @@ public class SseCoinService {
     }
 
     @EventListener
-    public void notify(NewPostsEvent event) {
+    public void broadcastPost(NewPostsEvent event) {
         for (SseMoule moule : moules) {
             try {
                 for (Post post : event.getPosts()) {
@@ -77,6 +79,17 @@ public class SseCoinService {
                         moule.emiter.send(post);
                     }
                 }
+            } catch (Exception e) {
+                moules.remove(moule);
+            }
+        }
+    }
+
+    @Async
+    public void broadcastPresence(Presence presence) {
+        for (SseMoule moule : moules) {
+            try {
+                moule.emiter.send(SseEmitter.event().name("presence").data(presence));
             } catch (Exception e) {
                 moules.remove(moule);
             }

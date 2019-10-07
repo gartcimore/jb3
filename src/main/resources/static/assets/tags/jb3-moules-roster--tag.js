@@ -1,6 +1,6 @@
 var jb3MoulesRosterTemplate = '\
 <select id="moules" class="c-card__item" size="{ Math.max(2, Math.min(Object.keys(moulesNicknames).length, 10)) }">\
-    <option each="{ nickname, ids in moulesNicknames }">{ nickname }{ ids.size > 1 && " &times; " + ids.size }</option>\
+    <option each="{ nickname, status in moulesNicknames }" title="{ status }">{ nickname }</option>\
 </select>\
 ';
 
@@ -14,28 +14,24 @@ var jb3MoulesRosterStyles = '\
 ';
 
 function jb3MoulesRosterConstructor() {
-    var self = this;
-    self.moulesPresences = new Map();
-    self.moulesNicknames = {};
-    self.on('presence', function (msg) {
-        if (msg.presence.nickname) {
-            self.moulesPresences.set(msg.mouleId, msg.presence);
-        } else {
-            self.moulesPresences.delete(msg.mouleId);
+    this.moulesNicknames = {};
+    this.on('presence', (msg) => {
+        if(msg.status) {
+            this.moulesNicknames[msg.nickname] = {
+                    status: msg.status,
+                    expiration: moment().add(5, "minutes")                                 
+            };
         }
-        self.moulesNicknames = {};
-        self.moulesPresences.forEach(function (moule, mouleId) {
-            var ids = self.moulesNicknames[moule.nickname] || new Set();
-            ids.add(mouleId);
-            self.moulesNicknames[moule.nickname] = ids;
-        });
-        self.update();
+        this.update();
     });
-    self.on('clear-presences', function () {
-        self.moulesPresences.clear();
-        self.moulesNicknames = {};
-        self.update();
-    });
+    setInterval(() => {
+        let now = moment();
+        for(let nickname in this.moulesNicknames) {
+            if(this.moulesNicknames[nickname].expiration.isAfter(now)) {
+                delete this.moulesNicknames[nickname];
+            }
+        }        
+    }, 5 * 60 * 1000);
 }
 
 riot.tag('jb3-moules-roster', jb3MoulesRosterTemplate, jb3MoulesRosterStyles, jb3MoulesRosterConstructor);

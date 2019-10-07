@@ -158,6 +158,17 @@ class Jb3 {
         setInterval(() => {
         	this.refreshDlfpToken();
         }, 60 * 60 * 1000);
+        
+        setInterval(() => {
+            let data = new FormData();
+            data.append("nickname", this.controlsNickname.val());
+            data.append("status", "plop");
+            fetch("/ssecoin/presence", {
+                method: 'POST',  
+                body: data
+            }
+            );
+        }, 60 * 1000);
     }
     
     connect() {
@@ -167,13 +178,11 @@ class Jb3 {
             reconnectDelay = 10;
         };
         sseCoin.onmessage = (event) => {
-            try {
-                let newMessage = JSON.parse(event.data);
-                this.newMessages = this.newMessages.concat(JSON.parse(event.data));
-            } catch(e) {
-                console.log(e);
-            }
+            this.newMessages = this.newMessages.concat(JSON.parse(event.data));
         };
+        sseCoin.addEventListener("presence", (event) => {
+            this.moulesRoster.trigger('presence', JSON.parse(event.data));
+        });
         sseCoin.onerror = (err) => {
             console.log(`Lost connection, retry in ${reconnectDelay} seconds`);
             sseCoin.close();

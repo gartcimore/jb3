@@ -22,6 +22,7 @@ public class CleanUtils {
     private static final int MAX_ROOM_LENGTH = 32;
     private static final int MAX_FORTUNE_TITLE_LENGTH = 256;
     private static final Whitelist messageWhitelist = Whitelist.none().addTags("b", "i", "s", "u", "tt", "code", "spoiler");
+    private static final int MAX_STATUS_LENGTH = 32;
 
     public static String truncateId(String id) {
         return StringUtils.abbreviate(id, MAX_ID_LENGTH);
@@ -74,6 +75,22 @@ public class CleanUtils {
             nickname = "coward";
         }
         return nickname;
+    }
+    
+    public static String truncateAndCleanNickname(String nickname) {
+        return cleanNickname(truncateNickname(nickname));
+    }
+    
+    public static String truncateAndCleanStatus(String status) {
+        return cleanStatus(truncateStatus(status));
+    }
+
+    private static String cleanStatus(String status) {
+        return bigornozify(status);
+    }
+
+    private static String truncateStatus(String status) {
+        return StringUtils.abbreviate(status, MAX_STATUS_LENGTH);
     }
 
     private static String bigornozify(String rawText) {

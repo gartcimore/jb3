@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import im.bci.jb3.bouchot.data.Post;
+import im.bci.jb3.bouchot.logic.CleanUtils;
+import im.bci.jb3.bouchot.websocket.messages.data.Presence;
 
 @Component
 @Controller
@@ -24,6 +26,15 @@ public class SseCoinController {
         SseMoule moule = service.addMoule(rooms);
         service.emitPosts(moule);
         return moule.emiter;
+    }
+    
+    @PostMapping(value = "/ssecoin/presence")
+    @ResponseBody
+    public void presence(String nickname, String status) {
+        Presence presence = new Presence();
+        presence.setNickname(CleanUtils.truncateAndCleanNickname(nickname));
+        presence.setStatus(CleanUtils.truncateAndCleanStatus(status));
+        service.broadcastPresence(presence);
     }
 
     @PostMapping(value = "/ssecoin/posts")
