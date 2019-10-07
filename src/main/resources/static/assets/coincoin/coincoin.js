@@ -152,23 +152,21 @@ class Jb3 {
         this.initTrollometre();
         this.setupGesture();
         this.connect();
-        setTimeout(() => {
-        	this.refreshDlfpToken();
-        }, 1000);
-        setInterval(() => {
-        	this.refreshDlfpToken();
-        }, 60 * 60 * 1000);
-        
-        setInterval(() => {
-            let data = new FormData();
-            data.append("nickname", this.controlsNickname.val());
-            data.append("status", "plop");
-            fetch("/ssecoin/presence", {
-                method: 'POST',  
-                body: data
-            }
-            );
-        }, 60 * 1000);
+        setTimeout(() => this.refreshDlfpToken(), 1000);
+        setInterval(() => this.refreshDlfpToken(), 60 * 60 * 1000);
+        setTimeout(() => this.sendPresence(), 1000);
+        setInterval(() => this.sendPresence(), 60 * 1000);
+    }
+    
+    sendPresence() {
+        let data = new FormData();
+        data.append("nickname", this.controlsNickname.val());
+        data.append("status", "plop");
+        fetch("/ssecoin/presence", {
+            method: 'POST',  
+            body: data
+        }
+        );
     }
     
     connect() {
