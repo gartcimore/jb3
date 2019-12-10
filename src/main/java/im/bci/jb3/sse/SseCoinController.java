@@ -47,8 +47,9 @@ public class SseCoinController {
     }
 
     @GetMapping(path = "/ssecoin/posts/{messageId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
     public Post findById(@PathVariable String messageId) {
         return service.findOne(messageId);
     }
-
+  
 }
