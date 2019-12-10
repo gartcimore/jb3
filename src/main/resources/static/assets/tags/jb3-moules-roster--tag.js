@@ -16,7 +16,7 @@ var jb3MoulesRosterStyles = '\
 function jb3MoulesRosterConstructor() {
     this.moulesNicknames = {};
     this.on('presence', (msg) => {
-        if(msg.status) {
+        if(msg.status && msg.nickname !== jb3_common.getNickname()) {
             this.moulesNicknames[msg.nickname] = {
                     status: msg.status,
                     expiration: moment().add(5, "minutes")                                 
