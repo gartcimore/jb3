@@ -417,7 +417,7 @@ class Jb3 {
                 cite.text(citedNorloge.text());
                 cite.removeClass('jb3-cite-raw');
             } else {
-                fetch(`/ssecoin/posts/find/${postId}`).then(response => response.json() ).then((post) => {
+                fetch(`/ssecoin/posts/find/${postId}`).then(response => response.ok && response.json() ).then((post) => {
                     $(`.jb3-cite-raw[data-ref='${post.id}']`).each((_, element) =>{
                         let cite = $(element);
                         cite.text(moment(post.time).format(NORLOGE_FULL));
