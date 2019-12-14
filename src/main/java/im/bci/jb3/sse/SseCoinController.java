@@ -14,6 +14,7 @@ import im.bci.jb3.bouchot.data.Post;
 import im.bci.jb3.bouchot.logic.CleanUtils;
 import im.bci.jb3.bouchot.websocket.messages.data.Presence;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Component
@@ -51,9 +52,13 @@ public class SseCoinController {
     }
 
     @GetMapping(path = "/ssecoin/posts/{messageId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public Post findById(@PathVariable String messageId) {
-        return service.findOne(messageId);
+    public ResponseEntity<Post> findById(@PathVariable String messageId) {
+        Post post = service.findOne(messageId);
+        if(null != post) {
+            return new ResponseEntity<>(post, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
   
 }
