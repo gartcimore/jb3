@@ -171,7 +171,7 @@ class Jb3 {
     
     connect() {
         let reconnectDelay = 10; 
-        let sseCoin = new EventSource(`/ssecoin/posts/?rooms=${Object.keys(this.rooms).join(',')}`);
+        let sseCoin = new EventSource(`/ssecoin/posts/stream?rooms=${Object.keys(this.rooms).join(',')}`);
         sseCoin.onopen = () => {
             reconnectDelay = 10;
         };
@@ -224,7 +224,7 @@ class Jb3 {
             data.append("nickname", this.controlsNickname.val());
             data.append("room", selectedRoom);
             data.append("auth", auth);
-            fetch("/ssecoin/posts", {
+            fetch("/ssecoin/posts/add", {
                 method: 'POST',  
                 body: data
             }
@@ -417,7 +417,7 @@ class Jb3 {
                 cite.text(citedNorloge.text());
                 cite.removeClass('jb3-cite-raw');
             } else {
-                fetch(`/ssecoin/posts/${postId}`).then(response => response.json() ).then((post) => {
+                fetch(`/ssecoin/posts/find/${postId}`).then(response => response.json() ).then((post) => {
                     $(`.jb3-cite-raw[data-ref='${post.id}']`).each((_, element) =>{
                         let cite = $(element);
                         cite.text(moment(post.time).format(NORLOGE_FULL));

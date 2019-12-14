@@ -24,7 +24,7 @@ public class SseCoinController {
     @Autowired
     private SseCoinService service;
 
-    @GetMapping("/ssecoin/posts")
+    @GetMapping("/ssecoin/posts/stream")
     public SseEmitter posts(@RequestParam(value = "rooms", required = true) String[] rooms) {
         SseMoule moule = service.addMoule(rooms);
         service.emitPosts(moule);
@@ -41,7 +41,7 @@ public class SseCoinController {
         service.broadcastPresence(presence);
     }
 
-    @PostMapping(value = "/ssecoin/posts")
+    @PostMapping(value = "/ssecoin/posts/add")
     @ResponseBody
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void post(@RequestParam(value = "nickname", required = false) String nickname,
@@ -51,7 +51,7 @@ public class SseCoinController {
         service.post(nickname, message, room, auth);
     }
 
-    @GetMapping(path = "/ssecoin/posts/{messageId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/ssecoin/posts/find/{messageId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Post> findById(@PathVariable String messageId) {
         Post post = service.findOne(messageId);
         if(null != post) {
