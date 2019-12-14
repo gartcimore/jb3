@@ -13,6 +13,8 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import im.bci.jb3.bouchot.data.Post;
 import im.bci.jb3.bouchot.logic.CleanUtils;
 import im.bci.jb3.bouchot.websocket.messages.data.Presence;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Component
 @Controller
@@ -30,6 +32,7 @@ public class SseCoinController {
     
     @PostMapping(value = "/ssecoin/presence")
     @ResponseBody
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void presence(String nickname, String status) {
         Presence presence = new Presence();
         presence.setNickname(CleanUtils.truncateAndCleanNickname(nickname));
@@ -39,6 +42,7 @@ public class SseCoinController {
 
     @PostMapping(value = "/ssecoin/posts")
     @ResponseBody
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public void post(@RequestParam(value = "nickname", required = false) String nickname,
             @RequestParam(value = "message") String message,
             @RequestParam(value = "room", required = false) String room,
