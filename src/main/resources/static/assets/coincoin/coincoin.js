@@ -170,11 +170,7 @@ class Jb3 {
     }
     
     connect() {
-        let reconnectDelay = 10; 
         let sseCoin = new EventSource(`/ssecoin/posts/stream?rooms=${Object.keys(this.rooms).join(',')}`);
-        sseCoin.onopen = () => {
-            reconnectDelay = 10;
-        };
         sseCoin.onmessage = (event) => {
             this.newMessages = this.newMessages.concat(JSON.parse(event.data));
         };
@@ -182,10 +178,9 @@ class Jb3 {
             this.moulesRoster.trigger('presence', JSON.parse(event.data));
         });
         sseCoin.onerror = (err) => {
-            console.log(`Lost connection, retry in ${reconnectDelay} seconds`);
+            console.log(`Lost connection, retry in 10 seconds`);
             sseCoin.close();
-            reconnectDelay = Math.max(reconnectDelay + 10, 600);
-            setTimeout(() => this.connect(), reconnectDelay * 1000);
+            setTimeout(() => this.connect(), 10000);
         };      
     }
     
