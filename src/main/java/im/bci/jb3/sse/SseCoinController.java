@@ -25,10 +25,10 @@ public class SseCoinController {
     private SseCoinService service;
 
     @GetMapping("/ssecoin/posts/stream")
-    public SseEmitter posts(@RequestParam(value = "rooms", required = true) String[] rooms) {
+    public ResponseEntity<SseEmitter> posts(@RequestParam(value = "rooms", required = true) String[] rooms) {
         SseMoule moule = service.addMoule(rooms);
         service.emitPosts(moule);
-        return moule.emiter;
+        return ResponseEntity.ok().header("X-Accel-Buffering", "no").body(moule.emiter);
     }
     
     @PostMapping(value = "/ssecoin/presence")
