@@ -1,4 +1,13 @@
-FROM adoptopenjdk/maven-openjdk11
+FROM maven:3.6-jdk-11 as build
+RUN mkdir /jb3
+WORKDIR /jb3
+ADD pom.xml pom.xml
+ADD src src
+
+# RUN mvn dependency:resolve && mvn verify && mvn package
+RUN mvn dependency:resolve && mvn verify && mvn package
+
+FROM adoptopenjdk/maven-openjdk11 as distribution
 
 # Update apt
 RUN apt-get update
@@ -9,14 +18,7 @@ RUN service mongodb start
 
 WORKDIR /code
 
-# Prepare by downloading dependencies
-ADD pom.xml /code/pom.xml
-RUN ["mvn", "dependency:resolve"]
-RUN ["mvn", "verify"]
-
-# Adding source, compile and package into a fat jar
-ADD src /code/src
-RUN ["mvn", "package"]
+COPY --from=build /jb3/* /code/
 
 EXPOSE 27017
 EXPOSE 8080
