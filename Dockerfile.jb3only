@@ -10,7 +10,7 @@ RUN echo "spring.data.mongodb.host=mongodb" >> /jb3/src/main/resources/config/ap
 # RUN mvn dependency:resolve && mvn verify && mvn package
 RUN mvn package
 
-FROM adoptopenjdk/maven-openjdk11 as distribution
+FROM adoptopenjdk/openjdk11:alpine-slim as distribution
 
 WORKDIR /code
 
