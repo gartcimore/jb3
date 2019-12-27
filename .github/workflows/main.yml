@@ -25,7 +25,7 @@ jobs:
     - name: Deploy the Docker image to GitHub Package Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        name: gartcimore/jb3
+        name: gartcimore/jb3/jb3
         dockerfile: Dockerfile.jb3only
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
