@@ -2,6 +2,7 @@
 
 jb3 is a KISS tribune powered by java, spring boot and mongodb.
 
+![](https://github.com/actions/jb3/workflows/Java%20CI/badge.svg)
 ## Features
 
 - archives
