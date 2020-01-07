@@ -5,13 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import im.bci.jb3.bouchot.data.Post;
-import im.bci.jb3.bouchot.logic.Tribune;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
@@ -19,12 +14,21 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
+import im.bci.jb3.bouchot.data.Post;
+import im.bci.jb3.bouchot.logic.Tribune;
+
+import static java.util.Arrays.asList;
+
 
 @Component
 public class CountDownBot implements Bot {
 
     private static int MAX_SIZE = 2;
-
+    private static String[] ADMINS = {"devnewton", "dave"};
+    private List<String> allowedNames = asList(ADMINS);
     @Autowired
     private Tribune tribune;
 
@@ -40,6 +44,10 @@ public class CountDownBot implements Bot {
     public void handle(Post post, UriComponentsBuilder uriBuilder) {
         try {
             if (tribune.isBotCall(post, NAME)) {
+                if(!allowedNames.contains(post.getCleanedNickname())) {
+                    LogFactory.getLog(this.getClass()).debug(String.format("%s not allowed for user '%s' for bot ", NAME, post.getCleanedNickname()));
+                    return;
+                }
                 Matcher matcher = COMMAND_PATTERN.matcher(post.getMessage());
                 if (matcher.matches()) {
                     String command = matcher.group("command");
@@ -56,9 +64,7 @@ public class CountDownBot implements Bot {
                             if (timers.size() <= MAX_SIZE) {
                                 scheduleTask(post, command, message, periodStr, intervalStr);
                             }
-
                             break;
-
                         default:
                             LogFactory.getLog(this.getClass()).debug(String.format("unknown command '%s' for bot ", command, NAME));
                     }
