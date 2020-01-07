@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 @Component
 public class CountDownBot implements Bot {
 
-    private static int MAX_SIZE = 5;
+    private static int MAX_SIZE = 2;
 
     @Autowired
     private Tribune tribune;
@@ -89,6 +89,12 @@ public class CountDownBot implements Bot {
         if (!intervalStr.isEmpty()) {
             try {
                 interval = Long.valueOf(intervalStr)*1000;
+                if (interval < 10*60*60) {
+                    interval = 10L*60*60;
+                    LogFactory.getLog(this.getClass()).debug(
+                            String.format("interval is too low, using default '%d' for bot %s", interval, NAME));
+
+                }
             } catch (NumberFormatException ex) {
                 LogFactory.getLog(this.getClass()).debug(
                   String.format("interval is not a number '%s' for bot ", intervalStr, NAME));
@@ -100,9 +106,15 @@ public class CountDownBot implements Bot {
         if (!periodStr.isEmpty()) {
             try {
                 period = Long.valueOf(periodStr)*1000;
+                if (period < 10*60*60) {
+                    period = 10*60*60;
+                    LogFactory.getLog(this.getClass()).debug(
+                            String.format("period is too low, using default '%d' for bot %s", period, NAME));
+
+                }
             } catch (NumberFormatException ex) {
                 LogFactory.getLog(this.getClass()).debug(
-                  String.format("period is not a number '%s' for bot ", periodStr, NAME));
+                  String.format("period is not a number '%s' for bot %s", periodStr, NAME));
                 tribune.post(NAME, String.format("invalid period %s, using default", periodStr), post.getRoom());
             }
         }
